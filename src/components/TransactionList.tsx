@@ -13,14 +13,17 @@ export const TransactionList = ({ transactions }: TransactionListProps) => {
       </header>
       <ul className="max-h-[420px] space-y-1 overflow-y-auto px-2 py-2">
         {transactions.map(transaction => {
-          const category =
-            typeof transaction.category === 'string' ? transaction.categoryName ?? transaction.category : transaction.category?.name
+          const categoryLabel =
+            typeof transaction.category === 'string'
+              ? transaction.category || transaction.categoryName || transaction.title || 'Transaction'
+              : transaction.category?.name ?? transaction.categoryName ?? transaction.title ?? 'Transaction'
           const isIncome = transaction.type === 'income'
           const amountLabel = `${isIncome ? '+' : '-'}${formatCurrency(Math.abs(transaction.amount))}`
+          const key = transaction._id ?? transaction.id ?? `${transaction.date}-${transaction.amount}`
 
           return (
             <li
-              key={transaction._id}
+              key={key}
               className="group flex items-center justify-between gap-4 rounded-2xl px-4 py-3 transition hover:bg-surfaceMuted"
             >
               <div className="flex items-center gap-4">
@@ -34,7 +37,7 @@ export const TransactionList = ({ transactions }: TransactionListProps) => {
                   {isIncome ? 'In' : 'Out'}
                 </span>
                 <div className="flex flex-col gap-1">
-                  <span className="text-sm font-semibold text-neutral">{category}</span>
+                  <span className="text-sm font-semibold text-neutral">{categoryLabel}</span>
                   <span className="text-xs uppercase tracking-[0.3em] text-muted">{formatDate(transaction.date)}</span>
                   {transaction.note ? (
                     <span className="text-xs text-muted">{transaction.note}</span>

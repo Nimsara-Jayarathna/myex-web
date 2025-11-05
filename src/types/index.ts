@@ -30,13 +30,18 @@ export interface Category {
 }
 
 export interface Transaction {
-  _id: string
+  _id?: string
+  id?: string
+  user?: string
+  title?: string
   amount: number
   type: 'income' | 'expense'
   category: Category | string
   categoryName?: string
+  categoryId?: string
   date: string
   note?: string
+  status?: string
   createdAt: string
   updatedAt: string
 }
