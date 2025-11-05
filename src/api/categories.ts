@@ -1,14 +1,55 @@
 import { apiClient } from './client'
 import type { Category } from '../types'
 
+type CategoryApiShape = Category & {
+  _id?: string
+  id?: string
+}
+
+type CategoriesResponse = CategoryApiShape[] | { categories: CategoryApiShape[] }
+
+const normalizeCategory = (category: CategoryApiShape): Category => {
+  const identifier = category._id ?? category.id
+  if (!identifier) {
+    throw new Error('Category missing identifier')
+  }
+  return {
+    ...category,
+    _id: identifier,
+    id: identifier,
+  }
+}
+
+const extractCategories = (data: CategoriesResponse): CategoryApiShape[] => {
+  if (Array.isArray(data)) {
+    return data
+  }
+  if (data?.categories) {
+    return data.categories
+  }
+  return []
+}
+
 export const getCategories = async () => {
-  const { data } = await apiClient.get<Category[]>('/api/categories')
-  return data
+  const { data } = await apiClient.get<CategoriesResponse>('/api/categories')
+  return extractCategories(data).map(normalizeCategory)
 }
 
 export const createCategory = async (payload: Pick<Category, 'name' | 'type'>) => {
-  const { data } = await apiClient.post<Category>('/api/categories', payload)
-  return data
+  const { data } = await apiClient.post<CategoryApiShape | { category: CategoryApiShape }>(
+    '/api/categories',
+    payload,
+  )
+
+  if (!data) {
+    throw new Error('Category response missing')
+  }
+
+  if ('category' in data && data.category) {
+    return normalizeCategory(data.category)
+  }
+
+  return normalizeCategory(data as CategoryApiShape)
 }
 
 export const deleteCategory = async (categoryId: string) => {

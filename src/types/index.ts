@@ -19,9 +19,12 @@ export interface UserProfile {
 }
 
 export interface Category {
-  _id: string
+  _id?: string
+  id?: string
   name: string
   type: 'income' | 'expense'
+  isDefault?: boolean
+  isActive?: boolean
   createdAt: string
   updatedAt: string
 }

@@ -53,8 +53,15 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     createMutation.mutate({ name: name.trim(), type })
   }
 
+  const resolveCategoryId = (category: Category) => category._id ?? category.id ?? ''
+
   const handleDelete = (category: Category) => {
-    deleteMutation.mutate(category._id)
+    const identifier = resolveCategoryId(category)
+    if (!identifier) {
+      toast.error('Unable to delete category: missing identifier')
+      return
+    }
+    deleteMutation.mutate(identifier)
   }
 
   return (
@@ -135,10 +142,11 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
         ) : (
           <ul className="grid gap-3 sm:grid-cols-2">
             {categories?.map(category => {
-              const isDeleting = deleteMutation.isPending && deleteMutation.variables === category._id
+              const categoryId = resolveCategoryId(category)
+              const isDeleting = deleteMutation.isPending && deleteMutation.variables === categoryId
               return (
                 <li
-                  key={category._id}
+                  key={categoryId}
                   className="flex items-center justify-between rounded-2xl border border-border bg-white px-4 py-3 text-sm text-muted transition hover:border-accent/40 hover:bg-surfaceMuted"
                 >
                   <div className="flex flex-col">

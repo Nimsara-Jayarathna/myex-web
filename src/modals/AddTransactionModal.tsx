@@ -29,6 +29,7 @@ export const AddTransactionModal = ({ open, onClose }: AddTransactionModalProps)
   const [category, setCategory] = useState('')
   const [date, setDate] = useState(dayjs().format('YYYY-MM-DD'))
   const [note, setNote] = useState('')
+  const resolveCategoryId = (item?: { _id?: string; id?: string }) => item?._id ?? item?.id ?? ''
 
   useEffect(() => {
     if (open) {
@@ -38,7 +39,10 @@ export const AddTransactionModal = ({ open, onClose }: AddTransactionModalProps)
 
   useEffect(() => {
     if (categories && categories.length && !category) {
-      setCategory(categories[0]._id)
+      const firstCategoryId = resolveCategoryId(categories[0])
+      if (firstCategoryId) {
+        setCategory(firstCategoryId)
+      }
     }
   }, [categories, category])
 
@@ -134,7 +138,7 @@ export const AddTransactionModal = ({ open, onClose }: AddTransactionModalProps)
             disabled={!categories?.length}
           >
             {categories?.map(item => (
-              <option key={item._id} value={item._id}>
+              <option key={resolveCategoryId(item)} value={resolveCategoryId(item)}>
                 {item.name} - {item.type}
               </option>
             ))}
