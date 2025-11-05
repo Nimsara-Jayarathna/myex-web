@@ -43,16 +43,16 @@ export const ReportsModal = ({ open, onClose }: ReportsModalProps) => {
         {
           label: 'Income',
           data: dataset.map(item => item.income),
-          borderColor: '#34d399',
-          backgroundColor: 'rgba(52, 211, 153, 0.15)',
+          borderColor: '#2ECC71',
+          backgroundColor: 'rgba(46, 204, 113, 0.15)',
           fill: true,
           tension: 0.3,
         },
         {
           label: 'Expenses',
           data: dataset.map(item => item.expense),
-          borderColor: '#f87171',
-          backgroundColor: 'rgba(248, 113, 113, 0.12)',
+          borderColor: '#E74C3C',
+          backgroundColor: 'rgba(231, 76, 60, 0.12)',
           fill: true,
           tension: 0.3,
         },
@@ -70,14 +70,14 @@ export const ReportsModal = ({ open, onClose }: ReportsModalProps) => {
     >
       <div className="flex flex-col gap-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex gap-2 rounded-full border border-white/10 bg-white/5 p-1">
+          <div className="flex gap-2 rounded-full border border-border bg-white p-1 shadow-sm">
             {(['daily', 'monthly'] as const).map(option => (
               <button
                 key={option}
                 type="button"
                 onClick={() => setView(option)}
                 className={`rounded-full px-4 py-1 text-sm capitalize transition ${
-                  view === option ? 'bg-sky-500 text-white shadow-md shadow-sky-500/30' : 'text-slate-300'
+                  view === option ? 'bg-accent text-white shadow-soft' : 'text-muted hover:text-neutral'
                 }`}
               >
                 {option}
@@ -85,18 +85,18 @@ export const ReportsModal = ({ open, onClose }: ReportsModalProps) => {
             ))}
           </div>
           {data?.totals ? (
-            <div className="grid gap-3 text-xs uppercase tracking-wide text-white/60 sm:grid-cols-3">
-              <div className="rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-emerald-100">
-                <span className="block text-[11px] text-emerald-200/70">Income</span>
-                <strong className="text-base text-white">{formatCurrency(data.totals.totalIncome)}</strong>
+            <div className="grid gap-3 text-xs uppercase tracking-wide text-muted sm:grid-cols-3">
+              <div className="rounded-2xl border border-income/30 bg-income/10 px-4 py-3 text-income">
+                <span className="block text-[11px] text-income/80">Income</span>
+                <strong className="text-base text-neutral">{formatCurrency(data.totals.totalIncome)}</strong>
               </div>
-              <div className="rounded-2xl border border-rose-400/40 bg-rose-500/10 px-4 py-3 text-rose-100">
-                <span className="block text-[11px] text-rose-200/70">Expenses</span>
-                <strong className="text-base text-white">{formatCurrency(data.totals.totalExpense)}</strong>
+              <div className="rounded-2xl border border-expense/30 bg-expense/10 px-4 py-3 text-expense">
+                <span className="block text-[11px] text-expense/80">Expenses</span>
+                <strong className="text-base text-neutral">{formatCurrency(data.totals.totalExpense)}</strong>
               </div>
-              <div className="rounded-2xl border border-sky-400/40 bg-sky-500/10 px-4 py-3 text-sky-100">
-                <span className="block text-[11px] text-sky-200/70">Balance</span>
-                <strong className="text-base text-white">{formatCurrency(data.totals.balance)}</strong>
+              <div className="rounded-2xl border border-accent/30 bg-accent/10 px-4 py-3 text-accent">
+                <span className="block text-[11px] text-accent/80">Balance</span>
+                <strong className="text-base text-neutral">{formatCurrency(data.totals.balance)}</strong>
               </div>
             </div>
           ) : null}
@@ -105,7 +105,7 @@ export const ReportsModal = ({ open, onClose }: ReportsModalProps) => {
         {isLoading ? (
           <LoadingSpinner />
         ) : data ? (
-          <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 via-slate-900/30 to-transparent p-4 shadow-inner shadow-black/40">
+          <div className="rounded-3xl border border-border bg-white/90 p-4 shadow-card">
             <Line
               data={chartData}
               options={{
@@ -113,7 +113,7 @@ export const ReportsModal = ({ open, onClose }: ReportsModalProps) => {
                 plugins: {
                   legend: {
                     labels: {
-                      color: '#CBD5F5',
+                      color: '#4F677F',
                     },
                   },
                   tooltip: {
@@ -127,19 +127,19 @@ export const ReportsModal = ({ open, onClose }: ReportsModalProps) => {
                 },
                 scales: {
                   x: {
-                    ticks: { color: '#94A3B8' },
-                    grid: { color: 'rgba(148, 163, 184, 0.1)' },
+                    ticks: { color: '#4F677F' },
+                    grid: { color: 'rgba(79, 103, 127, 0.1)' },
                   },
                   y: {
-                    ticks: { color: '#94A3B8' },
-                    grid: { color: 'rgba(148, 163, 184, 0.1)' },
+                    ticks: { color: '#4F677F' },
+                    grid: { color: 'rgba(79, 103, 127, 0.1)' },
                   },
                 },
               }}
             />
           </div>
         ) : (
-          <p className="rounded-2xl border border-dashed border-white/10 bg-white/5 px-4 py-8 text-center text-sm text-slate-400">
+          <p className="rounded-2xl border border-dashed border-border bg-white/80 px-4 py-8 text-center text-sm text-muted">
             No summary data yet. Add a transaction to see insights.
           </p>
         )}

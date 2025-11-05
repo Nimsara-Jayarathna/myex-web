@@ -85,7 +85,7 @@ export const AddTransactionModal = ({ open, onClose }: AddTransactionModalProps)
     >
       <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
         <div className="grid gap-4 sm:grid-cols-2">
-          <label className="flex flex-col gap-2 text-sm text-white">
+          <label className="flex flex-col gap-2 text-sm text-neutral">
             Amount
             <input
               type="number"
@@ -93,17 +93,17 @@ export const AddTransactionModal = ({ open, onClose }: AddTransactionModalProps)
               min="0"
               value={amount}
               onChange={event => setAmount(event.target.value)}
-              className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none"
+              className="rounded-2xl border border-border bg-white px-4 py-3 text-sm text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
               placeholder="0.00"
             />
           </label>
-          <label className="flex flex-col gap-2 text-sm text-white">
+          <label className="flex flex-col gap-2 text-sm text-neutral">
             Date
             <input
               type="date"
               value={date}
               onChange={event => setDate(event.target.value)}
-              className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white focus:border-sky-500 focus:outline-none"
+              className="rounded-2xl border border-border bg-white px-4 py-3 text-sm text-neutral focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
             />
           </label>
         </div>
@@ -116,8 +116,8 @@ export const AddTransactionModal = ({ open, onClose }: AddTransactionModalProps)
               onClick={() => setType(option)}
               className={`rounded-2xl border px-4 py-2 text-sm font-medium capitalize transition ${
                 type === option
-                  ? 'border-sky-500 bg-sky-500/20 text-sky-200'
-                  : 'border-white/10 bg-white/5 text-slate-300 hover:border-sky-500/40 hover:text-white'
+                  ? 'border-accent bg-accent/10 text-accent'
+                  : 'border-border bg-white text-muted hover:border-accent/40 hover:text-neutral'
               }`}
             >
               {option}
@@ -125,12 +125,12 @@ export const AddTransactionModal = ({ open, onClose }: AddTransactionModalProps)
           ))}
         </div>
 
-        <label className="flex flex-col gap-2 text-sm text-white">
+        <label className="flex flex-col gap-2 text-sm text-neutral">
           Category
           <select
             value={category}
             onChange={event => setCategory(event.target.value)}
-            className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white focus:border-sky-500 focus:outline-none"
+            className="rounded-2xl border border-border bg-white px-4 py-3 text-sm text-neutral focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
             disabled={!categories?.length}
           >
             {categories?.map(item => (
@@ -142,25 +142,25 @@ export const AddTransactionModal = ({ open, onClose }: AddTransactionModalProps)
           </select>
         </label>
         {!categories?.length ? (
-          <p className="rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-2 text-xs text-amber-100">
+          <p className="rounded-2xl border border-accent/30 bg-accent/10 px-4 py-2 text-xs text-accent">
             You need at least one category. Create one in Settings first.
           </p>
         ) : null}
 
-        <label className="flex flex-col gap-2 text-sm text-white">
+        <label className="flex flex-col gap-2 text-sm text-neutral">
           Note
           <textarea
             value={note}
             onChange={event => setNote(event.target.value)}
             rows={3}
             placeholder="Optional note about this transaction"
-            className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none"
+            className="rounded-2xl border border-border bg-white px-4 py-3 text-sm text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
           />
         </label>
 
         <button
           type="submit"
-          className="mt-2 inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-sky-400 via-sky-500 to-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+          className="mt-2 inline-flex items-center justify-center gap-2 rounded-2xl bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#2F89C9] disabled:cursor-not-allowed disabled:opacity-70"
           disabled={mutation.isPending || !categories?.length}
         >
           {mutation.isPending ? (

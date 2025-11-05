@@ -65,12 +65,9 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
       subtitle="Create and organize your income and expense categories."
       widthClassName="max-w-2xl"
     >
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-5 rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 via-slate-900/40 to-transparent p-5"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5 rounded-3xl border border-border bg-white/90 p-5 shadow-sm">
         <div className="flex flex-col gap-2">
-          <label htmlFor="category-name" className="text-sm font-medium text-white">
+          <label htmlFor="category-name" className="text-sm font-medium text-neutral">
             Category name
           </label>
           <input
@@ -78,7 +75,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
             name="name"
             value={name}
             onChange={event => setName(event.target.value)}
-            className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none"
+            className="w-full rounded-2xl border border-border bg-white px-4 py-2 text-sm text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
             placeholder="e.g. Groceries"
           />
         </div>
@@ -90,8 +87,8 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
               onClick={() => setType(option)}
               className={`rounded-2xl border px-4 py-2 text-sm font-medium capitalize transition ${
                 type === option
-                  ? 'border-sky-400/60 bg-sky-500/20 text-sky-100 shadow-inner shadow-sky-500/40'
-                  : 'border-white/10 bg-white/5 text-slate-300 hover:border-sky-400/60 hover:text-white'
+                  ? 'border-accent bg-accent/10 text-accent shadow-inner shadow-accent/20'
+                  : 'border-border bg-white text-muted hover:border-accent/40 hover:text-neutral'
               }`}
             >
               {option}
@@ -100,7 +97,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
         </div>
         <button
           type="submit"
-          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-sky-400 via-sky-500 to-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#2F89C9] disabled:cursor-not-allowed disabled:opacity-70"
           disabled={createMutation.isPending}
         >
           {createMutation.isPending ? (
@@ -115,11 +112,11 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
       </form>
 
       <div className="mt-6 space-y-4">
-        <div className="flex items-center justify-between text-xs uppercase tracking-wide text-white/60">
+        <div className="flex items-center justify-between text-xs uppercase tracking-wide text-muted">
           <span>Existing categories</span>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-medium text-slate-200 transition hover:border-sky-500/40 hover:text-white"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1 text-[11px] font-medium text-muted transition hover:border-accent/40 hover:text-accent"
             onClick={() => queryClient.invalidateQueries({ queryKey: categoryKey })}
             disabled={isFetching}
           >
@@ -142,16 +139,16 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
               return (
                 <li
                   key={category._id}
-                  className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200 transition hover:border-sky-400/40 hover:bg-sky-500/10"
+                  className="flex items-center justify-between rounded-2xl border border-border bg-white px-4 py-3 text-sm text-muted transition hover:border-accent/40 hover:bg-surfaceMuted"
                 >
                   <div className="flex flex-col">
-                    <span className="font-medium text-white">{category.name}</span>
-                    <span className="text-xs uppercase tracking-wide text-slate-400">{category.type}</span>
+                    <span className="font-medium text-neutral">{category.name}</span>
+                    <span className="text-xs uppercase tracking-wide text-muted/70">{category.type}</span>
                   </div>
                   <button
                     type="button"
                     onClick={() => handleDelete(category)}
-                    className="inline-flex items-center gap-1 rounded-full border border-rose-500/20 px-3 py-1 text-xs font-medium text-rose-200 transition hover:border-rose-300 hover:bg-rose-500/20 hover:text-rose-100"
+                    className="inline-flex items-center gap-1 rounded-full border border-expense/30 px-3 py-1 text-xs font-medium text-expense transition hover:border-expense/50 hover:bg-expense/10"
                     disabled={isDeleting}
                   >
                     {isDeleting ? <Spinner size="sm" /> : null}
@@ -161,7 +158,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
               )
             })}
             {categories?.length === 0 ? (
-              <li className="rounded-2xl border border-dashed border-white/10 bg-white/5 px-4 py-6 text-center text-xs text-slate-400">
+              <li className="rounded-2xl border border-dashed border-border bg-white/80 px-4 py-6 text-center text-xs text-muted">
                 No categories yet. Create one above.
               </li>
             ) : null}

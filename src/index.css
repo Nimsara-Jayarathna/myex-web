@@ -2,20 +2,4 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: dark;
-}
-
-body {
-  background: radial-gradient(circle at 18% 20%, rgba(148, 163, 184, 0.12), transparent 52%),
-    radial-gradient(circle at 82% 10%, rgba(71, 85, 105, 0.1), transparent 58%),
-    linear-gradient(180deg, #0a0b10 0%, #050508 100%);
-  color: #f8fafc;
-  -webkit-font-smoothing: antialiased;
-}
-
-::selection {
-  background: rgba(100, 116, 139, 0.35);
-  color: #0f172a;
-}
 

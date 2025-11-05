@@ -1,7 +1,7 @@
 export const LoadingSpinner = () => {
   return (
     <div className="flex items-center justify-center py-12">
-      <span className="h-12 w-12 animate-spin rounded-full border-[3px] border-slate-700/40 border-t-sky-400" />
+      <span className="h-12 w-12 animate-spin rounded-full border-[3px] border-border border-t-accent" />
     </div>
   )
 }

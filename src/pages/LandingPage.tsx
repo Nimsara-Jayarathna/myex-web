@@ -12,16 +12,22 @@ import type { AuthMode } from '../types'
 const featureHighlights = [
   {
     title: 'Unified cashflow',
-    description: 'Track income, expenses, and balance in one realtime view tailored to your patterns.',
+    description: 'Track income, expenses, and balance in a single, calm dashboard tailored to your goals.',
   },
   {
     title: 'Effortless logging',
-    description: 'Add transactions with contextual categories, notes, and smart defaults in two taps.',
+    description: 'Record transactions with smart defaults, notes, and categories in seconds.',
   },
   {
     title: 'Insightful analytics',
-    description: 'Transform raw spending data into daily and monthly trends that keep you on target.',
+    description: 'Understand trends instantly with clean visuals for daily through monthly views.',
   },
+]
+
+const statHighlights = [
+  { label: 'Avg. setup', value: '2 min' },
+  { label: 'Categories ready', value: '12+' },
+  { label: 'Customer rating', value: '4.8/5' },
 ]
 
 export const LandingPage = () => {
@@ -29,7 +35,8 @@ export const LandingPage = () => {
   const { setAuth, isAuthenticated } = useAuth()
   const [mode, setMode] = useState<AuthMode | null>(null)
   const [formState, setFormState] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
   })
@@ -64,26 +71,35 @@ export const LandingPage = () => {
     event.preventDefault()
     if (!mode) return
 
-    const payload = {
+    const trimmed = {
+      firstName: formState.firstName.trim(),
+      lastName: formState.lastName.trim(),
       email: formState.email.trim(),
       password: formState.password.trim(),
-      ...(mode === 'register' ? { name: formState.name.trim() } : {}),
     }
 
-    if (!payload.email || !payload.password) {
+    if (!trimmed.email || !trimmed.password) {
       toast.error('Email and password are required')
       return
     }
 
-    if (mode === 'register' && !payload.name) {
-      toast.error('Please add your name')
-      return
-    }
-
     if (mode === 'login') {
-      loginMutation.mutate(payload)
+      loginMutation.mutate({
+        email: trimmed.email,
+        password: trimmed.password,
+      })
     } else {
-      registerMutation.mutate(payload)
+      if (!trimmed.firstName || !trimmed.lastName) {
+        toast.error('Please add your first and last name')
+        return
+      }
+
+      registerMutation.mutate({
+        email: trimmed.email,
+        password: trimmed.password,
+        fname: trimmed.firstName,
+        lname: trimmed.lastName,
+      })
     }
   }
 
@@ -105,7 +121,8 @@ export const LandingPage = () => {
   const closeModal = () => {
     setMode(null)
     setFormState({
-      name: '',
+      firstName: '',
+      lastName: '',
       email: '',
       password: '',
     })
@@ -114,100 +131,158 @@ export const LandingPage = () => {
   }
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-neutral-950 px-6 py-16 text-slate-100">
+    <main className="relative flex min-h-screen flex-col items-center overflow-hidden bg-background px-6 py-16 text-neutral">
+      <div className="pointer-events-none absolute inset-0 bg-hero-grid" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-gradient-to-b from-white/80 via-white/50 to-transparent" />
       <motion.div
-        className="relative z-10 flex w-full max-w-5xl flex-col items-center gap-16 text-center"
-        initial={{ opacity: 0, y: 30 }}
+        className="relative z-10 flex w-full max-w-6xl flex-col gap-16 text-center lg:text-left"
+        initial={{ opacity: 0, y: 32 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.25, 0.8, 0.25, 1] }}
       >
-        <motion.div
-          className="flex flex-col items-center gap-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.6 }}
-        >
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2 text-xs uppercase tracking-[0.32em] text-slate-300">
-            Smart Finance, Refined
-          </span>
-          <div className="space-y-4">
-            <h1 className="text-5xl font-semibold leading-tight text-white sm:text-6xl">
-              All your money stories in one beautifully clear dashboard.
-            </h1>
-            <p className="mx-auto max-w-2xl text-base text-slate-300 sm:text-lg">
-              MyEx helps you understand every transaction with context, clarity, and calm. Track, analyze, and
-              celebrate your financial habits with elegant tooling built for modern teams and individuals.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <motion.button
-              type="button"
-              onClick={() => setMode('login')}
-              whileHover={{ y: -4, boxShadow: '0 18px 35px -18px rgba(56,189,248,0.65)' }}
-              whileTap={{ scale: 0.98 }}
-              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-400 via-sky-500 to-indigo-500 px-8 py-3 text-sm font-semibold text-white transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus-visible:ring-sky-200/70"
-            >
-              Log In
-              <span className="transition-transform group-hover:translate-x-1">→</span>
-            </motion.button>
-            <motion.button
-              type="button"
-              onClick={() => setMode('register')}
-              whileHover={{ y: -4 }}
-              whileTap={{ scale: 0.98 }}
-              className="rounded-full border border-white/15 bg-white/5 px-8 py-3 text-sm font-semibold text-slate-200 transition hover:border-sky-400/50 hover:bg-sky-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus-visible:ring-sky-200/70"
-            >
-              Create an account
-            </motion.button>
-          </div>
-        </motion.div>
+        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+          <motion.div
+            className="flex flex-col items-center gap-6 lg:items-start"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.6 }}
+          >
+            <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-white px-6 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-accent shadow-sm">
+              Finance, refined
+            </span>
+            <div className="space-y-5">
+              <h1 className="text-4xl font-semibold leading-tight text-neutral sm:text-5xl lg:text-6xl">
+                Everything you earn and spend, beautifully organized.
+              </h1>
+              <p className="max-w-2xl text-base text-muted sm:text-lg">
+                MyEx pairs intuitive tracking with calm visuals so you can review income, expenses, and balance within
+                a single, distraction-free workspace.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
+              <motion.button
+                type="button"
+                onClick={() => setMode('login')}
+                whileHover={{ y: -4, boxShadow: '0 18px 35px -18px rgba(52,152,219,0.45)' }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center gap-2 rounded-full bg-accent px-8 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-[#2F89C9] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                Log in
+              </motion.button>
+              <motion.button
+                type="button"
+                onClick={() => setMode('register')}
+                whileHover={{ y: -4 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-white px-8 py-3 text-sm font-semibold text-accent transition hover:border-accent/40 hover:bg-accent/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                Create account
+              </motion.button>
+            </div>
+          </motion.div>
 
-        <motion.ul
-          className="grid w-full gap-4 text-left sm:grid-cols-3"
+          <motion.div
+            className="flex flex-col gap-5 rounded-4xl border border-border bg-surface p-8 text-left shadow-card"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-muted">Current balance</p>
+                <p className="mt-2 text-3xl font-semibold text-neutral">$8,245.67</p>
+              </div>
+              <span className="rounded-full bg-income/15 px-4 py-1 text-xs font-semibold text-income">+12% this month</span>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="rounded-3xl border border-income/30 bg-income/10 px-5 py-4">
+                <p className="text-xs uppercase tracking-wide text-income/80">Income</p>
+                <p className="mt-2 text-xl font-semibold text-income">$4,820.00</p>
+              </div>
+              <div className="rounded-3xl border border-expense/30 bg-expense/10 px-5 py-4">
+                <p className="text-xs uppercase tracking-wide text-expense/80">Expenses</p>
+                <p className="mt-2 text-xl font-semibold text-expense">$1,960.40</p>
+              </div>
+            </div>
+            <div className="rounded-3xl border border-border bg-surfaceMuted px-5 py-4">
+              <p className="text-xs uppercase tracking-wide text-muted">Upcoming items</p>
+              <ul className="mt-3 space-y-2 text-sm text-muted">
+                <li className="flex items-center justify-between">
+                  <span>Team lunch</span>
+                  <span className="rounded-full bg-expense/10 px-3 py-1 text-xs font-semibold text-expense">$120</span>
+                </li>
+                <li className="flex items-center justify-between">
+                  <span>Freelance payout</span>
+                  <span className="rounded-full bg-income/10 px-3 py-1 text-xs font-semibold text-income">$640</span>
+                </li>
+              </ul>
+            </div>
+          </motion.div>
+        </div>
+
+        <motion.div
+          className="grid gap-4 text-left sm:grid-cols-3"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          {featureHighlights.map((feature, index) => (
-            <motion.li
+          {featureHighlights.map(feature => (
+            <motion.article
               key={feature.title}
-              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6"
-              whileHover={{ y: -6 }}
-              transition={{ type: 'spring', stiffness: 220, damping: 25 }}
+              className="group relative flex h-full flex-col justify-between gap-6 rounded-3xl border border-border bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-accent/40 hover:shadow-soft"
+              whileHover={{ y: -8 }}
+              transition={{ type: 'spring', stiffness: 240, damping: 24 }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-sky-400/10 opacity-0 transition group-hover:opacity-100" />
-              <div className="relative flex flex-col gap-3">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-sky-500/15 text-sm font-semibold text-sky-200">
-                  {(index + 1).toString().padStart(2, '0')}
+              <div className="flex flex-col gap-4">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10 text-sm font-semibold text-accent">
+                  {feature.title.split(' ')[0]}
                 </span>
-                <h3 className="text-lg font-semibold text-white">{feature.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-300">{feature.description}</p>
+                <h3 className="text-lg font-semibold text-neutral">{feature.title}</h3>
+                <p className="text-sm leading-relaxed text-muted">{feature.description}</p>
               </div>
-            </motion.li>
+              <span className="text-xs font-semibold uppercase tracking-[0.3em] text-accent/70">Learn more</span>
+            </motion.article>
           ))}
-        </motion.ul>
+        </motion.div>
+
+        <motion.div
+          className="flex flex-wrap items-center justify-center gap-6 rounded-3xl border border-border bg-white/80 px-6 py-8 shadow-sm sm:justify-between"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+        >
+          <p className="text-sm text-muted">Designed for founders, families, and finance teams that value clarity.</p>
+          <div className="flex flex-wrap items-center gap-5">
+            {statHighlights.map(stat => (
+              <div key={stat.label} className="text-left">
+                <p className="text-xs uppercase tracking-wide text-muted/70">{stat.label}</p>
+                <p className="text-lg font-semibold text-neutral">{stat.value}</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </motion.div>
 
       <Modal open={isModalOpen} onClose={closeModal} title={modalCopy.title} subtitle={modalCopy.subtitle}>
         {mode ? (
-          <div className="mb-5 flex flex-col gap-4">
+          <div className="mb-6 flex flex-col gap-4">
             <div className="flex justify-center">
-              <div className="flex rounded-full border border-white/10 bg-white/5 p-1 text-xs font-semibold text-slate-300">
+              <div className="flex rounded-full border border-border bg-surfaceMuted p-1 text-xs font-semibold text-muted">
                 {(['login', 'register'] as const).map(tab => (
                   <button
                     key={tab}
                     type="button"
                     onClick={() => setMode(tab)}
                     className={`rounded-full px-4 py-1.5 transition ${
-                      mode === tab ? 'bg-sky-500 text-white shadow-md shadow-sky-500/40' : 'text-slate-300 hover:text-white'
+                      mode === tab ? 'bg-accent text-white shadow-soft' : 'hover:text-neutral'
                     }`}
                   >
-                    {tab === 'login' ? 'Login' : 'Register'}
+                    {tab === 'login' ? 'Log in' : 'Register'}
                   </button>
                 ))}
               </div>
             </div>
-            <p className="text-center text-xs text-slate-400">
+            <p className="text-center text-xs text-muted">
               {mode === 'login'
                 ? 'Enter your credentials to jump back into your dashboard.'
                 : 'Set a secure password and we will initialize your workspace.'}
@@ -215,68 +290,102 @@ export const LandingPage = () => {
           </div>
         ) : null}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {mode === 'register' ? (
-            <label className="flex flex-col gap-2 text-sm text-white">
-              Full name
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5 text-left">
+          <div className="flex flex-col gap-4 rounded-3xl border border-border/80 bg-white/95 p-5 shadow-soft">
+            {mode === 'register' ? (
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label className="flex flex-col gap-2 text-sm font-medium text-neutral">
+                  First name
+                  <input
+                    type="text"
+                    autoComplete="given-name"
+                    value={formState.firstName}
+                    onChange={event => setFormState(prev => ({ ...prev, firstName: event.target.value }))}
+                    placeholder="Alex"
+                    className="rounded-2xl border border-border bg-white px-4 py-2 text-sm text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+                  />
+                </label>
+                <label className="flex flex-col gap-2 text-sm font-medium text-neutral">
+                  Last name
+                  <input
+                    type="text"
+                    autoComplete="family-name"
+                    value={formState.lastName}
+                    onChange={event => setFormState(prev => ({ ...prev, lastName: event.target.value }))}
+                    placeholder="Morgan"
+                    className="rounded-2xl border border-border bg-white px-4 py-2 text-sm text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+                  />
+                </label>
+              </div>
+            ) : null}
+            <label className="flex flex-col gap-2 text-sm font-medium text-neutral">
+              Email
               <input
-                type="text"
-                autoComplete="name"
-                value={formState.name}
-                onChange={event => setFormState(prev => ({ ...prev, name: event.target.value }))}
-                placeholder="Chelsea Carter"
-                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none"
+                type="email"
+                autoComplete="email"
+                value={formState.email}
+                onChange={event => setFormState(prev => ({ ...prev, email: event.target.value }))}
+                placeholder="you@example.com"
+                className="rounded-2xl border border-border bg-white px-4 py-2 text-sm text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
               />
             </label>
-          ) : null}
-          <label className="flex flex-col gap-2 text-sm text-white">
-            Email
-            <input
-              type="email"
-              autoComplete="email"
-              value={formState.email}
-              onChange={event => setFormState(prev => ({ ...prev, email: event.target.value }))}
-              placeholder="you@example.com"
-              className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none"
-            />
-          </label>
-          <label className="flex flex-col gap-2 text-sm text-white">
-            Password
-            <input
-              type="password"
-              autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-              value={formState.password}
-              onChange={event => setFormState(prev => ({ ...prev, password: event.target.value }))}
-              placeholder="********"
-              className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none"
-            />
-          </label>
+            <label className="flex flex-col gap-2 text-sm font-medium text-neutral">
+              Password
+              <input
+                type="password"
+                autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+                value={formState.password}
+                onChange={event => setFormState(prev => ({ ...prev, password: event.target.value }))}
+                placeholder="********"
+                className="rounded-2xl border border-border bg-white px-4 py-2 text-sm text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+              />
+            </label>
 
-          {activeMutation.isError ? (
-            <p className="rounded-2xl border border-rose-500/30 bg-rose-500/10 px-4 py-2 text-sm text-rose-100">
-              Something went wrong. Please try again.
+            {activeMutation.isError ? (
+              <p className="rounded-2xl border border-expense/30 bg-expense/10 px-4 py-2 text-sm text-expense">
+                Something went wrong. Please try again.
+              </p>
+            ) : null}
+
+            <button
+              type="submit"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#2F89C9] disabled:cursor-not-allowed disabled:opacity-70"
+              disabled={isLoading}
+            >
+              {isLoading ? <Spinner size="sm" /> : null}
+              <span>{isLoading ? 'Working on it...' : mode === 'login' ? 'Sign in to MyEx' : 'Create account'}</span>
+            </button>
+          </div>
+            <p className="text-center text-[11px] text-muted">
+              By continuing you agree to our{' '}
+              <span className="text-neutral underline decoration-border underline-offset-4">Terms</span> and{' '}
+              <span className="text-neutral underline decoration-border underline-offset-4">Privacy Policy</span>.
             </p>
-          ) : null}
-
-          <button
-            type="submit"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-sky-400 via-sky-500 to-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
-            disabled={isLoading}
-          >
-            {isLoading ? <Spinner size="sm" /> : null}
-            <span>{isLoading ? 'Working on it...' : mode === 'login' ? 'Sign in to MyEx' : 'Create account'}</span>
-          </button>
-          <p className="text-center text-[11px] text-slate-500">
-            By continuing you agree to our{' '}
-            <span className="text-slate-200 underline decoration-slate-500 decoration-dotted underline-offset-4">
-              Terms
-            </span>{' '}
-            and{' '}
-            <span className="text-slate-200 underline decoration-slate-500 decoration-dotted underline-offset-4">
-              Privacy Policy
-            </span>
-            .
-          </p>
+            <p className="text-center text-xs text-muted">
+              {mode === 'login' ? (
+                <>
+                  New to MyEx?{' '}
+                  <button
+                    type="button"
+                    onClick={() => setMode('register')}
+                    className="font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition hover:text-[#2F89C9]"
+                  >
+                    Create an account
+                  </button>
+                </>
+              ) : (
+                <>
+                  Already onboard?{' '}
+                  <button
+                    type="button"
+                    onClick={() => setMode('login')}
+                    className="font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition hover:text-[#2F89C9]"
+                  >
+                    Log in here
+                  </button>
+                </>
+              )}
+            </p>
         </form>
       </Modal>
     </main>

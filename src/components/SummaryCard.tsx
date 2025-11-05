@@ -10,37 +10,36 @@ interface SummaryCardProps {
 }
 
 const accentContainer: Record<NonNullable<SummaryCardProps['accent']>, string> = {
-  income: 'from-emerald-400/15 via-emerald-500/10 to-emerald-500/5 border-emerald-400/30',
-  expense: 'from-rose-400/15 via-rose-500/10 to-rose-500/5 border-rose-400/30',
-  balance: 'from-sky-400/15 via-sky-500/10 to-indigo-500/5 border-sky-400/30',
+  income: 'border-income/25 bg-white shadow-soft',
+  expense: 'border-expense/25 bg-white shadow-soft',
+  balance: 'border-accent/25 bg-white shadow-soft',
 }
 
 const iconAccent: Record<NonNullable<SummaryCardProps['accent']>, string> = {
-  income: 'bg-emerald-500/15 text-emerald-200',
-  expense: 'bg-rose-500/15 text-rose-200',
-  balance: 'bg-sky-500/15 text-sky-200',
+  income: 'border-income/40 bg-income/15 text-income',
+  expense: 'border-expense/40 bg-expense/15 text-expense',
+  balance: 'border-accent/40 bg-accent/15 text-accent',
 }
 
 const highlightAccent: Record<NonNullable<SummaryCardProps['accent']>, string> = {
-  income: 'text-emerald-200/80',
-  expense: 'text-rose-200/80',
-  balance: 'text-sky-200/80',
+  income: 'text-income',
+  expense: 'text-expense',
+  balance: 'text-accent',
 }
 
 export const SummaryCard = ({ title, amount, icon, accent = 'balance', highlight }: SummaryCardProps) => (
   <article
-    className={`group relative overflow-hidden rounded-[26px] border bg-gradient-to-br p-6 transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_24px_64px_-32px_rgba(56,189,248,0.65)] ${accentContainer[accent]}`}
+    className={`group relative overflow-hidden rounded-3xl border p-6 transition-transform duration-200 hover:-translate-y-1 hover:shadow-card ${accentContainer[accent]}`}
   >
-    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 opacity-0 transition group-hover:opacity-100" />
-    <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-50" />
-    <div className="relative flex items-start justify-between">
+    <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent opacity-70" />
+    <div className="relative flex items-start justify-between gap-4">
       <div className="flex flex-col gap-2">
-        <span className="text-xs uppercase tracking-[0.35em] text-white/60">{title}</span>
-        <span className="text-3xl font-semibold text-white">{formatCurrency(amount)}</span>
-        {highlight ? <span className={`text-xs uppercase tracking-[0.3em] ${highlightAccent[accent]}`}>{highlight}</span> : null}
+        <span className="text-xs uppercase tracking-[0.3em] text-muted">{title}</span>
+        <span className="text-3xl font-semibold text-neutral">{formatCurrency(amount)}</span>
+        {highlight ? <span className={`text-xs font-semibold uppercase tracking-[0.3em] ${highlightAccent[accent]}`}>{highlight}</span> : null}
       </div>
       <span
-        className={`flex h-12 w-12 items-center justify-center rounded-full border border-white/10 shadow-inner shadow-black/30 ${iconAccent[accent]}`}
+        className={`flex h-12 w-12 items-center justify-center rounded-full border text-base font-semibold ${iconAccent[accent]}`}
       >
         {icon}
       </span>

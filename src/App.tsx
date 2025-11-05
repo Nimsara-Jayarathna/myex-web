@@ -5,7 +5,7 @@ import { ProtectedRoute } from './components/ProtectedRoute'
 
 export default function App() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-neutral-950 text-slate-100 antialiased">
+    <div className="relative min-h-screen overflow-hidden bg-background font-sans text-neutral antialiased">
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route

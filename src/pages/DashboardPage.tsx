@@ -88,16 +88,16 @@ export const DashboardPage = () => {
   }, [isSummaryError, isTransactionsError])
 
   return (
-    <div className="relative min-h-screen bg-neutral-950 pb-24">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_0%,rgba(148,163,184,0.14),transparent)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(40%_35%_at_12%_18%,rgba(71,85,105,0.18),transparent)]" />
+    <div className="relative min-h-screen bg-background pb-24 text-neutral">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(52,152,219,0.12),_transparent_60%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_rgba(46,204,113,0.1),_transparent_55%)]" />
       <Navbar
         onOpenSettings={() => setSettingsOpen(true)}
         onOpenReports={() => setReportsOpen(true)}
         onLogout={handleLogout}
         userName={displayName}
       />
-      <main className="relative z-10 mx-auto flex max-w-6xl flex-col gap-8 px-6 pb-16 pt-8">
+      <main className="relative z-10 mx-auto flex max-w-6xl flex-col gap-10 px-6 pb-16 pt-8">
         <section className="grid gap-6 md:grid-cols-3">
           {isSummaryLoading ? (
             <div className="md:col-span-3">
@@ -117,16 +117,16 @@ export const DashboardPage = () => {
           )}
         </section>
 
-        <section className="rounded-[32px] border border-white/10 bg-slate-900/70 p-6 shadow-[0_32px_72px_-48px_rgba(56,189,248,0.65)]">
+        <section className="rounded-4xl border border-border bg-white/90 p-6 shadow-card">
           <header className="mb-6 flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h2 className="text-lg font-semibold text-white">Transactions</h2>
-              <p className="text-sm text-slate-400">Track and review every inflow and outflow.</p>
+              <h2 className="text-lg font-semibold text-neutral">Transactions</h2>
+              <p className="text-sm text-muted">Track and review every inflow and outflow.</p>
             </div>
             <button
               type="button"
               onClick={() => setAddTransactionOpen(true)}
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-400 via-sky-500 to-indigo-500 px-5 py-2 text-sm font-semibold text-white transition hover:brightness-110"
+              className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2 text-sm font-semibold text-white shadow-soft transition hover:bg-[#2F89C9]"
             >
               Add transaction
             </button>
@@ -143,7 +143,7 @@ export const DashboardPage = () => {
                 <button
                   type="button"
                   onClick={() => setAddTransactionOpen(true)}
-                  className="rounded-full bg-gradient-to-r from-sky-400 via-sky-500 to-indigo-500 px-4 py-2 text-xs font-semibold text-white transition hover:brightness-110"
+                  className="rounded-full bg-accent px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#2F89C9]"
                 >
                   Add transaction
                 </button>
