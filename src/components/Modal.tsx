@@ -35,7 +35,7 @@ export const Modal = ({ open, onClose, title, subtitle, children, footer, widthC
           transition={{ duration: 0.25, ease: 'easeOut' }}
         >
           <motion.div
-            className="absolute inset-0 bg-neutral/60 backdrop-blur-md"
+            className="absolute inset-0 bg-neutral/70 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -43,7 +43,7 @@ export const Modal = ({ open, onClose, title, subtitle, children, footer, widthC
           <motion.div
             role="dialog"
             aria-modal="true"
-            className={`relative w-full overflow-hidden rounded-4xl border border-border bg-surface px-6 pb-6 pt-8 text-neutral shadow-card backdrop-blur-xl sm:px-8 ${widthClassName}`}
+            className={`relative w-full overflow-hidden rounded-[34px] border border-white/40 bg-white/55 px-8 pb-8 pt-10 text-neutral shadow-[0_45px_120px_-50px_rgba(15,35,55,0.6)] backdrop-blur-2xl sm:px-10 ${widthClassName}`}
             initial={{ y: 36, opacity: 0, scale: 0.98 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 24, opacity: 0, scale: 0.97 }}
@@ -54,7 +54,7 @@ export const Modal = ({ open, onClose, title, subtitle, children, footer, widthC
             <button
               type="button"
               onClick={onClose}
-              className="absolute right-6 top-6 inline-flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-muted transition hover:border-accent/40 hover:text-neutral"
+              className="absolute right-6 top-6 inline-flex items-center gap-2 rounded-full border border-white/50 bg-white/80 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-neutral/70 transition hover:border-accent/40 hover:text-neutral"
             >
               Close
             </button>

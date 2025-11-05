@@ -130,6 +130,19 @@ export const LandingPage = () => {
     registerMutation.reset()
   }
 
+  const transitionToMode = (nextMode: AuthMode) => {
+    if (mode === nextMode) {
+      return
+    }
+    setMode(nextMode)
+    setFormState(prev => ({
+      ...prev,
+      ...(nextMode === 'login' ? { firstName: '', lastName: '' } : {}),
+    }))
+    loginMutation.reset()
+    registerMutation.reset()
+  }
+
   return (
     <main className="relative flex min-h-screen flex-col items-center overflow-hidden bg-background px-6 py-16 text-neutral">
       <div className="pointer-events-none absolute inset-0 bg-hero-grid" />
@@ -162,7 +175,7 @@ export const LandingPage = () => {
             <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
               <motion.button
                 type="button"
-                onClick={() => setMode('login')}
+                onClick={() => transitionToMode('login')}
                 whileHover={{ y: -4, boxShadow: '0 18px 35px -18px rgba(52,152,219,0.45)' }}
                 whileTap={{ scale: 0.98 }}
                 className="inline-flex items-center gap-2 rounded-full bg-accent px-8 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-[#2F89C9] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
@@ -171,7 +184,7 @@ export const LandingPage = () => {
               </motion.button>
               <motion.button
                 type="button"
-                onClick={() => setMode('register')}
+                onClick={() => transitionToMode('register')}
                 whileHover={{ y: -4 }}
                 whileTap={{ scale: 0.98 }}
                 className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-white px-8 py-3 text-sm font-semibold text-accent transition hover:border-accent/40 hover:bg-accent/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
@@ -263,38 +276,49 @@ export const LandingPage = () => {
         </motion.div>
       </motion.div>
 
-      <Modal open={isModalOpen} onClose={closeModal} title={modalCopy.title} subtitle={modalCopy.subtitle}>
-        {mode ? (
-          <div className="mb-6 flex flex-col gap-4">
-            <div className="flex justify-center">
-              <div className="flex rounded-full border border-border bg-surfaceMuted p-1 text-xs font-semibold text-muted">
-                {(['login', 'register'] as const).map(tab => (
-                  <button
-                    key={tab}
-                    type="button"
-                    onClick={() => setMode(tab)}
-                    className={`rounded-full px-4 py-1.5 transition ${
-                      mode === tab ? 'bg-accent text-white shadow-soft' : 'hover:text-neutral'
-                    }`}
-                  >
-                    {tab === 'login' ? 'Log in' : 'Register'}
-                  </button>
-                ))}
-              </div>
+      <Modal
+        open={isModalOpen}
+        onClose={closeModal}
+        title={modalCopy.title}
+        subtitle={modalCopy.subtitle}
+        widthClassName="max-w-xl"
+      >
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6 text-left">
+          <div className="flex justify-center">
+            <div className="flex w-full max-w-xs items-center gap-1 rounded-full border border-white/60 bg-white/35 p-1 shadow-soft backdrop-blur-lg">
+              <button
+                type="button"
+                onClick={() => transitionToMode('login')}
+                className={`flex-1 rounded-full px-4 py-2 text-sm font-semibold transition ${
+                  mode === 'login'
+                    ? 'bg-gradient-to-r from-accent via-[#3fa9f5] to-[#277bb9] text-white shadow-[0_18px_40px_-24px_rgba(52,152,219,0.6)]'
+                    : 'text-neutral/70 hover:text-neutral'
+                }`}
+              >
+                Log in
+              </button>
+              <button
+                type="button"
+                onClick={() => transitionToMode('register')}
+                className={`flex-1 rounded-full px-4 py-2 text-sm font-semibold transition ${
+                  mode === 'register'
+                    ? 'bg-gradient-to-r from-accent via-[#3fa9f5] to-[#277bb9] text-white shadow-[0_18px_40px_-24px_rgba(52,152,219,0.6)]'
+                    : 'text-neutral/70 hover:text-neutral'
+                }`}
+              >
+                Sign up
+              </button>
             </div>
-            <p className="text-center text-xs text-muted">
-              {mode === 'login'
-                ? 'Enter your credentials to jump back into your dashboard.'
-                : 'Set a secure password and we will initialize your workspace.'}
-            </p>
           </div>
-        ) : null}
-
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5 text-left">
-          <div className="flex flex-col gap-4 rounded-3xl border border-border/80 bg-white/95 p-5 shadow-soft">
+          <p className="text-center text-xs text-neutral/70">
+            {mode === 'login'
+              ? 'Enter your credentials to jump back into your dashboard.'
+              : 'Add your details and we will spin up a fresh workspace.'}
+          </p>
+          <div className="flex flex-col gap-4 rounded-[28px] border border-white/60 bg-white/75 p-6 shadow-[0_35px_100px_-60px_rgba(15,35,55,0.7)] backdrop-blur-2xl">
             {mode === 'register' ? (
               <div className="grid gap-3 sm:grid-cols-2">
-                <label className="flex flex-col gap-2 text-sm font-medium text-neutral">
+                <label className="flex flex-col gap-2 text-sm font-medium text-neutral/80">
                   First name
                   <input
                     type="text"
@@ -302,10 +326,10 @@ export const LandingPage = () => {
                     value={formState.firstName}
                     onChange={event => setFormState(prev => ({ ...prev, firstName: event.target.value }))}
                     placeholder="Alex"
-                    className="rounded-2xl border border-border bg-white px-4 py-2 text-sm text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+                    className="rounded-2xl border border-white/60 bg-white/90 px-4 py-2.5 text-sm text-neutral placeholder:text-muted/70 shadow-[inset_0_1px_4px_rgba(15,23,42,0.08)] focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
                   />
                 </label>
-                <label className="flex flex-col gap-2 text-sm font-medium text-neutral">
+                <label className="flex flex-col gap-2 text-sm font-medium text-neutral/80">
                   Last name
                   <input
                     type="text"
@@ -313,12 +337,12 @@ export const LandingPage = () => {
                     value={formState.lastName}
                     onChange={event => setFormState(prev => ({ ...prev, lastName: event.target.value }))}
                     placeholder="Morgan"
-                    className="rounded-2xl border border-border bg-white px-4 py-2 text-sm text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+                    className="rounded-2xl border border-white/60 bg-white/90 px-4 py-2.5 text-sm text-neutral placeholder:text-muted/70 shadow-[inset_0_1px_4px_rgba(15,23,42,0.08)] focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
                   />
                 </label>
               </div>
             ) : null}
-            <label className="flex flex-col gap-2 text-sm font-medium text-neutral">
+            <label className="flex flex-col gap-2 text-sm font-medium text-neutral/80">
               Email
               <input
                 type="email"
@@ -326,10 +350,10 @@ export const LandingPage = () => {
                 value={formState.email}
                 onChange={event => setFormState(prev => ({ ...prev, email: event.target.value }))}
                 placeholder="you@example.com"
-                className="rounded-2xl border border-border bg-white px-4 py-2 text-sm text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+                className="rounded-2xl border border-white/60 bg-white/90 px-4 py-2.5 text-sm text-neutral placeholder:text-muted/70 shadow-[inset_0_1px_4px_rgba(15,23,42,0.08)] focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
               />
             </label>
-            <label className="flex flex-col gap-2 text-sm font-medium text-neutral">
+            <label className="flex flex-col gap-2 text-sm font-medium text-neutral/80">
               Password
               <input
                 type="password"
@@ -337,55 +361,55 @@ export const LandingPage = () => {
                 value={formState.password}
                 onChange={event => setFormState(prev => ({ ...prev, password: event.target.value }))}
                 placeholder="********"
-                className="rounded-2xl border border-border bg-white px-4 py-2 text-sm text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+                className="rounded-2xl border border-white/60 bg-white/90 px-4 py-2.5 text-sm text-neutral placeholder:text-muted/70 shadow-[inset_0_1px_4px_rgba(15,23,42,0.08)] focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
               />
             </label>
 
             {activeMutation.isError ? (
-              <p className="rounded-2xl border border-expense/30 bg-expense/10 px-4 py-2 text-sm text-expense">
+              <p className="rounded-2xl border border-expense/30 bg-expense/15 px-4 py-2 text-sm text-expense">
                 Something went wrong. Please try again.
               </p>
             ) : null}
 
             <button
               type="submit"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#2F89C9] disabled:cursor-not-allowed disabled:opacity-70"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-accent via-[#3fa9f5] to-[#277bb9] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_24px_60px_-28px_rgba(52,152,219,0.7)] transition hover:from-[#2f8fd0] hover:via-[#3b9be0] hover:to-[#226aa7] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-80"
               disabled={isLoading}
             >
               {isLoading ? <Spinner size="sm" /> : null}
               <span>{isLoading ? 'Working on it...' : mode === 'login' ? 'Sign in to MyEx' : 'Create account'}</span>
             </button>
           </div>
-            <p className="text-center text-[11px] text-muted">
-              By continuing you agree to our{' '}
-              <span className="text-neutral underline decoration-border underline-offset-4">Terms</span> and{' '}
-              <span className="text-neutral underline decoration-border underline-offset-4">Privacy Policy</span>.
-            </p>
-            <p className="text-center text-xs text-muted">
-              {mode === 'login' ? (
-                <>
-                  New to MyEx?{' '}
-                  <button
-                    type="button"
-                    onClick={() => setMode('register')}
-                    className="font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition hover:text-[#2F89C9]"
-                  >
-                    Create an account
-                  </button>
-                </>
-              ) : (
-                <>
-                  Already onboard?{' '}
-                  <button
-                    type="button"
-                    onClick={() => setMode('login')}
-                    className="font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition hover:text-[#2F89C9]"
-                  >
-                    Log in here
-                  </button>
-                </>
-              )}
-            </p>
+          <p className="text-center text-[11px] text-neutral/70">
+            By continuing you agree to our{' '}
+            <span className="text-neutral underline decoration-border/80 underline-offset-4">Terms</span> and{' '}
+            <span className="text-neutral underline decoration-border/80 underline-offset-4">Privacy Policy</span>.
+          </p>
+          <p className="text-center text-xs text-neutral/70">
+            {mode === 'login' ? (
+              <>
+                New to MyEx?{' '}
+                <button
+                  type="button"
+                  onClick={() => transitionToMode('register')}
+                  className="font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition hover:text-[#2F89C9]"
+                >
+                  Create an account
+                </button>
+              </>
+            ) : (
+              <>
+                Already onboard?{' '}
+                <button
+                  type="button"
+                  onClick={() => transitionToMode('login')}
+                  className="font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition hover:text-[#2F89C9]"
+                >
+                  Log in here
+                </button>
+              </>
+            )}
+          </p>
         </form>
       </Modal>
     </main>
