@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  BUILD_DIR: build
+  BUILD_DIR: dist
   TARGET_DIR: /var/www/myex-fe
   SITE_NAME: myex-fe
 
@@ -91,4 +91,3 @@ jobs:
           sudo nginx -t
           sudo systemctl reload nginx
           EOF
-
