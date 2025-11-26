@@ -169,7 +169,6 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
               const badgeClasses = isIncome
                 ? 'border-income/40 bg-income/15 text-income'
                 : 'border-expense/40 bg-expense/15 text-expense'
-              const removeButtonClasses = 'border-expense/30 text-expense hover:border-expense/50 hover:bg-expense/10'
               const emptyState = isIncome
                 ? 'No income categories yet. Add one above.'
                 : 'No expense categories yet. Add one above.'
