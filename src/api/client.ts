@@ -1,16 +1,14 @@
 import axios from 'axios'
 import { useAuthStore } from '../context/auth-store'
 
-const FALLBACK_BASE_URL = 'https://api.myex.com'
-
 const normalizeBaseUrl = (value: string) => value.replace(/\/+$/, '')
 
 const resolveBaseUrl = () => {
   const fromEnv = import.meta.env.VITE_API_BASE_URL?.trim()
-  if (fromEnv && fromEnv.length > 0) {
-    return normalizeBaseUrl(fromEnv)
+  if (!fromEnv || fromEnv.length === 0) {
+    throw new Error('Missing VITE_API_BASE_URL; set your backend URL in the environment.')
   }
-  return FALLBACK_BASE_URL
+  return normalizeBaseUrl(fromEnv)
 }
 
 export const API_BASE_URL = resolveBaseUrl()
