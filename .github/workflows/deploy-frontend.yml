@@ -75,6 +75,11 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" <<EOF
           set -e
+          if ! command -v nginx >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y nginx
+          fi
+          sudo mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled
           sudo tee /etc/nginx/sites-available/${SITE_NAME} >/dev/null <<NGINXCONF
           server {
               listen 80;
