@@ -74,28 +74,7 @@ jobs:
         run: |
           rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa -p ${SSH_PORT}" "${BUILD_DIR}/" "${SSH_USER}@${SSH_HOST}:${TARGET_DIR}/"
 
-      - name: Configure and reload Nginx
+      - name: Reload Nginx
         run: |
-          ssh -i ~/.ssh/id_rsa -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" <<EOF
-          set -e
-          if ! command -v nginx >/dev/null 2>&1; then
-            sudo apt-get update
-            sudo apt-get install -y nginx
-          fi
-          sudo mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled
-          sudo tee /etc/nginx/sites-available/${SITE_NAME} >/dev/null <<NGINXCONF
-          server {
-              listen 80;
-              server_name _;
-              root ${TARGET_DIR};
-              index index.html;
-
-              location / {
-                  try_files \$uri \$uri/ /index.html;
-              }
-          }
-          NGINXCONF
-          sudo ln -sf /etc/nginx/sites-available/${SITE_NAME} /etc/nginx/sites-enabled/${SITE_NAME}
-          sudo nginx -t
-          sudo systemctl reload nginx
-          EOF
+          ssh -i ~/.ssh/id_rsa -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" \
+            "sudo systemctl reload nginx"
