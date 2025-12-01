@@ -92,11 +92,13 @@ jobs:
 
       - name: Create target directory on server
         run: |
-          ssh -i ~/.ssh/id_rsa -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "sudo mkdir -p '$TARGET_DIR' && sudo chown -R '$SSH_USER':'$SSH_USER' '$TARGET_DIR'"
+          ssh -i ~/.ssh/id_rsa -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" \
+            "sudo mkdir -p '$TARGET_DIR' && sudo chown -R '$SSH_USER':'$SSH_USER' '$TARGET_DIR'"
 
       - name: Sync build to server
         run: |
-          rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa -p ${SSH_PORT}" "${BUILD_DIR}/" "${SSH_USER}@${SSH_HOST}:${TARGET_DIR}/"
+          rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa -p ${SSH_PORT}" \
+            "${BUILD_DIR}/" "${SSH_USER}@${SSH_HOST}:${TARGET_DIR}/"
 
       - name: Configure and reload Nginx (main)
         if: needs.build.outputs.branch_name == 'main'
