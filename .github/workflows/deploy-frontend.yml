@@ -22,6 +22,8 @@ jobs:
       branch_name: ${{ steps.deploy_vars.outputs.branch_name }}
       container_name: ${{ steps.deploy_vars.outputs.container_name }}
       port: ${{ steps.deploy_vars.outputs.port }}
+      commit_sha: ${{ steps.deploy_vars.outputs.commit_sha }}
+      network_name: ${{ steps.deploy_vars.outputs.network_name }}
     env:
       VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
     steps:
@@ -40,6 +42,7 @@ jobs:
             echo "container_name=myex-frontend" >> "$GITHUB_OUTPUT"
             echo "port=8080" >> "$GITHUB_OUTPUT"
             echo "commit_sha=$COMMIT_SHA" >> "$GITHUB_OUTPUT"
+            echo "network_name=npm_default" >> "$GITHUB_OUTPUT"
           else
             echo "deploy_env=staging" >> "$GITHUB_OUTPUT"
             echo "target_dir=/var/www/myex-fe-staging" >> "$GITHUB_OUTPUT"
@@ -48,6 +51,7 @@ jobs:
             echo "container_name=myex-frontend-staging" >> "$GITHUB_OUTPUT"
             echo "port=8080" >> "$GITHUB_OUTPUT"
             echo "commit_sha=$COMMIT_SHA" >> "$GITHUB_OUTPUT"
+            echo "network_name=npm_default" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Use Node.js 20
@@ -80,6 +84,7 @@ jobs:
       CONTAINER_NAME: ${{ needs.build.outputs.container_name }}
       PORT: ${{ needs.build.outputs.port }}
       COMMIT_SHA: ${{ needs.build.outputs.commit_sha }}
+      DOCKER_NETWORK: ${{ needs.build.outputs.network_name }}
       SSH_HOST: ${{ secrets.DO_SSH_HOST }}
       SSH_USER: ${{ secrets.DO_SSH_USER }}
       SSH_PORT: ${{ secrets.DO_SSH_PORT }}
@@ -112,6 +117,11 @@ jobs:
           ssh -i ~/.ssh/id_rsa -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" \
             "docker pull nginx:latest"
 
+      - name: Ensure Docker network exists
+        run: |
+          ssh -i ~/.ssh/id_rsa -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" \
+            "docker network inspect $DOCKER_NETWORK >/dev/null 2>&1 || docker network create $DOCKER_NETWORK"
+
       - name: Create target directory on server
         run: |
           ssh -i ~/.ssh/id_rsa -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" \
@@ -126,6 +136,8 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" <<EOF
           docker run -d --name $CONTAINER_NAME \
+            --network $DOCKER_NETWORK \
+            --network-alias $CONTAINER_NAME \
             -p $PORT:80 \
             -v $TARGET_DIR:/usr/share/nginx/html:ro \
             --restart unless-stopped \
