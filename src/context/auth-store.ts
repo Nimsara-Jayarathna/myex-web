@@ -2,27 +2,33 @@ import { create } from 'zustand'
 import type { AuthResponse, UserProfile } from '../types'
 
 interface AuthState {
-  token: string | null
   user: UserProfile | null
   isAuthenticated: boolean
+  isSessionChecked: boolean
   setAuth: (payload: AuthResponse) => void
+  markSessionChecked: () => void
   logout: () => void
 }
 
 export const useAuthStore = create<AuthState>(set => ({
-  token: null,
   user: null,
   isAuthenticated: false,
-  setAuth: ({ token, user }: AuthResponse) =>
+  isSessionChecked: false,
+  setAuth: ({ user }: AuthResponse) =>
     set({
-      token,
       user,
       isAuthenticated: true,
+      isSessionChecked: true,
     }),
+  markSessionChecked: () =>
+    set(state => ({
+      ...state,
+      isSessionChecked: true,
+    })),
   logout: () =>
     set({
-      token: null,
       user: null,
       isAuthenticated: false,
+      isSessionChecked: true,
     }),
 }))

@@ -1,9 +1,37 @@
+import { useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Route, Routes } from 'react-router-dom'
 import { LandingPage } from './pages/LandingPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { ProtectedRoute } from './components/ProtectedRoute'
+import { getSession } from './api/auth'
+import { useAuth } from './hooks/useAuth'
 
 export default function App() {
+  const { setAuth, logout, isSessionChecked } = useAuth()
+
+  const sessionQuery = useQuery({
+    queryKey: ['auth', 'session'],
+    queryFn: getSession,
+    enabled: !isSessionChecked,
+    retry: false,
+    refetchOnWindowFocus: false,
+  })
+
+  useEffect(() => {
+    if (sessionQuery.data?.user) {
+      setAuth(sessionQuery.data)
+    } else if (sessionQuery.isSuccess) {
+      logout()
+    }
+  }, [logout, sessionQuery.data, sessionQuery.isSuccess, setAuth])
+
+  useEffect(() => {
+    if (sessionQuery.isError) {
+      logout()
+    }
+  }, [logout, sessionQuery.isError])
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-background font-sans text-neutral antialiased">
       <Routes>
