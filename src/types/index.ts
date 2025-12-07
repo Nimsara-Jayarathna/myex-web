@@ -8,7 +8,11 @@ export interface AuthCredentials {
 }
 
 export interface AuthResponse {
-  token: string
+  user: UserProfile
+  token?: string
+}
+
+export interface SessionResponse {
   user: UserProfile
 }
 

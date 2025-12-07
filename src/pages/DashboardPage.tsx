@@ -14,6 +14,7 @@ import { FloatingActionButton } from '../components/FloatingActionButton'
 import { AddTransactionModal } from '../modals/AddTransactionModal'
 import { SettingsModal } from '../modals/SettingsModal'
 import { ReportsModal } from '../modals/ReportsModal'
+import { logoutSession } from '../api/auth'
 import { useAuth } from '../hooks/useAuth'
 
 const transactionKey = ['transactions']
@@ -74,6 +75,7 @@ export const DashboardPage = () => {
   }, [summary])
 
   const handleLogout = () => {
+    void logoutSession().catch(() => {})
     logout()
     toast.success('Logged out')
     navigate('/', { replace: true })
