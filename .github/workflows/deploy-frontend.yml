@@ -89,6 +89,9 @@ jobs:
       SSH_USER: ${{ secrets.DO_SSH_USER }}
       SSH_PORT: ${{ secrets.DO_SSH_PORT }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
