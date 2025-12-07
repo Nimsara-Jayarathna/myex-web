@@ -1,24 +1,25 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowTrendDown, faArrowTrendUp, faWallet } from '@fortawesome/free-solid-svg-icons'
+import dayjs from 'dayjs'
 import { Navbar } from '../components/Navbar'
-import { SummaryCard } from '../components/SummaryCard'
-import { getTransactionSummary, getTransactions } from '../api/transactions'
-import { TransactionList } from '../components/TransactionList'
-import { LoadingSpinner } from '../components/LoadingSpinner'
-import { EmptyState } from '../components/EmptyState'
+import { getTransactionsFiltered } from '../api/transactions'
+import { TransactionsSection } from '../components/TransactionsSection'
+import { TabNavigation } from '../components/TabNavigation'
+import { TodaySummaryCards } from '../components/TodaySummaryCards'
+import { AllTransactionsPage } from '../components/AllTransactions/AllTransactionsPage'
 import { FloatingActionButton } from '../components/FloatingActionButton'
 import { AddTransactionModal } from '../modals/AddTransactionModal'
 import { SettingsModal } from '../modals/SettingsModal'
 import { ReportsModal } from '../modals/ReportsModal'
 import { logoutSession } from '../api/auth'
 import { useAuth } from '../hooks/useAuth'
+import type { Transaction } from '../types'
+import type { TransactionFilters } from '../api/transactions'
+import type { SortDirection, SortField, TransactionTypeFilter } from '../components/AllTransactions/AllTransactionsPage'
 
 const transactionKey = ['transactions']
-const summaryKey = ['summary']
 
 export const DashboardPage = () => {
   const navigate = useNavigate()
@@ -26,53 +27,85 @@ export const DashboardPage = () => {
   const [isSettingsOpen, setSettingsOpen] = useState(false)
   const [isReportsOpen, setReportsOpen] = useState(false)
   const [isAddTransactionOpen, setAddTransactionOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState<'today' | 'all'>('today')
+  const [todayTransactions, setTodayTransactions] = useState<Transaction[]>([])
+  const [allTransactions, setAllTransactions] = useState<Transaction[]>([])
+  const [todayIncome, setTodayIncome] = useState(0)
+  const [todayExpense, setTodayExpense] = useState(0)
+  const [todayBalance, setTodayBalance] = useState(0)
+  const [allFilters, setAllFilters] = useState<{
+    startDate: string
+    endDate: string
+    typeFilter: TransactionTypeFilter
+    categoryFilter: string
+    sortField: SortField
+    sortDirection: SortDirection
+  }>({
+    startDate: '',
+    endDate: '',
+    typeFilter: 'all',
+    categoryFilter: 'all',
+    sortField: 'date',
+    sortDirection: 'desc',
+  })
+  const todayDate = dayjs().format('YYYY-MM-DD')
 
-  const { data: summary, isLoading: isSummaryLoading, isError: isSummaryError } = useQuery({
-    queryKey: summaryKey,
-    queryFn: getTransactionSummary,
+  const {
+    data: todayData,
+    isLoading: isTodayLoading,
+    isError: isTodayError,
+  } = useQuery({
+    queryKey: [...transactionKey, 'today', todayDate],
+    queryFn: () =>
+      getTransactionsFiltered({
+        startDate: todayDate,
+        endDate: todayDate,
+      } as TransactionFilters),
     enabled: isAuthenticated,
   })
 
   const {
-    data: transactions,
-    isLoading: isTransactionsLoading,
-    isError: isTransactionsError,
+    data: allData,
+    isLoading: isAllLoading,
+    isError: isAllError,
   } = useQuery({
-    queryKey: transactionKey,
-    queryFn: getTransactions,
+    queryKey: [...transactionKey, 'all', allFilters],
+    queryFn: () =>
+      getTransactionsFiltered({
+        startDate: allFilters.startDate || undefined,
+        endDate: allFilters.endDate || undefined,
+        type: allFilters.typeFilter === 'all' ? undefined : allFilters.typeFilter,
+        category: allFilters.categoryFilter === 'all' ? undefined : allFilters.categoryFilter,
+        sortBy: allFilters.sortField,
+        sortDir: allFilters.sortDirection,
+      }),
     enabled: isAuthenticated,
   })
 
-  const summaryCards = useMemo(() => {
-    const totals = summary?.totals
-    const income = totals?.totalIncome ?? 0
-    const expense = totals?.totalExpense ?? 0
-    const balance = totals?.balance ?? 0
+  useEffect(() => {
+    const items = todayData?.transactions ?? []
+    setTodayTransactions(items)
+    const income = items.filter(item => item.type === 'income').reduce((total, item) => total + item.amount, 0)
+    const expense = items.filter(item => item.type === 'expense').reduce((total, item) => total + item.amount, 0)
+    setTodayIncome(income)
+    setTodayExpense(expense)
+    setTodayBalance(income - expense)
+  }, [todayData])
 
-    return [
-      {
-        title: 'Total income',
-        amount: income,
-        accent: 'income' as const,
-        icon: <FontAwesomeIcon icon={faArrowTrendUp} />,
-        highlight: 'Money in',
-      },
-      {
-        title: 'Total expenses',
-        amount: expense,
-        accent: 'expense' as const,
-        icon: <FontAwesomeIcon icon={faArrowTrendDown} />,
-        highlight: 'Money out',
-      },
-      {
-        title: 'Net balance',
-        amount: balance,
-        accent: 'balance' as const,
-        icon: <FontAwesomeIcon icon={faWallet} />,
-        highlight: balance >= 0 ? 'You are on track' : 'Spending exceeds income',
-      },
-    ]
-  }, [summary])
+  useEffect(() => {
+    setAllTransactions(allData?.transactions ?? [])
+  }, [allData])
+
+  const handleTransactionCreated = (transaction: Transaction) => {
+    const todayReference = dayjs()
+    setAllTransactions(prev => [transaction, ...prev])
+    if (dayjs(transaction.date).isSame(todayReference, 'day')) {
+      setTodayTransactions(prev => [transaction, ...prev])
+      setTodayIncome(prev => prev + (transaction.type === 'income' ? transaction.amount : 0))
+      setTodayExpense(prev => prev + (transaction.type === 'expense' ? transaction.amount : 0))
+      setTodayBalance(prev => prev + (transaction.type === 'income' ? transaction.amount : -transaction.amount))
+    }
+  }
 
   const handleLogout = () => {
     void logoutSession().catch(() => {})
@@ -84,10 +117,10 @@ export const DashboardPage = () => {
   const displayName = user?.name?.split(' ')[0] ?? user?.email ?? 'there'
 
   useEffect(() => {
-    if (isSummaryError || isTransactionsError) {
+    if (isTodayError || isAllError) {
       toast.error('Unable to load dashboard data')
     }
-  }, [isSummaryError, isTransactionsError])
+  }, [isAllError, isTodayError])
 
   return (
     <div className="relative min-h-screen bg-background pb-24 text-neutral">
@@ -100,66 +133,47 @@ export const DashboardPage = () => {
         userName={displayName}
       />
       <main className="relative z-10 mx-auto flex max-w-6xl flex-col gap-10 px-6 pb-16 pt-8">
-        <section className="grid gap-6 md:grid-cols-3">
-          {isSummaryLoading ? (
-            <div className="md:col-span-3">
-              <LoadingSpinner />
-            </div>
-          ) : (
-            summaryCards.map(card => (
-              <SummaryCard
-                key={card.title}
-                title={card.title}
-                amount={card.amount}
-                accent={card.accent}
-                icon={card.icon}
-                highlight={card.highlight}
-              />
-            ))
-          )}
-        </section>
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          <TabNavigation
+            tabs={[
+              { id: 'today' as const, label: "Today's Activity" },
+              { id: 'all' as const, label: 'All Transactions' },
+            ]}
+            activeTab={activeTab}
+            onChange={setActiveTab}
+          />
+        </div>
 
-        <section className="rounded-4xl border border-border bg-white/90 p-6 shadow-card">
-          <header className="mb-6 flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h2 className="text-lg font-semibold text-neutral">Transactions</h2>
-              <p className="text-sm text-muted">Track and review every inflow and outflow.</p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setAddTransactionOpen(true)}
-              className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2 text-sm font-semibold text-white shadow-soft transition hover:bg-[#2F89C9]"
-            >
-              Add transaction
-            </button>
-          </header>
-          {isTransactionsLoading ? (
-            <LoadingSpinner />
-          ) : transactions && transactions.length ? (
-            <TransactionList transactions={transactions} />
-          ) : (
-            <EmptyState
-              title="No transactions yet"
-              description="Log your first income or expense to unlock insights."
-              action={
-                <button
-                  type="button"
-                  onClick={() => setAddTransactionOpen(true)}
-                  className="rounded-full bg-accent px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#2F89C9]"
-                >
-                  Add transaction
-                </button>
-              }
+        {activeTab === 'today' ? (
+          <div className="space-y-6">
+            <TodaySummaryCards income={todayIncome} expense={todayExpense} balance={todayBalance} />
+            <TransactionsSection
+              title="Today's Activity"
+              transactions={todayTransactions}
+              isLoading={isTodayLoading}
+              emptyTitle="No activity today"
+              emptyDescription="Add a transaction to see it reflected in today's activity."
             />
-          )}
-        </section>
+          </div>
+        ) : (
+          <AllTransactionsPage
+            transactions={allTransactions}
+            isLoading={isAllLoading}
+            filters={allFilters}
+            onFiltersChange={setAllFilters}
+          />
+        )}
       </main>
 
       <FloatingActionButton onClick={() => setAddTransactionOpen(true)} />
 
       <SettingsModal open={isSettingsOpen} onClose={() => setSettingsOpen(false)} />
       <ReportsModal open={isReportsOpen} onClose={() => setReportsOpen(false)} />
-      <AddTransactionModal open={isAddTransactionOpen} onClose={() => setAddTransactionOpen(false)} />
+      <AddTransactionModal
+        open={isAddTransactionOpen}
+        onClose={() => setAddTransactionOpen(false)}
+        onTransactionCreated={handleTransactionCreated}
+      />
     </div>
   )
 }

@@ -80,56 +80,73 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
       onClose={onClose}
       title="Manage Categories"
       subtitle="Create and organize your income and expense categories."
-      widthClassName="max-w-2xl"
+      widthClassName="max-w-4xl"
     >
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5 rounded-3xl border border-border bg-white/90 p-5 shadow-sm">
-        <div className="flex flex-col gap-2">
-          <label htmlFor="category-name" className="text-sm font-medium text-neutral">
-            Category name
-          </label>
-          <input
-            id="category-name"
-            name="name"
-            value={name}
-            onChange={event => setName(event.target.value)}
-            className="w-full rounded-2xl border border-border bg-white px-4 py-2 text-sm text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
-            placeholder="e.g. Groceries"
-          />
-        </div>
-        <div className="flex flex-wrap gap-3">
-          {(['income', 'expense'] as const).map(option => (
-            <button
-              key={option}
-              type="button"
-              onClick={() => setType(option)}
-              className={`rounded-2xl border px-4 py-2 text-sm font-medium capitalize transition ${
-                type === option
-                  ? 'border-accent bg-accent/10 text-accent shadow-inner shadow-accent/20'
-                  : 'border-border bg-white text-muted hover:border-accent/40 hover:text-neutral'
-              }`}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
-        <button
-          type="submit"
-          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#2F89C9] disabled:cursor-not-allowed disabled:opacity-70"
-          disabled={createMutation.isPending}
+      <div className="space-y-5">
+        <form
+          onSubmit={handleSubmit}
+          className="grid gap-4 rounded-3xl border border-border bg-gradient-to-br from-white via-white/95 to-surfaceMuted/70 p-5 shadow-sm md:grid-cols-[2fr_1fr]"
         >
-          {createMutation.isPending ? (
-            <>
-              <Spinner size="sm" />
-              <span>Saving...</span>
-            </>
-          ) : (
-            <span>Add category</span>
-          )}
-        </button>
-      </form>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="category-name" className="text-sm font-semibold text-neutral">
+              Category name
+            </label>
+            <input
+              id="category-name"
+              name="name"
+              value={name}
+              onChange={event => setName(event.target.value)}
+              className="w-full rounded-2xl border border-border bg-white px-4 py-2.5 text-sm text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+              placeholder="e.g. Groceries"
+            />
+          </div>
+          <div className="flex flex-col gap-3">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">Type</span>
+            <div className="inline-flex rounded-full border border-border bg-white shadow-soft">
+              {(['income', 'expense'] as const).map(option => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setType(option)}
+                  className={`px-4 py-2 text-sm font-semibold capitalize transition first:rounded-l-full last:rounded-r-full ${
+                    type === option
+                      ? 'bg-accent text-white shadow-[0_12px_35px_-20px_rgba(52,152,219,0.6)]'
+                      : 'text-neutral hover:bg-accent/10'
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+            <button
+              type="submit"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#2F89C9] disabled:cursor-not-allowed disabled:opacity-70"
+              disabled={createMutation.isPending}
+            >
+              {createMutation.isPending ? (
+                <>
+                  <Spinner size="sm" />
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <span>Add category</span>
+              )}
+            </button>
+          </div>
+        </form>
 
-      <div className="mt-6 space-y-4">
-        <div className="flex items-center justify-between text-xs uppercase tracking-wide text-muted">
+        <div className="flex flex-wrap gap-3">
+          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-4 py-2 text-xs font-semibold text-neutral shadow-soft">
+            Income: <span className="rounded-full bg-income/15 px-2 py-0.5 text-income">{incomeCategories.length}</span>
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-4 py-2 text-xs font-semibold text-neutral shadow-soft">
+            Expense:{' '}
+            <span className="rounded-full bg-expense/15 px-2 py-0.5 text-expense">{expenseCategories.length}</span>
+          </span>
+        </div>
+
+        <div className="mt-6 rounded-3xl border border-border/60 bg-white/70 p-4 shadow-[0_20px_60px_-45px_rgba(15,23,42,0.25)]">
+        <div className="flex flex-wrap items-center justify-between gap-3 text-xs uppercase tracking-wide text-muted">
           <span>Existing categories</span>
           <button
             type="button"
@@ -147,55 +164,56 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
             )}
           </button>
         </div>
-        {isLoading ? (
-          <LoadingSpinner />
-        ) : (
-          <div className="grid gap-4 md:grid-cols-2">
-            {[
-              {
-                title: 'Income categories',
-                description: 'Streams bringing money in.',
-                accent: 'income' as const,
-                items: incomeCategories,
-              },
-              {
-                title: 'Expense categories',
-                description: 'Places where money goes out.',
-                accent: 'expense' as const,
-                items: expenseCategories,
-              },
-            ].map(column => {
-              const isIncome = column.accent === 'income'
-              const badgeClasses = isIncome
-                ? 'border-income/40 bg-income/15 text-income'
-                : 'border-expense/40 bg-expense/15 text-expense'
-              const emptyState = isIncome
-                ? 'No income categories yet. Add one above.'
-                : 'No expense categories yet. Add one above.'
+        <div className="mt-4 space-y-4">
+          {isLoading ? (
+            <LoadingSpinner />
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2">
+              {[
+                {
+                  title: 'Income categories',
+                  description: 'Streams bringing money in.',
+                  accent: 'income' as const,
+                  items: incomeCategories,
+                },
+                {
+                  title: 'Expense categories',
+                  description: 'Places where money goes out.',
+                  accent: 'expense' as const,
+                  items: expenseCategories,
+                },
+              ].map(column => {
+                const isIncome = column.accent === 'income'
+                const badgeClasses = isIncome
+                  ? 'border-income/40 bg-income/15 text-income'
+                  : 'border-expense/40 bg-expense/15 text-expense'
+                const emptyState = isIncome
+                  ? 'No income categories yet. Add one above.'
+                  : 'No expense categories yet. Add one above.'
 
-              return (
-                <div
-                  key={column.title}
-                  className="flex flex-col gap-4 rounded-3xl border border-border bg-white/85 p-5 shadow-[0_24px_70px_-45px_rgba(15,23,42,0.25)] backdrop-blur"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <h3 className="text-sm font-semibold text-neutral">{column.title}</h3>
-                      <p className="text-xs text-muted">{column.description}</p>
+                return (
+                  <div
+                    key={column.title}
+                    className="flex min-w-0 flex-col gap-4 rounded-3xl border border-border bg-white/90 p-5 shadow-[0_24px_70px_-45px_rgba(15,23,42,0.25)] backdrop-blur"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <h3 className="text-sm font-semibold text-neutral">{column.title}</h3>
+                        <p className="text-xs text-muted">{column.description}</p>
+                      </div>
+                      <span
+                        className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-[11px] font-medium ${
+                          isIncome
+                            ? 'border-income/40 bg-income/10 text-income'
+                            : 'border-expense/40 bg-expense/10 text-expense'
+                        }`}
+                      >
+                        {column.items.length}
+                      </span>
                     </div>
-                    <span
-                      className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-[11px] font-medium ${
-                        isIncome
-                          ? 'border-income/40 bg-income/10 text-income'
-                          : 'border-expense/40 bg-expense/10 text-expense'
-                      }`}
-                    >
-                      {column.items.length}
-                    </span>
-                  </div>
-                  <ul className="space-y-3">
-                    {column.items.length
-                      ? column.items.map(category => {
+                    <ul className="space-y-3">
+                      {column.items.length ? (
+                        column.items.map(category => {
                           const categoryId = resolveCategoryId(category)
                           const isDeleting =
                             deleteMutation.isPending && deleteMutation.variables === categoryId
@@ -215,7 +233,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                                 </span>
                                 <div className="flex flex-col">
                                   <span className="font-medium text-neutral">{category.name}</span>
-                                  <div className="flex items-center gap-2 text-xs text-muted">
+                                  <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
                                     <span className="uppercase tracking-[0.25em]">
                                       {category.type}
                                     </span>
@@ -244,17 +262,19 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                             </li>
                           )
                         })
-                      : (
+                      ) : (
                         <li className="rounded-2xl border border-dashed border-border bg-white/70 px-4 py-6 text-center text-xs text-muted">
                           {emptyState}
                         </li>
-                        )}
-                  </ul>
-                </div>
-              )
-            })}
-          </div>
-        )}
+                      )}
+                    </ul>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      </div>
       </div>
     </Modal>
   )

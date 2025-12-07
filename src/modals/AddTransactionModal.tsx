@@ -6,10 +6,12 @@ import { Modal } from '../components/Modal'
 import { Spinner } from '../components/Spinner'
 import { getCategories } from '../api/categories'
 import { createTransaction } from '../api/transactions'
+import type { Transaction } from '../types'
 
 interface AddTransactionModalProps {
   open: boolean
   onClose: () => void
+  onTransactionCreated?: (transaction: Transaction) => void
 }
 
 const categoryKey = ['categories']
@@ -17,7 +19,7 @@ const transactionKey = ['transactions']
 const summaryKey = ['summary']
 type AddTransactionStep = 'chooseType' | 'details'
 
-export const AddTransactionModal = ({ open, onClose }: AddTransactionModalProps) => {
+export const AddTransactionModal = ({ open, onClose, onTransactionCreated }: AddTransactionModalProps) => {
   const queryClient = useQueryClient()
   const { data: categories } = useQuery({
     queryKey: categoryKey,
@@ -68,10 +70,11 @@ export const AddTransactionModal = ({ open, onClose }: AddTransactionModalProps)
 
   const mutation = useMutation({
     mutationFn: createTransaction,
-    onSuccess: () => {
+    onSuccess: transaction => {
       toast.success('Transaction added')
       queryClient.invalidateQueries({ queryKey: transactionKey })
       queryClient.invalidateQueries({ queryKey: summaryKey })
+      onTransactionCreated?.(transaction)
       setAmount('')
       setNote('')
       onClose()
