@@ -5,6 +5,8 @@ import { Modal } from '../components/Modal'
 import { Spinner } from '../components/Spinner'
 import { getCategories, createCategory, deleteCategory, setDefaultCategory } from '../api/categories'
 import { LoadingSpinner } from '../components/LoadingSpinner'
+import { ErrorBanner } from '../components/ErrorBanner'
+import { mapApiError } from '../utils/errors'
 import type { Category } from '../types'
 
 interface SettingsModalProps {
@@ -20,11 +22,20 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const [type, setType] = useState<'income' | 'expense'>('income')
   const [defaultIncomeId, setDefaultIncomeId] = useState('')
   const [defaultExpenseId, setDefaultExpenseId] = useState('')
+  const [uiError, setUiError] = useState<{ message: string; detail?: string } | null>(null)
 
-  const { data: categories, isLoading, isFetching } = useQuery({
+  const {
+    data: categories,
+    isLoading,
+    isFetching,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: categoryKey,
     queryFn: getCategories,
     enabled: open,
+    retry: 1,
   })
 
   const resolveCategoryId = (category: Category) => category._id ?? category.id ?? ''
@@ -45,8 +56,9 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
       toast.success('Category created')
       setName('')
       queryClient.invalidateQueries({ queryKey: categoryKey })
+      setUiError(null)
     },
-    onError: () => toast.error('Unable to create category'),
+    onError: error => setUiError(mapApiError(error)),
   })
 
   const deleteMutation = useMutation({
@@ -54,8 +66,9 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     onSuccess: () => {
       toast.success('Category removed')
       queryClient.invalidateQueries({ queryKey: categoryKey })
+      setUiError(null)
     },
-    onError: () => toast.error('Unable to remove category'),
+    onError: error => setUiError(mapApiError(error)),
   })
 
   const setDefaultMutation = useMutation({
@@ -64,8 +77,9 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
       toast.success('Default category updated')
       queryClient.invalidateQueries({ queryKey: categoryKey })
       queryClient.invalidateQueries({ queryKey: ['transactions'] })
+      setUiError(null)
     },
-    onError: () => toast.error('Unable to update default category'),
+    onError: error => setUiError(mapApiError(error)),
   })
 
   useEffect(() => {
@@ -74,6 +88,12 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     setDefaultIncomeId(incomeDefault ? resolveCategoryId(incomeDefault) : '')
     setDefaultExpenseId(expenseDefault ? resolveCategoryId(expenseDefault) : '')
   }, [categories, expenseCategories, incomeCategories])
+
+  useEffect(() => {
+    if (open) {
+      setUiError(null)
+    }
+  }, [open])
 
   const handleDefaultSelect = (categoryId: string, categoryType: 'income' | 'expense') => {
     if (!categoryId) return
@@ -114,6 +134,17 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
       widthClassName="max-w-4xl"
     >
       <div className="space-y-5">
+        {uiError || isError ? (
+          <div className="flex justify-center">
+            <ErrorBanner
+              message={(uiError ?? mapApiError(error)).message}
+              detail={(uiError ?? mapApiError(error)).detail}
+              onRetry={isError ? () => refetch() : undefined}
+              className="w-full max-w-2xl"
+            />
+          </div>
+        ) : null}
+
         <form
           onSubmit={handleSubmit}
           className="grid gap-4 rounded-3xl border border-border bg-gradient-to-br from-white via-white/95 to-surfaceMuted/70 p-5 shadow-sm md:grid-cols-[3fr_2fr] md:items-end"
