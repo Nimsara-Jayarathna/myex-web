@@ -61,7 +61,7 @@ export const DashboardPage = () => {
         startDate: todayDate,
         endDate: todayDate,
       } as TransactionFilters),
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && activeTab === 'today',
   })
 
   const {
@@ -79,7 +79,7 @@ export const DashboardPage = () => {
         sortBy: allFilters.sortField,
         sortDir: allFilters.sortDirection,
       }),
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && activeTab === 'all',
   })
 
   useEffect(() => {

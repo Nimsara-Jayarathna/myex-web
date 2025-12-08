@@ -38,6 +38,10 @@ export const AddTransactionModal = ({ open, onClose, onTransactionCreated }: Add
     () => (categories ?? []).filter(item => item.type === type),
     [categories, type],
   )
+  const defaultCategoryId = useMemo(() => {
+    const defaultCategory = filteredCategories.find(item => item.isDefault)
+    return resolveCategoryId(defaultCategory)
+  }, [filteredCategories])
 
   useEffect(() => {
     if (open) {
@@ -64,9 +68,12 @@ export const AddTransactionModal = ({ open, onClose, onTransactionCreated }: Add
       if (stillValid) {
         return previous
       }
+      if (defaultCategoryId) {
+        return defaultCategoryId
+      }
       return resolveCategoryId(filteredCategories[0])
     })
-  }, [filteredCategories, step])
+  }, [defaultCategoryId, filteredCategories, step])
 
   const mutation = useMutation({
     mutationFn: createTransaction,
