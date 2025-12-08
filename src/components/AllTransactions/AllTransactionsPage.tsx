@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import type { Transaction } from '../../types'
 import { LoadingSpinner } from '../LoadingSpinner'
@@ -7,6 +8,7 @@ import { FiltersBar } from './FiltersBar'
 import { SortingControls } from './SortingControls'
 import { GroupingControls } from './GroupingControls'
 import { TransactionTable } from './TransactionTable'
+import { getCategories } from '../../api/categories'
 
 export type SortField = 'date' | 'amount' | 'category'
 export type SortDirection = 'asc' | 'desc'
@@ -34,20 +36,35 @@ export const AllTransactionsPage = ({
   onFiltersChange,
 }: AllTransactionsPageProps) => {
   const [grouping, setGrouping] = useState<Grouping>('none')
+  const { data: categoriesData } = useQuery({
+    queryKey: ['categories'],
+    queryFn: getCategories,
+  })
 
-  const categories = useMemo(() => {
-    const set = new Set<string>()
-    transactions.forEach(txn => {
-      if (typeof txn.category === 'string') {
-        if (txn.category) set.add(txn.category)
-      } else if (txn.category?.name) {
-        set.add(txn.category.name)
-      } else if (txn.categoryName) {
-        set.add(txn.categoryName)
-      }
-    })
-    return Array.from(set).sort()
-  }, [transactions])
+  const categories = useMemo(
+    () =>
+      (categoriesData ?? []).map(item => ({
+        id: item.id ?? item._id ?? item.name,
+        name: item.name,
+        type: item.type,
+      })),
+    [categoriesData],
+  )
+
+  const categoriesForType = useMemo(
+    () => (filters.typeFilter === 'all' ? categories : categories.filter(item => item.type === filters.typeFilter)),
+    [categories, filters.typeFilter],
+  )
+
+  useEffect(() => {
+    if (filters.categoryFilter === 'all') {
+      return
+    }
+    const stillValid = categoriesForType.some(cat => cat.id === filters.categoryFilter)
+    if (!stillValid) {
+      onFiltersChange({ ...filters, categoryFilter: 'all' })
+    }
+  }, [categoriesForType, filters, onFiltersChange])
 
   const grouped = useMemo(() => {
     if (grouping === 'none') {
@@ -90,7 +107,7 @@ export const AllTransactionsPage = ({
           endDate={filters.endDate}
           typeFilter={filters.typeFilter}
           categoryFilter={filters.categoryFilter}
-          categories={categories}
+          categories={categoriesForType}
           onChange={({ startDate, endDate, typeFilter, categoryFilter }) => {
             onFiltersChange({
               ...filters,

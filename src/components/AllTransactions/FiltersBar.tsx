@@ -7,7 +7,11 @@ interface FiltersBarProps {
   endDate: string
   typeFilter: TransactionTypeFilter
   categoryFilter: string
-  categories: string[]
+  categories: {
+    id: string
+    name: string
+    type: 'income' | 'expense'
+  }[]
   onChange: (filters: {
     startDate: string
     endDate: string
@@ -24,6 +28,9 @@ export const FiltersBar = ({
   categories,
   onChange,
 }: FiltersBarProps) => {
+  const filteredCategories =
+    typeFilter === 'all' ? categories : categories.filter(category => category.type === typeFilter)
+
   const handleDateChange = (key: 'startDate' | 'endDate') => (event: ChangeEvent<HTMLInputElement>) => {
     onChange({
       startDate: key === 'startDate' ? event.target.value : startDate,
@@ -33,12 +40,12 @@ export const FiltersBar = ({
     })
   }
 
-  const handleTypeChange = (event: ChangeEvent<HTMLSelectElement>) => {
+  const handleTypeChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange({
       startDate,
       endDate,
       typeFilter: event.target.value as TransactionTypeFilter,
-      categoryFilter,
+      categoryFilter: 'all',
     })
   }
 
@@ -52,7 +59,7 @@ export const FiltersBar = ({
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-3xl border border-border bg-white/90 p-4 shadow-soft">
+    <div className="flex w-full flex-wrap items-stretch justify-between gap-4 rounded-3xl border border-border bg-white/90 p-4 shadow-soft">
       <div className="flex flex-col gap-1 text-xs text-muted">
         <span className="font-semibold uppercase tracking-[0.2em]">Date range</span>
         <div className="flex flex-wrap items-center gap-2">
@@ -72,17 +79,23 @@ export const FiltersBar = ({
         </div>
       </div>
 
-      <div className="flex flex-col gap-1 text-xs text-muted">
+      <div className="flex flex-col gap-2 text-xs text-muted">
         <span className="font-semibold uppercase tracking-[0.2em]">Type</span>
-        <select
-          value={typeFilter}
-          onChange={handleTypeChange}
-          className="rounded-2xl border border-border bg-white px-3 py-2 text-sm text-neutral focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
-        >
-          <option value="all">All</option>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-        </select>
+        <div className="flex items-center gap-3 rounded-2xl border border-border bg-white px-3 py-2 text-sm text-neutral">
+          {(['all', 'income', 'expense'] as const).map(option => (
+            <label key={option} className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em]">
+              <input
+                type="radio"
+                name="typeFilter"
+                value={option}
+                checked={typeFilter === option}
+                onChange={handleTypeChange}
+                className="h-4 w-4 accent-accent"
+              />
+              <span className="capitalize text-neutral">{option}</span>
+            </label>
+          ))}
+        </div>
       </div>
 
       <div className="flex flex-col gap-1 text-xs text-muted">
@@ -93,9 +106,9 @@ export const FiltersBar = ({
           className="min-w-[160px] rounded-2xl border border-border bg-white px-3 py-2 text-sm text-neutral focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
         >
           <option value="all">All</option>
-          {categories.map(category => (
-            <option key={category} value={category}>
-              {category}
+          {filteredCategories.map(category => (
+            <option key={category.id} value={category.id}>
+              {category.name}
             </option>
           ))}
         </select>
