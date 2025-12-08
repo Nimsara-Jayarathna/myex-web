@@ -14,10 +14,6 @@ on:
 env:
   BUILD_DIR: dist
 
-permissions:
-  contents: read
-  deployments: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,8 +22,8 @@ jobs:
        (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')) ||
       (github.event_name == 'pull_request' &&
        (github.base_ref == 'dev' || github.base_ref == 'main'))
-    environment: ${{ ((github.event_name == 'pull_request' && github.base_ref == 'main') ||
-      (github.event_name == 'push' && github.ref == 'refs/heads/main')) && 'production' || 'staging' }}
+    environment: ${{ (github.event_name == 'pull_request' && github.base_ref == 'main') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') && 'production' || 'staging' }}
     outputs:
       deploy_env: ${{ steps.deploy_vars.outputs.deploy_env }}
       target_dir: ${{ steps.deploy_vars.outputs.target_dir }}
@@ -79,38 +75,6 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-      - name: Create fake deployment for PR
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const baseRef = context.payload.pull_request.base.ref;
-            const headSha = context.payload.pull_request.head.sha;
-            const envName = baseRef === 'main' ? 'production' : 'staging';
-            const { owner, repo } = context.repo;
-
-            // Create a transient deployment for PR
-            const deployment = await github.rest.repos.createDeployment({
-              owner,
-              repo,
-              ref: headSha,
-              environment: envName,
-              auto_merge: false,
-              required_contexts: [],
-              transient_environment: true,
-              production_environment: envName === 'production',
-              description: `Fake deployment for PR #${context.payload.pull_request.number}`,
-            });
-
-            // Mark the deployment as active success
-            await github.rest.repos.createDeploymentStatus({
-              owner,
-              repo,
-              deployment_id: deployment.data.id,
-              state: 'success',
-            });
-
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
@@ -133,7 +97,6 @@ jobs:
       SSH_HOST: ${{ secrets.DO_SSH_HOST }}
       SSH_USER: ${{ secrets.DO_SSH_USER }}
       SSH_PORT: ${{ secrets.DO_SSH_PORT }}
-      SSH_KEY: ${{ secrets.DO_SSH_KEY }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -145,13 +108,16 @@ jobs:
           path: ${{ env.BUILD_DIR }}
 
       - name: Prepare SSH key
+        env:
+          SSH_KEY: ${{ secrets.DO_SSH_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo "${SSH_KEY}" > ~/.ssh/id_rsa
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
       - name: Add droplet to known hosts
-        run: ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+        run: |
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
 
       - name: Stop and remove existing container
         run: |
