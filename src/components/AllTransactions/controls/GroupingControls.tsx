@@ -1,5 +1,5 @@
 import { ControlCard, ControlButton } from './SharedControls'
-import type { Grouping } from './types'
+import type { Grouping } from '../types'
 
 interface GroupingControlsProps {
   grouping: Grouping
@@ -26,3 +26,4 @@ export const GroupingControls = ({ grouping, onChange }: GroupingControlsProps) 
     </ControlCard>
   )
 }
+

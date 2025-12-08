@@ -33,3 +33,4 @@ export const ControlButton = ({ label, icon, isActive = false, onClick }: Contro
     {label}
   </button>
 )
+

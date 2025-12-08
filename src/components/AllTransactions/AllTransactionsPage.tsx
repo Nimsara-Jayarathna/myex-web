@@ -6,9 +6,9 @@ import type { AllTransactionsPageProps, Grouping, SortDirection, SortField } fro
 import { LoadingSpinner } from '../LoadingSpinner'
 import { EmptyState } from '../EmptyState'
 import { FiltersBar } from './FiltersBar'
-import { SortControls } from './SortControls'
-import { DirectionControls } from './DirectionControls'
-import { GroupingControls } from './GroupingControls'
+import { SortControls } from './controls/SortControls'
+import { DirectionControls } from './controls/DirectionControls'
+import { GroupingControls } from './controls/GroupingControls'
 import { TransactionTable } from './TransactionTable'
 import { getCategories } from '../../api/categories'
 

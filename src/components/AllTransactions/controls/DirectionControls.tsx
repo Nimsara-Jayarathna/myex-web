@@ -1,5 +1,5 @@
 import { ControlCard, ControlButton } from './SharedControls'
-import type { SortDirection } from './types'
+import type { SortDirection } from '../types'
 
 interface DirectionControlsProps {
   direction: SortDirection
@@ -8,8 +8,8 @@ interface DirectionControlsProps {
 
 export const DirectionControls = ({ direction, onChange }: DirectionControlsProps) => {
   const options: { id: SortDirection; label: string; icon: string }[] = [
-    { id: 'asc', label: 'Ascending', icon: '↑' },
-    { id: 'desc', label: 'Descending', icon: '↓' },
+    { id: 'asc', label: 'Ascending', icon: 'ƒ+`' },
+    { id: 'desc', label: 'Descending', icon: 'ƒ+"' },
   ]
 
   return (
@@ -26,3 +26,4 @@ export const DirectionControls = ({ direction, onChange }: DirectionControlsProp
     </ControlCard>
   )
 }
+

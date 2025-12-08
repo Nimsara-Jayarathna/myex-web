@@ -1,5 +1,5 @@
 import { ControlCard, ControlButton } from './SharedControls'
-import type { SortField } from './types'
+import type { SortField } from '../types'
 
 interface SortControlsProps {
   field: SortField
@@ -26,3 +26,4 @@ export const SortControls = ({ field, onChange }: SortControlsProps) => {
     </ControlCard>
   )
 }
+
