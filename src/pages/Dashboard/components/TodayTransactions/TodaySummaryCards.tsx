@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowTrendDown, faArrowTrendUp, faWallet } from '@fortawesome/free-solid-svg-icons'
-import { SummaryCard } from '../../../../components/ui/SummaryCard'
+import { SummaryCard } from '../ui/SummaryCard'
 
 interface TodaySummaryCardsProps {
   income: number
@@ -48,4 +48,3 @@ export const TodaySummaryCards = ({ income, expense, balance }: TodaySummaryCard
     </div>
   )
 }
-

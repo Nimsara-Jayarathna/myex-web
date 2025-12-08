@@ -1,5 +1,5 @@
 import type { Transaction } from '../../../../../types'
-import { TransactionsSection } from '../../../../../components/Transactions/TransactionsSection'
+import { TransactionsSection } from '../../Transactions/TransactionsSection'
 import { TodaySummaryCards } from '../TodaySummaryCards'
 
 interface TodayActivitySectionProps {
@@ -30,4 +30,3 @@ export const TodayActivitySection = ({
     </div>
   )
 }
-

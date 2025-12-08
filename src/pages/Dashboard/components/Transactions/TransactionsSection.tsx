@@ -1,6 +1,6 @@
-import type { Transaction } from '../../types'
-import { TransactionList } from '../TransactionList'
-import { LoadingSpinner } from '../LoadingSpinner'
+import type { Transaction } from '../../../../types'
+import { TransactionList } from '../../../../components/TransactionList'
+import { LoadingSpinner } from '../../../../components/LoadingSpinner'
 import { EmptyState } from '../ui/EmptyState'
 import { ListHeader } from './ListHeader'
 

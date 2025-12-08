@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { formatCurrency } from '../../utils/format'
+import { formatCurrency } from '../../../../utils/format'
 
 interface SummaryCardProps {
   title: string
