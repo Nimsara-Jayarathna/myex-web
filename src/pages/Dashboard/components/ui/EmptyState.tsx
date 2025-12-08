@@ -13,3 +13,4 @@ export const EmptyState = ({ title, description, action }: EmptyStateProps) => {
     </div>
   )
 }
+

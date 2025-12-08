@@ -9,6 +9,12 @@ type TransactionApiShape = Transaction & {
 }
 
 type TransactionsResponse = TransactionApiShape[] | { transactions: TransactionApiShape[] }
+type PaginatedTransactionsResponse = {
+  transactions: TransactionApiShape[]
+  page?: number
+  pageSize?: number
+  total?: number
+}
 
 const normalizeTransaction = (transaction: TransactionApiShape): Transaction => {
   const identifier = transaction._id ?? transaction.id
@@ -30,8 +36,8 @@ const extractTransactions = (data: TransactionsResponse): TransactionApiShape[] 
   if (Array.isArray(data)) {
     return data
   }
-  if (data?.transactions) {
-    return data.transactions
+  if ((data as PaginatedTransactionsResponse)?.transactions) {
+    return (data as PaginatedTransactionsResponse).transactions
   }
   return []
 }
@@ -39,6 +45,31 @@ const extractTransactions = (data: TransactionsResponse): TransactionApiShape[] 
 export const getTransactions = async () => {
   const { data } = await apiClient.get<TransactionsResponse>('/api/transactions')
   return extractTransactions(data).map(normalizeTransaction)
+}
+
+export interface TransactionFilters {
+  startDate?: string
+  endDate?: string
+  type?: 'income' | 'expense'
+  category?: string
+  sortBy?: 'date' | 'amount' | 'category'
+  sortDir?: 'asc' | 'desc'
+  page?: number
+  pageSize?: number
+}
+
+export const getTransactionsFiltered = async (filters: TransactionFilters = {}) => {
+  const { data } = await apiClient.get<TransactionsResponse | PaginatedTransactionsResponse>('/api/transactions', {
+    params: {
+      ...filters,
+    },
+  })
+  return {
+    transactions: extractTransactions(data).map(normalizeTransaction),
+    total: (data as PaginatedTransactionsResponse)?.total,
+    page: (data as PaginatedTransactionsResponse)?.page,
+    pageSize: (data as PaginatedTransactionsResponse)?.pageSize,
+  }
 }
 
 export const createTransaction = async (payload: TransactionInput) => {

@@ -3,13 +3,14 @@ import { formatCurrency, formatDate } from '../utils/format'
 
 interface TransactionListProps {
   transactions: Transaction[]
+  title?: string
 }
 
-export const TransactionList = ({ transactions }: TransactionListProps) => {
+export const TransactionList = ({ transactions, title = 'Recent Transactions' }: TransactionListProps) => {
   return (
     <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-soft">
       <header className="flex items-center justify-between border-b border-border px-6 py-4">
-        <span className="text-sm font-medium uppercase tracking-[0.28em] text-muted">Recent Transactions</span>
+        <span className="text-sm font-medium uppercase tracking-[0.28em] text-muted">{title}</span>
       </header>
       <ul className="max-h-[420px] space-y-1 overflow-y-auto px-2 py-2">
         {transactions.map(transaction => {
