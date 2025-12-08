@@ -57,7 +57,7 @@ export const CategoryFilter = ({
           className="flex w-full items-center justify-between rounded-2xl border border-border bg-white px-4 py-2 text-sm font-semibold text-neutral shadow-sm hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/25"
         >
           <span className="truncate">{categoryLabel}</span>
-          <span className="ml-2 text-xs font-semibold text-muted/70">{isCategoryOpen ? 'ƒ-ı' : 'ƒ-¬'}</span>
+          <span className="ml-2 text-xs font-semibold text-muted/70">{isCategoryOpen ? '▲' : '▼'}</span>
         </button>
 
         {isCategoryOpen && (

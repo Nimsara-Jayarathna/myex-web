@@ -8,8 +8,8 @@ interface DirectionControlsProps {
 
 export const DirectionControls = ({ direction, onChange }: DirectionControlsProps) => {
   const options: { id: SortDirection; label: string; icon: string }[] = [
-    { id: 'asc', label: 'Ascending', icon: 'ƒ+`' },
-    { id: 'desc', label: 'Descending', icon: 'ƒ+"' },
+    { id: 'asc', label: 'Ascending', icon: '↑' },
+    { id: 'desc', label: 'Descending', icon: '↓' },
   ]
 
   return (
