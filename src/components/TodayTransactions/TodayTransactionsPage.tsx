@@ -1,5 +1,4 @@
 import type { Transaction } from '../../types'
-import { TodaySummarySection } from './summary/TodaySummarySection'
 import { TodayActivitySection } from './activity/TodayActivitySection'
 
 interface TodayTransactionsPageProps {
@@ -18,10 +17,13 @@ export const TodayTransactionsPage = ({
   balance,
 }: TodayTransactionsPageProps) => {
   return (
-    <div className="space-y-6">
-      <TodaySummarySection income={income} expense={expense} balance={balance} />
-      <TodayActivitySection transactions={transactions} isLoading={isLoading} />
-    </div>
+    <TodayActivitySection
+      transactions={transactions}
+      isLoading={isLoading}
+      income={income}
+      expense={expense}
+      balance={balance}
+    />
   )
 }
 
