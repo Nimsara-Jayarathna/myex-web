@@ -17,7 +17,7 @@ import { logoutSession } from '../api/auth'
 import { useAuth } from '../hooks/useAuth'
 import type { Transaction } from '../types'
 import type { TransactionFilters } from '../api/transactions'
-import type { SortDirection, SortField, TransactionTypeFilter } from '../components/AllTransactions/AllTransactionsPage'
+import type { AllTransactionsFilters } from '../components/AllTransactions/types'
 
 const transactionKey = ['transactions']
 
@@ -33,14 +33,7 @@ export const DashboardPage = () => {
   const [todayIncome, setTodayIncome] = useState(0)
   const [todayExpense, setTodayExpense] = useState(0)
   const [todayBalance, setTodayBalance] = useState(0)
-  const [allFilters, setAllFilters] = useState<{
-    startDate: string
-    endDate: string
-    typeFilter: TransactionTypeFilter
-    categoryFilter: string
-    sortField: SortField
-    sortDirection: SortDirection
-  }>({
+  const [allFilters, setAllFilters] = useState<AllTransactionsFilters>({
     startDate: '',
     endDate: '',
     typeFilter: 'all',

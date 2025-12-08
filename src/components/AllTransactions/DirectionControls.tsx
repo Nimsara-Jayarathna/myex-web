@@ -1,5 +1,5 @@
 import { ControlCard, ControlButton } from './SharedControls'
-import type { SortDirection } from './AllTransactionsPage'
+import type { SortDirection } from './types'
 
 interface DirectionControlsProps {
   direction: SortDirection

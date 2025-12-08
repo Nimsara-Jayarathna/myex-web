@@ -1,5 +1,5 @@
 import { ControlCard, ControlButton } from './SharedControls'
-import type { SortField } from './AllTransactionsPage'
+import type { SortField } from './types'
 
 interface SortControlsProps {
   field: SortField

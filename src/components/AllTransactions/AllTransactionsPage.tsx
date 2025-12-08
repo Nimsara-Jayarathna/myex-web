@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import type { Transaction } from '../../types'
+import type { AllTransactionsPageProps, Grouping, SortDirection, SortField } from './types'
 import { LoadingSpinner } from '../LoadingSpinner'
 import { EmptyState } from '../EmptyState'
 import { FiltersBar } from './FiltersBar'
@@ -10,26 +11,6 @@ import { DirectionControls } from './DirectionControls'
 import { GroupingControls } from './GroupingControls'
 import { TransactionTable } from './TransactionTable'
 import { getCategories } from '../../api/categories'
-
-// --- Type Definitions ---
-export type SortField = 'date' | 'amount' | 'category'
-export type SortDirection = 'asc' | 'desc'
-export type TransactionTypeFilter = 'all' | 'income' | 'expense'
-export type Grouping = 'none' | 'month' | 'category'
-
-interface AllTransactionsPageProps {
-  transactions: Transaction[]
-  isLoading?: boolean
-  filters: {
-    startDate: string
-    endDate: string
-    typeFilter: TransactionTypeFilter
-    categoryFilter: string
-    sortField: SortField
-    sortDirection: SortDirection
-  }
-  onFiltersChange: (filters: AllTransactionsPageProps['filters']) => void
-}
 
 // --- Main Component ---
 export const AllTransactionsPage = ({

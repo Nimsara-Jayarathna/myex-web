@@ -1,10 +1,6 @@
 import type { Transaction } from '../../types'
+import type { GroupedTransactions } from './types'
 import { formatCurrency, formatDate } from '../../utils/format'
-
-interface GroupedTransactions {
-  label: string
-  items: Transaction[]
-}
 
 interface TransactionTableProps {
   transactions: Transaction[]

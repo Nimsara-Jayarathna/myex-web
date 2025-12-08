@@ -1,5 +1,5 @@
 import { ControlCard, ControlButton } from './SharedControls'
-import type { Grouping } from './AllTransactionsPage'
+import type { Grouping } from './types'
 
 interface GroupingControlsProps {
   grouping: Grouping
