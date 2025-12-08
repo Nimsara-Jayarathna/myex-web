@@ -14,6 +14,10 @@ on:
 env:
   BUILD_DIR: dist
 
+permissions:
+  contents: read
+  deployments: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,8 +26,8 @@ jobs:
        (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')) ||
       (github.event_name == 'pull_request' &&
        (github.base_ref == 'dev' || github.base_ref == 'main'))
-    environment: ${{ (github.event_name == 'pull_request' && github.base_ref == 'main') ||
-      (github.event_name == 'push' && github.ref == 'refs/heads/main') && 'production' || 'staging' }}
+    environment: ${{ ((github.event_name == 'pull_request' && github.base_ref == 'main') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main')) && 'production' || 'staging' }}
     outputs:
       deploy_env: ${{ steps.deploy_vars.outputs.deploy_env }}
       target_dir: ${{ steps.deploy_vars.outputs.target_dir }}
@@ -74,6 +78,34 @@ jobs:
 
       - name: Build frontend
         run: npm run build
+
+      - name: Create fake deployment for PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const baseRef = context.payload.pull_request.base.ref;
+            const envName = baseRef === 'main' ? 'production' : 'staging';
+            const { owner, repo } = context.repo;
+
+            const deployment = await github.rest.repos.createDeployment({
+              owner,
+              repo,
+              ref: baseRef,
+              environment: envName,
+              auto_merge: false,
+              required_contexts: [],
+              description: `Fake deployment for PR #${context.payload.pull_request.number}`,
+            });
+
+            await github.rest.repos.createDeploymentStatus({
+              owner,
+              repo,
+              deployment_id: deployment.data.id,
+              state: 'success',
+              auto_inactive: true,
+            });
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
