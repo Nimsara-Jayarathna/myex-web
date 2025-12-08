@@ -5,15 +5,17 @@ import type { Transaction } from '../../types'
 import { LoadingSpinner } from '../LoadingSpinner'
 import { EmptyState } from '../EmptyState'
 import { FiltersBar } from './FiltersBar'
-import { SortingControls } from './SortingControls'
+import { SortControls } from './SortControls'
+import { DirectionControls } from './DirectionControls'
 import { GroupingControls } from './GroupingControls'
 import { TransactionTable } from './TransactionTable'
 import { getCategories } from '../../api/categories'
 
+// --- Type Definitions ---
 export type SortField = 'date' | 'amount' | 'category'
 export type SortDirection = 'asc' | 'desc'
 export type TransactionTypeFilter = 'all' | 'income' | 'expense'
-type Grouping = 'none' | 'month' | 'category'
+export type Grouping = 'none' | 'month' | 'category'
 
 interface AllTransactionsPageProps {
   transactions: Transaction[]
@@ -29,6 +31,7 @@ interface AllTransactionsPageProps {
   onFiltersChange: (filters: AllTransactionsPageProps['filters']) => void
 }
 
+// --- Main Component ---
 export const AllTransactionsPage = ({
   transactions,
   isLoading = false,
@@ -36,6 +39,8 @@ export const AllTransactionsPage = ({
   onFiltersChange,
 }: AllTransactionsPageProps) => {
   const [grouping, setGrouping] = useState<Grouping>('none')
+
+  // Fetch categories
   const { data: categoriesData } = useQuery({
     queryKey: ['categories'],
     queryFn: getCategories,
@@ -48,31 +53,31 @@ export const AllTransactionsPage = ({
         name: item.name,
         type: item.type,
       })),
-    [categoriesData],
+    [categoriesData]
   )
 
   const categoriesForType = useMemo(
-    () => (filters.typeFilter === 'all' ? categories : categories.filter(item => item.type === filters.typeFilter)),
-    [categories, filters.typeFilter],
+    () =>
+      filters.typeFilter === 'all'
+        ? categories
+        : categories.filter(item => item.type === filters.typeFilter),
+    [categories, filters.typeFilter]
   )
 
+  // Ensure selected category is valid
   useEffect(() => {
-    if (filters.categoryFilter === 'all') {
-      return
-    }
+    if (filters.categoryFilter === 'all') return
     const stillValid = categoriesForType.some(cat => cat.id === filters.categoryFilter)
     if (!stillValid) {
       onFiltersChange({ ...filters, categoryFilter: 'all' })
     }
   }, [categoriesForType, filters, onFiltersChange])
 
+  // Group transactions
   const grouped = useMemo(() => {
-    if (grouping === 'none') {
-      return null
-    }
+    if (grouping === 'none') return null
 
     const buckets = new Map<string, Transaction[]>()
-
     transactions.forEach(txn => {
       let key: string
       if (grouping === 'month') {
@@ -83,9 +88,7 @@ export const AllTransactionsPage = ({
             ? txn.category || txn.categoryName || txn.title || 'Uncategorised'
             : txn.category?.name ?? txn.categoryName ?? txn.title ?? 'Uncategorised'
       }
-      if (!buckets.has(key)) {
-        buckets.set(key, [])
-      }
+      if (!buckets.has(key)) buckets.set(key, [])
       buckets.get(key)!.push(txn)
     })
 
@@ -118,17 +121,15 @@ export const AllTransactionsPage = ({
             })
           }}
         />
-        <div className="flex flex-wrap gap-3">
-          <SortingControls
+
+        <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-3">
+          <SortControls
             field={filters.sortField}
+            onChange={(field: SortField) => onFiltersChange({ ...filters, sortField: field })}
+          />
+          <DirectionControls
             direction={filters.sortDirection}
-            onChange={(field, direction) => {
-              onFiltersChange({
-                ...filters,
-                sortField: field,
-                sortDirection: direction,
-              })
-            }}
+            onChange={(direction: SortDirection) => onFiltersChange({ ...filters, sortDirection: direction })}
           />
           <GroupingControls grouping={grouping} onChange={setGrouping} />
         </div>
@@ -137,10 +138,7 @@ export const AllTransactionsPage = ({
       {isLoading ? (
         <LoadingSpinner />
       ) : transactions.length === 0 ? (
-        <EmptyState
-          title="No transactions found"
-          description="Adjust filters or add a transaction to see it here."
-        />
+        <EmptyState title="No transactions found" description="Adjust filters or add a transaction to see it here." />
       ) : (
         <TransactionTable transactions={transactions} grouped={grouped ?? undefined} />
       )}

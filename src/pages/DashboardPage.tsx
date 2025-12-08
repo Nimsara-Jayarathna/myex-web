@@ -132,7 +132,7 @@ export const DashboardPage = () => {
         onLogout={handleLogout}
         userName={displayName}
       />
-      <main className="relative z-10 mx-auto flex max-w-6xl flex-col gap-10 px-6 pb-16 pt-8">
+      <main className="relative z-10 mx-auto flex max-w-7xl flex-col gap-10 px-6 pb-16 pt-8">
         <div className="flex flex-wrap items-center justify-center gap-4">
           <TabNavigation
             tabs={[
