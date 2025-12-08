@@ -86,13 +86,14 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const baseRef = context.payload.pull_request.base.ref;
+            const headSha = context.payload.pull_request.head.sha;
             const envName = baseRef === 'main' ? 'production' : 'staging';
             const { owner, repo } = context.repo;
 
             const deployment = await github.rest.repos.createDeployment({
               owner,
               repo,
-              ref: baseRef,
+              ref: headSha,
               environment: envName,
               auto_merge: false,
               required_contexts: [],
