@@ -5,9 +5,8 @@ import toast from 'react-hot-toast'
 import dayjs from 'dayjs'
 import { Navbar } from '../components/Navbar'
 import { getTransactionsFiltered } from '../api/transactions'
-import { TransactionsSection } from '../components/TransactionsSection'
 import { TabNavigation } from '../components/TabNavigation'
-import { TodaySummaryCards } from '../components/TodaySummaryCards'
+import { TodayTransactionsPage } from '../components/TodayTransactionsPage'
 import { AllTransactionsPage } from '../components/AllTransactions/AllTransactionsPage'
 import { FloatingActionButton } from '../components/FloatingActionButton'
 import { AddTransactionModal } from '../modals/AddTransactionModal'
@@ -138,16 +137,13 @@ export const DashboardPage = () => {
         </div>
 
         {activeTab === 'today' ? (
-          <div className="space-y-6">
-            <TodaySummaryCards income={todayIncome} expense={todayExpense} balance={todayBalance} />
-            <TransactionsSection
-              title="Today's Activity"
-              transactions={todayTransactions}
-              isLoading={isTodayLoading}
-              emptyTitle="No activity today"
-              emptyDescription="Add a transaction to see it reflected in today's activity."
-            />
-          </div>
+          <TodayTransactionsPage
+            transactions={todayTransactions}
+            isLoading={isTodayLoading}
+            income={todayIncome}
+            expense={todayExpense}
+            balance={todayBalance}
+          />
         ) : (
           <AllTransactionsPage
             transactions={allTransactions}
