@@ -5,16 +5,33 @@ on:
     branches:
       - main
       - dev
+  pull_request:
+    branches:
+      - main
+      - dev
   workflow_dispatch:
 
 env:
   BUILD_DIR: dist
 
 jobs:
+
+  # ============================================
+  # BUILD JOB — runs on PR + push
+  # ============================================
   build:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main'
-    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+    if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/pull/')
+    
+    # PR -> staging/production environment check
+    # Push -> real deployment
+    environment: ${{ 
+      github.event_name == 'pull_request' &&
+      (github.event.pull_request.base.ref == 'main' && 'production' || 'staging')
+      ||
+      (github.ref == 'refs/heads/main' && 'production' || 'staging')
+    }}
+
     outputs:
       deploy_env: ${{ steps.deploy_vars.outputs.deploy_env }}
       target_dir: ${{ steps.deploy_vars.outputs.target_dir }}
@@ -24,17 +41,30 @@ jobs:
       port: ${{ steps.deploy_vars.outputs.port }}
       commit_sha: ${{ steps.deploy_vars.outputs.commit_sha }}
       network_name: ${{ steps.deploy_vars.outputs.network_name }}
+      is_pr: ${{ steps.deploy_vars.outputs.is_pr }}
+
     env:
       VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set deployment variables
+      - name: Detect environment + set variables
         id: deploy_vars
         run: |
           COMMIT_SHA=$(git rev-parse --short HEAD)
-          if [ "${GITHUB_REF}" = "refs/heads/main" ]; then
+
+          # detect PR or push
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            echo "is_pr=true" >> "$GITHUB_OUTPUT"
+            BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+          else
+            echo "is_pr=false" >> "$GITHUB_OUTPUT"
+            BASE_BRANCH="${GITHUB_REF#refs/heads/}"
+          fi
+
+          if [[ "$BASE_BRANCH" == "main" ]]; then
             echo "deploy_env=production" >> "$GITHUB_OUTPUT"
             echo "target_dir=/var/www/myex-fe" >> "$GITHUB_OUTPUT"
             echo "site_name=myex-frontend" >> "$GITHUB_OUTPUT"
@@ -54,7 +84,7 @@ jobs:
             echo "network_name=npm_default" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Use Node.js 20
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -66,18 +96,30 @@ jobs:
       - name: Build frontend
         run: npm run build
 
+      # for PRs we only need a check, no artifact upload required
       - name: Upload build artifact
+        if: steps.deploy_vars.outputs.is_pr == 'false'
         uses: actions/upload-artifact@v4
         with:
           name: frontend-build
           path: ${{ env.BUILD_DIR }}
           if-no-files-found: error
 
+      # PR ONLY: fake deploy check
+      - name: Simulate deploy for PR check
+        if: steps.deploy_vars.outputs.is_pr == 'true'
+        run: echo "Simulated deployment successful."
+
+
+  # ============================================
+  # DEPLOY JOB — runs ONLY on push (never on PR)
+  # ============================================
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main'
+    if: needs.build.outputs.is_pr == 'false'   # block PR deployment
     environment: ${{ needs.build.outputs.deploy_env }}
+
     env:
       TARGET_DIR: ${{ needs.build.outputs.target_dir }}
       SITE_NAME: ${{ needs.build.outputs.site_name }}
@@ -88,11 +130,12 @@ jobs:
       SSH_HOST: ${{ secrets.DO_SSH_HOST }}
       SSH_USER: ${{ secrets.DO_SSH_USER }}
       SSH_PORT: ${{ secrets.DO_SSH_PORT }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download build artifact
+      - name: Download built frontend
         uses: actions/download-artifact@v4
         with:
           name: frontend-build
@@ -107,15 +150,14 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
 
       - name: Add droplet to known hosts
-        run: |
-          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+        run: ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
 
-      - name: Stop and remove existing container
+      - name: Stop existing container
         run: |
           ssh -i ~/.ssh/id_rsa -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" \
             "docker rm -f $CONTAINER_NAME || true"
 
-      - name: Pull latest Nginx image
+      - name: Pull Nginx image
         run: |
           ssh -i ~/.ssh/id_rsa -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" \
             "docker pull nginx:latest"
@@ -125,12 +167,12 @@ jobs:
           ssh -i ~/.ssh/id_rsa -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" \
             "docker network inspect $DOCKER_NETWORK >/dev/null 2>&1 || docker network create $DOCKER_NETWORK"
 
-      - name: Create target directory on server
+      - name: Prepare directory on server
         run: |
           ssh -i ~/.ssh/id_rsa -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" \
             "mkdir -p '$TARGET_DIR'"
 
-      - name: Sync build to server
+      - name: Sync build files
         run: |
           rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa -p ${SSH_PORT}" \
             "${BUILD_DIR}/" "${SSH_USER}@${SSH_HOST}:${TARGET_DIR}/"
@@ -152,4 +194,4 @@ jobs:
             --restart unless-stopped \
             --label commit_sha=$COMMIT_SHA \
             nginx:latest
-          EOF
+EOF
