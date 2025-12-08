@@ -6,10 +6,12 @@ import { Modal } from '../components/Modal'
 import { Spinner } from '../components/Spinner'
 import { getCategories } from '../api/categories'
 import { createTransaction } from '../api/transactions'
+import type { Transaction } from '../types'
 
 interface AddTransactionModalProps {
   open: boolean
   onClose: () => void
+  onTransactionCreated?: (transaction: Transaction) => void
 }
 
 const categoryKey = ['categories']
@@ -17,7 +19,7 @@ const transactionKey = ['transactions']
 const summaryKey = ['summary']
 type AddTransactionStep = 'chooseType' | 'details'
 
-export const AddTransactionModal = ({ open, onClose }: AddTransactionModalProps) => {
+export const AddTransactionModal = ({ open, onClose, onTransactionCreated }: AddTransactionModalProps) => {
   const queryClient = useQueryClient()
   const { data: categories } = useQuery({
     queryKey: categoryKey,
@@ -36,6 +38,10 @@ export const AddTransactionModal = ({ open, onClose }: AddTransactionModalProps)
     () => (categories ?? []).filter(item => item.type === type),
     [categories, type],
   )
+  const defaultCategoryId = useMemo(() => {
+    const defaultCategory = filteredCategories.find(item => item.isDefault)
+    return resolveCategoryId(defaultCategory)
+  }, [filteredCategories])
 
   useEffect(() => {
     if (open) {
@@ -62,16 +68,20 @@ export const AddTransactionModal = ({ open, onClose }: AddTransactionModalProps)
       if (stillValid) {
         return previous
       }
+      if (defaultCategoryId) {
+        return defaultCategoryId
+      }
       return resolveCategoryId(filteredCategories[0])
     })
-  }, [filteredCategories, step])
+  }, [defaultCategoryId, filteredCategories, step])
 
   const mutation = useMutation({
     mutationFn: createTransaction,
-    onSuccess: () => {
+    onSuccess: transaction => {
       toast.success('Transaction added')
       queryClient.invalidateQueries({ queryKey: transactionKey })
       queryClient.invalidateQueries({ queryKey: summaryKey })
+      onTransactionCreated?.(transaction)
       setAmount('')
       setNote('')
       onClose()

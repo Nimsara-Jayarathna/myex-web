@@ -1,5 +1,5 @@
-import { type ReactNode } from 'react'
-import { formatCurrency } from '../utils/format'
+import type { ReactNode } from 'react'
+import { formatCurrency } from '../../../../utils/format'
 
 interface SummaryCardProps {
   title: string
@@ -36,7 +36,11 @@ export const SummaryCard = ({ title, amount, icon, accent = 'balance', highlight
       <div className="flex flex-col gap-2">
         <span className="text-xs uppercase tracking-[0.3em] text-muted">{title}</span>
         <span className="text-3xl font-semibold text-neutral">{formatCurrency(amount)}</span>
-        {highlight ? <span className={`text-xs font-semibold uppercase tracking-[0.3em] ${highlightAccent[accent]}`}>{highlight}</span> : null}
+        {highlight ? (
+          <span className={`text-xs font-semibold uppercase tracking-[0.3em] ${highlightAccent[accent]}`}>
+            {highlight}
+          </span>
+        ) : null}
       </div>
       <span
         className={`flex h-12 w-12 items-center justify-center rounded-full border text-base font-semibold ${iconAccent[accent]}`}
@@ -46,3 +50,4 @@ export const SummaryCard = ({ title, amount, icon, accent = 'balance', highlight
     </div>
   </article>
 )
+
