@@ -1,9 +1,9 @@
-import { type FormEvent, useMemo, useState } from 'react'
+import { type FormEvent, useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import { Modal } from '../components/Modal'
 import { Spinner } from '../components/Spinner'
-import { getCategories, createCategory, deleteCategory } from '../api/categories'
+import { getCategories, createCategory, deleteCategory, setDefaultCategory } from '../api/categories'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import type { Category } from '../types'
 
@@ -18,6 +18,8 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const queryClient = useQueryClient()
   const [name, setName] = useState('')
   const [type, setType] = useState<'income' | 'expense'>('income')
+  const [defaultIncomeId, setDefaultIncomeId] = useState('')
+  const [defaultExpenseId, setDefaultExpenseId] = useState('')
 
   const { data: categories, isLoading, isFetching } = useQuery({
     queryKey: categoryKey,
@@ -55,6 +57,35 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     },
     onError: () => toast.error('Unable to remove category'),
   })
+
+  const setDefaultMutation = useMutation({
+    mutationFn: (categoryId: string) => setDefaultCategory(categoryId),
+    onSuccess: () => {
+      toast.success('Default category updated')
+      queryClient.invalidateQueries({ queryKey: categoryKey })
+      queryClient.invalidateQueries({ queryKey: ['transactions'] })
+    },
+    onError: () => toast.error('Unable to update default category'),
+  })
+
+  useEffect(() => {
+    const incomeDefault = incomeCategories.find(item => item.isDefault)
+    const expenseDefault = expenseCategories.find(item => item.isDefault)
+    setDefaultIncomeId(incomeDefault ? resolveCategoryId(incomeDefault) : '')
+    setDefaultExpenseId(expenseDefault ? resolveCategoryId(expenseDefault) : '')
+  }, [categories, expenseCategories, incomeCategories])
+
+  const handleDefaultSelect = (categoryId: string, categoryType: 'income' | 'expense') => {
+    if (!categoryId) return
+    if (categoryType === 'income') {
+      if (categoryId === defaultIncomeId) return
+      setDefaultIncomeId(categoryId)
+    } else {
+      if (categoryId === defaultExpenseId) return
+      setDefaultExpenseId(categoryId)
+    }
+    setDefaultMutation.mutate(categoryId)
+  }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -137,14 +168,69 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
           </div>
         </form>
 
-        <div className="flex flex-wrap gap-3">
-          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-4 py-2 text-xs font-semibold text-neutral shadow-soft">
-            Income: <span className="rounded-full bg-income/15 px-2 py-0.5 text-income">{incomeCategories.length}</span>
-          </span>
-          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-4 py-2 text-xs font-semibold text-neutral shadow-soft">
-            Expense:{' '}
-            <span className="rounded-full bg-expense/15 px-2 py-0.5 text-expense">{expenseCategories.length}</span>
-          </span>
+        <div className="rounded-3xl border border-border bg-white/90 p-5 shadow-[0_22px_60px_-48px_rgba(15,23,42,0.28)]">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 className="text-sm font-semibold text-neutral">Default categories</h3>
+              <p className="text-xs text-muted">Choose the go-to income and expense categories.</p>
+            </div>
+            {setDefaultMutation.isPending ? (
+              <span className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1 text-[11px] font-medium text-muted">
+                <Spinner size="sm" /> Updating...
+              </span>
+            ) : null}
+          </div>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <label className="flex flex-col gap-2 text-sm text-neutral">
+              <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-income">
+                Income default
+                <span className="h-2 w-2 rounded-full bg-income" aria-hidden="true" />
+              </span>
+              <select
+                value={defaultIncomeId}
+                onChange={event => handleDefaultSelect(event.target.value, 'income')}
+                disabled={!incomeCategories.length || setDefaultMutation.isPending}
+                className="rounded-2xl border border-income/30 bg-white px-3 py-2.5 text-sm font-semibold text-neutral shadow-[0_10px_28px_-22px_rgba(15,23,42,0.35)] transition focus:border-income focus:outline-none focus:ring-2 focus:ring-income/25 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <option value="" disabled>
+                  {incomeCategories.length ? 'Select income default' : 'No income categories'}
+                </option>
+                {incomeCategories.map(item => {
+                  const id = resolveCategoryId(item)
+                  return (
+                    <option key={id} value={id}>
+                      {item.name}
+                    </option>
+                  )
+                })}
+              </select>
+            </label>
+
+            <label className="flex flex-col gap-2 text-sm text-neutral">
+              <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-expense">
+                Expense default
+                <span className="h-2 w-2 rounded-full bg-expense" aria-hidden="true" />
+              </span>
+              <select
+                value={defaultExpenseId}
+                onChange={event => handleDefaultSelect(event.target.value, 'expense')}
+                disabled={!expenseCategories.length || setDefaultMutation.isPending}
+                className="rounded-2xl border border-expense/30 bg-white px-3 py-2.5 text-sm font-semibold text-neutral shadow-[0_10px_28px_-22px_rgba(15,23,42,0.35)] transition focus:border-expense focus:outline-none focus:ring-2 focus:ring-expense/25 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <option value="" disabled>
+                  {expenseCategories.length ? 'Select expense default' : 'No expense categories'}
+                </option>
+                {expenseCategories.map(item => {
+                  const id = resolveCategoryId(item)
+                  return (
+                    <option key={id} value={id}>
+                      {item.name}
+                    </option>
+                  )
+                })}
+              </select>
+            </label>
+          </div>
         </div>
 
         <div className="mt-6 rounded-3xl border border-border/60 bg-white/70 p-4 shadow-[0_20px_60px_-45px_rgba(15,23,42,0.25)]">
