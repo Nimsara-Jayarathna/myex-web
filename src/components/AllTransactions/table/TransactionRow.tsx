@@ -34,7 +34,7 @@ export const TransactionRow = ({ transaction }: TransactionRowProps) => {
         {isIncome ? '+' : '-'}
         {formatCurrency(Math.abs(transaction.amount))}
       </td>
-      <td className="px-4 py-3 text-sm text-muted">{transaction.note ?? 'ƒ?"'}</td>
+      <td className="px-4 py-3 text-sm text-muted">{transaction.note ?? 'No note'}</td>
     </tr>
   )
 }

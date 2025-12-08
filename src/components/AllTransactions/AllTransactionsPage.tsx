@@ -1,7 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import dayjs from 'dayjs'
-import type { Transaction } from '../../types'
+import { useState } from 'react'
 import type { AllTransactionsPageProps, Grouping, SortDirection, SortField } from './types'
 import { LoadingSpinner } from '../LoadingSpinner'
 import { EmptyState } from '../EmptyState'
@@ -10,7 +7,8 @@ import { SortControls } from './controls/SortControls'
 import { DirectionControls } from './controls/DirectionControls'
 import { GroupingControls } from './controls/GroupingControls'
 import { TransactionTable } from './TransactionTable'
-import { getCategories } from '../../api/categories'
+import { useAllTransactionsCategories } from './hooks/useAllTransactionsCategories'
+import { useGroupedTransactions } from './hooks/useGroupedTransactions'
 
 // --- Main Component ---
 export const AllTransactionsPage = ({
@@ -21,60 +19,8 @@ export const AllTransactionsPage = ({
 }: AllTransactionsPageProps) => {
   const [grouping, setGrouping] = useState<Grouping>('none')
 
-  // Fetch categories
-  const { data: categoriesData } = useQuery({
-    queryKey: ['categories'],
-    queryFn: getCategories,
-  })
-
-  const categories = useMemo(
-    () =>
-      (categoriesData ?? []).map(item => ({
-        id: item.id ?? item._id ?? item.name,
-        name: item.name,
-        type: item.type,
-      })),
-    [categoriesData]
-  )
-
-  const categoriesForType = useMemo(
-    () =>
-      filters.typeFilter === 'all'
-        ? categories
-        : categories.filter(item => item.type === filters.typeFilter),
-    [categories, filters.typeFilter]
-  )
-
-  // Ensure selected category is valid
-  useEffect(() => {
-    if (filters.categoryFilter === 'all') return
-    const stillValid = categoriesForType.some(cat => cat.id === filters.categoryFilter)
-    if (!stillValid) {
-      onFiltersChange({ ...filters, categoryFilter: 'all' })
-    }
-  }, [categoriesForType, filters, onFiltersChange])
-
-  // Group transactions
-  const grouped = useMemo(() => {
-    if (grouping === 'none') return null
-
-    const buckets = new Map<string, Transaction[]>()
-    transactions.forEach(txn => {
-      let key: string
-      if (grouping === 'month') {
-        key = dayjs(txn.date).format('MMMM YYYY')
-      } else {
-        key =
-          typeof txn.category === 'string'
-            ? txn.category || txn.categoryName || txn.title || 'Uncategorised'
-            : txn.category?.name ?? txn.categoryName ?? txn.title ?? 'Uncategorised'
-      }
-      if (!buckets.has(key)) buckets.set(key, [])
-      buckets.get(key)!.push(txn)
-    })
-
-    return Array.from(buckets.entries()).map(([label, items]) => ({ label, items }))
-  }, [grouping, transactions])
+  const { categoriesForType } = useAllTransactionsCategories(filters, onFiltersChange)
+  const grouped = useGroupedTransactions(transactions, grouping)
 
   return (
     <section className="space-y-4 rounded-4xl border border-border bg-white/90 p-6 shadow-card">

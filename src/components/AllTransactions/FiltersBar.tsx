@@ -3,22 +3,20 @@ import { DateRangeFilter } from './filters/DateRangeFilter'
 import { TypeFilter } from './filters/TypeFilter'
 import { CategoryFilter } from './filters/CategoryFilter'
 
-interface FiltersBarProps {
+type FilterValues = {
   startDate: string
   endDate: string
   typeFilter: TransactionTypeFilter
   categoryFilter: string
+}
+
+interface FiltersBarProps extends FilterValues {
   categories: {
     id: string
     name: string
     type: 'income' | 'expense'
   }[]
-  onChange: (filters: {
-    startDate: string
-    endDate: string
-    typeFilter: TransactionTypeFilter
-    categoryFilter: string
-  }) => void
+  onChange: (filters: FilterValues) => void
 }
 
 export const FiltersBar = ({
@@ -29,40 +27,30 @@ export const FiltersBar = ({
   categories,
   onChange,
 }: FiltersBarProps) => {
-  const handleStartDateChange = (value: string) => {
+  const updateFilters = (overrides: Partial<FilterValues>) => {
     onChange({
-      startDate: value,
+      startDate,
       endDate,
       typeFilter,
       categoryFilter,
+      ...overrides,
     })
+  }
+
+  const handleStartDateChange = (value: string) => {
+    updateFilters({ startDate: value })
   }
 
   const handleEndDateChange = (value: string) => {
-    onChange({
-      startDate,
-      endDate: value,
-      typeFilter,
-      categoryFilter,
-    })
+    updateFilters({ endDate: value })
   }
 
   const handleTypeChange = (value: TransactionTypeFilter) => {
-    onChange({
-      startDate,
-      endDate,
-      typeFilter: value,
-      categoryFilter: 'all',
-    })
+    updateFilters({ typeFilter: value, categoryFilter: 'all' })
   }
 
   const handleCategoryChange = (value: string) => {
-    onChange({
-      startDate,
-      endDate,
-      typeFilter,
-      categoryFilter: value,
-    })
+    updateFilters({ categoryFilter: value })
   }
 
   return (
@@ -85,4 +73,3 @@ export const FiltersBar = ({
     </div>
   )
 }
-
