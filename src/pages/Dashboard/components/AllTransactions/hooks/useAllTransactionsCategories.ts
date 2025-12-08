@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import type { AllTransactionsFilters } from '../types'
-import { getCategories } from '../../../api/categories'
+import { getCategories } from '../../../../../api/categories'
 
 interface CategoryOption {
   id: string

@@ -1,5 +1,5 @@
-import type { Transaction } from '../../../types'
-import { formatCurrency, formatDate } from '../../../utils/format'
+import type { Transaction } from '../../../../../types'
+import { formatCurrency, formatDate } from '../../../../../utils/format'
 
 const resolveCategory = (transaction: Transaction) => {
   if (typeof transaction.category === 'string') {

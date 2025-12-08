@@ -1,6 +1,6 @@
-import type { Transaction } from '../../../types'
-import { TransactionsSection } from '../../Transactions/TransactionsSection'
-import { TodaySummaryCards } from '../../TodaySummaryCards'
+import type { Transaction } from '../../../../../types'
+import { TransactionsSection } from '../../../../../components/Transactions/TransactionsSection'
+import { TodaySummaryCards } from '../TodaySummaryCards'
 
 interface TodayActivitySectionProps {
   transactions: Transaction[]
@@ -30,3 +30,4 @@ export const TodayActivitySection = ({
     </div>
   )
 }
+

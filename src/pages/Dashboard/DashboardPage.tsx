@@ -3,20 +3,21 @@ import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import dayjs from 'dayjs'
-import { Navbar } from '../components/Navbar/Navbar'
-import { getTransactionsFiltered } from '../api/transactions'
-import { TabNavigation } from '../components/TabNavigation'
-import { TodayTransactionsPage } from '../components/TodayTransactions/TodayTransactionsPage'
-import { AllTransactionsPage } from '../components/AllTransactions/AllTransactionsPage'
-import { FloatingActionButton } from '../components/FloatingActionButton'
-import { AddTransactionModal } from '../modals/AddTransactionModal'
-import { SettingsModal } from '../modals/SettingsModal'
-import { ReportsModal } from '../modals/ReportsModal'
-import { logoutSession } from '../api/auth'
-import { useAuth } from '../hooks/useAuth'
-import type { Transaction } from '../types'
-import type { TransactionFilters } from '../api/transactions'
-import type { AllTransactionsFilters } from '../components/AllTransactions/types'
+import { Navbar } from '../../components/Navbar/Navbar'
+import { getTransactionsFiltered } from '../../api/transactions'
+import { TabNavigation } from '../../components/TabNavigation'
+import { TodayTransactionsPage } from './components/TodayTransactions/TodayTransactionsPage'
+import { AllTransactionsPage } from './components/AllTransactions/AllTransactionsPage'
+import { FloatingActionButton } from '../../components/FloatingActionButton'
+import { AddTransactionModal } from '../../modals/AddTransactionModal'
+import { SettingsModal } from '../../modals/SettingsModal'
+import { ReportsModal } from '../../modals/ReportsModal'
+import { logoutSession } from '../../api/auth'
+import { useAuth } from '../../hooks/useAuth'
+import type { Transaction } from '../../types'
+import type { TransactionFilters } from '../../api/transactions'
+import type { AllTransactionsFilters } from './components/AllTransactions/types'
+import { Widget } from './components/Widget'
 
 const transactionKey = ['transactions']
 
@@ -136,22 +137,24 @@ export const DashboardPage = () => {
           />
         </div>
 
-        {activeTab === 'today' ? (
-          <TodayTransactionsPage
-            transactions={todayTransactions}
-            isLoading={isTodayLoading}
-            income={todayIncome}
-            expense={todayExpense}
-            balance={todayBalance}
-          />
-        ) : (
-          <AllTransactionsPage
-            transactions={allTransactions}
-            isLoading={isAllLoading}
-            filters={allFilters}
-            onFiltersChange={setAllFilters}
-          />
-        )}
+        <Widget>
+          {activeTab === 'today' ? (
+            <TodayTransactionsPage
+              transactions={todayTransactions}
+              isLoading={isTodayLoading}
+              income={todayIncome}
+              expense={todayExpense}
+              balance={todayBalance}
+            />
+          ) : (
+            <AllTransactionsPage
+              transactions={allTransactions}
+              isLoading={isAllLoading}
+              filters={allFilters}
+              onFiltersChange={setAllFilters}
+            />
+          )}
+        </Widget>
       </main>
 
       <FloatingActionButton onClick={() => setAddTransactionOpen(true)} />

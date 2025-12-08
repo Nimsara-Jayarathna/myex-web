@@ -1,4 +1,4 @@
-import type { Transaction } from '../../types'
+import type { Transaction } from '../../../../types'
 import type { GroupedTransactions } from './types'
 import { TransactionTableHeader } from './table/TransactionTableHeader'
 import { TransactionRow } from './table/TransactionRow'

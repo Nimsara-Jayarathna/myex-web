@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import dayjs from 'dayjs'
-import type { Transaction } from '../../../types'
+import type { Transaction } from '../../../../../types'
 import type { GroupedTransactions, Grouping } from '../types'
 
 export const useGroupedTransactions = (

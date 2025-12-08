@@ -1,4 +1,4 @@
-import type { Transaction } from '../../types'
+import type { Transaction } from '../../../../types'
 
 export type SortField = 'date' | 'amount' | 'category'
 export type SortDirection = 'asc' | 'desc'

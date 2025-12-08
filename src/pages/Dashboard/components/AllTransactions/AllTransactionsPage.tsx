@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { AllTransactionsPageProps, Grouping, SortDirection, SortField } from './types'
-import { LoadingSpinner } from '../LoadingSpinner'
-import { EmptyState } from '../ui/EmptyState'
+import { LoadingSpinner } from '../../../../components/LoadingSpinner'
+import { EmptyState } from '../../../../components/ui/EmptyState'
 import { FiltersBar } from './FiltersBar'
 import { SortControls } from './controls/SortControls'
 import { DirectionControls } from './controls/DirectionControls'
@@ -10,7 +10,6 @@ import { TransactionTable } from './TransactionTable'
 import { useAllTransactionsCategories } from './hooks/useAllTransactionsCategories'
 import { useGroupedTransactions } from './hooks/useGroupedTransactions'
 
-// --- Main Component ---
 export const AllTransactionsPage = ({
   transactions,
   isLoading = false,
@@ -72,3 +71,4 @@ export const AllTransactionsPage = ({
     </section>
   )
 }
+
