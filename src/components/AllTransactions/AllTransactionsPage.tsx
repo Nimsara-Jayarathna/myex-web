@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { AllTransactionsPageProps, Grouping, SortDirection, SortField } from './types'
 import { LoadingSpinner } from '../LoadingSpinner'
-import { EmptyState } from '../EmptyState'
+import { EmptyState } from '../ui/EmptyState'
 import { FiltersBar } from './FiltersBar'
 import { SortControls } from './controls/SortControls'
 import { DirectionControls } from './controls/DirectionControls'

@@ -1,7 +1,8 @@
-import type { Transaction } from '../types'
-import { TransactionList } from './TransactionList'
-import { LoadingSpinner } from './LoadingSpinner'
-import { EmptyState } from './EmptyState'
+import type { Transaction } from '../../types'
+import { TransactionList } from '../TransactionList'
+import { LoadingSpinner } from '../LoadingSpinner'
+import { EmptyState } from '../ui/EmptyState'
+import { ListHeader } from './ListHeader'
 
 interface TransactionsSectionProps {
   title: string
@@ -20,12 +21,7 @@ export const TransactionsSection = ({
 }: TransactionsSectionProps) => {
   return (
     <section className="rounded-4xl border border-border bg-white/90 p-6 shadow-card">
-      <header className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-semibold text-neutral">{title}</h2>
-          <p className="text-sm text-muted">Track and review every inflow and outflow.</p>
-        </div>
-      </header>
+      <ListHeader title={title} />
 
       {isLoading ? (
         <LoadingSpinner />
@@ -37,3 +33,4 @@ export const TransactionsSection = ({
     </section>
   )
 }
+

@@ -1,5 +1,5 @@
 import type { Transaction } from '../../../types'
-import { TransactionsSection } from '../../TransactionsSection'
+import { TransactionsSection } from '../../Transactions/TransactionsSection'
 
 interface TodayActivitySectionProps {
   transactions: Transaction[]
@@ -17,4 +17,3 @@ export const TodayActivitySection = ({ transactions, isLoading = false }: TodayA
     />
   )
 }
-
