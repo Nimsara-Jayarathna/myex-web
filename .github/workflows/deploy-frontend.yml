@@ -90,6 +90,7 @@ jobs:
             const envName = baseRef === 'main' ? 'production' : 'staging';
             const { owner, repo } = context.repo;
 
+            // Create a transient deployment for PR
             const deployment = await github.rest.repos.createDeployment({
               owner,
               repo,
@@ -97,15 +98,17 @@ jobs:
               environment: envName,
               auto_merge: false,
               required_contexts: [],
+              transient_environment: true,
+              production_environment: envName === 'production',
               description: `Fake deployment for PR #${context.payload.pull_request.number}`,
             });
 
+            // Mark the deployment as active success
             await github.rest.repos.createDeploymentStatus({
               owner,
               repo,
               deployment_id: deployment.data.id,
               state: 'success',
-              auto_inactive: true,
             });
 
       - name: Upload build artifact
@@ -130,6 +133,7 @@ jobs:
       SSH_HOST: ${{ secrets.DO_SSH_HOST }}
       SSH_USER: ${{ secrets.DO_SSH_USER }}
       SSH_PORT: ${{ secrets.DO_SSH_PORT }}
+      SSH_KEY: ${{ secrets.DO_SSH_KEY }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -141,16 +145,13 @@ jobs:
           path: ${{ env.BUILD_DIR }}
 
       - name: Prepare SSH key
-        env:
-          SSH_KEY: ${{ secrets.DO_SSH_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          echo "${SSH_KEY}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
       - name: Add droplet to known hosts
-        run: |
-          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+        run: ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
 
       - name: Stop and remove existing container
         run: |
