@@ -19,17 +19,19 @@ export const AllTransactionsPage = ({
   const [grouping, setGrouping] = useState<Grouping>('none')
 
   const { categoriesForType } = useAllTransactionsCategories(filters, onFiltersChange)
-  const grouped = useGroupedTransactions(transactions, grouping)
+  const filteredTransactions =
+    filters.categoryFilter === 'all'
+      ? transactions
+      : transactions.filter(transaction => {
+          const transactionCategoryId =
+            transaction.categoryId ?? (typeof transaction.category === 'string' ? transaction.category : undefined)
+          return transactionCategoryId === filters.categoryFilter
+        })
+
+  const grouped = useGroupedTransactions(filteredTransactions, grouping)
 
   return (
     <section className="space-y-4 rounded-4xl border border-border bg-white/90 p-6 shadow-card">
-      <header className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-semibold text-neutral">All Transactions</h2>
-          <p className="text-sm text-muted">Filter, sort, or group your full history.</p>
-        </div>
-      </header>
-
       <div className="space-y-3">
         <FiltersBar
           startDate={filters.startDate}
@@ -66,7 +68,7 @@ export const AllTransactionsPage = ({
       ) : transactions.length === 0 ? (
         <EmptyState title="No transactions found" description="Adjust filters or add a transaction to see it here." />
       ) : (
-        <TransactionTable transactions={transactions} grouped={grouped ?? undefined} />
+        <TransactionTable transactions={filteredTransactions} grouped={grouped ?? undefined} />
       )}
     </section>
   )

@@ -31,7 +31,14 @@ const extractCategories = (data: CategoriesResponse): CategoryApiShape[] => {
 }
 
 export const getCategories = async () => {
-  const { data } = await apiClient.get<CategoriesResponse>('/api/categories')
+  const { data } = await apiClient.get<CategoriesResponse>('/api/categories/active')
+  return extractCategories(data).map(normalizeCategory)
+}
+
+export const getAllCategories = async (type?: 'income' | 'expense') => {
+  const { data } = await apiClient.get<CategoriesResponse>('/api/categories/all', {
+    params: type ? { type } : {},
+  })
   return extractCategories(data).map(normalizeCategory)
 }
 

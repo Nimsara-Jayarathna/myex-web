@@ -9,9 +9,9 @@ import { TabNavigation } from '../../components/TabNavigation'
 import { TodayTransactionsPage } from './components/TodayTransactions/TodayTransactionsPage'
 import { AllTransactionsPage } from './components/AllTransactions/AllTransactionsPage'
 import { FloatingActionButton } from '../../components/FloatingActionButton'
-import { AddTransactionModal } from '../../modals/AddTransactionModal'
-import { SettingsModal } from '../../modals/SettingsModal'
-import { ReportsModal } from '../../modals/ReportsModal'
+import { AddTransactionModal } from '../../modals/AddTransaction'
+import { SettingsModal } from '../../modals/Settings'
+import { ReportsModal } from '../../modals/Reports'
 import { logoutSession } from '../../api/auth'
 import { useAuth } from '../../hooks/useAuth'
 import type { Transaction } from '../../types'
@@ -24,6 +24,7 @@ const transactionKey = ['transactions']
 export const DashboardPage = () => {
   const navigate = useNavigate()
   const { user, logout, isAuthenticated } = useAuth()
+  const todayDate = dayjs().format('YYYY-MM-DD')
   const [isSettingsOpen, setSettingsOpen] = useState(false)
   const [isReportsOpen, setReportsOpen] = useState(false)
   const [isAddTransactionOpen, setAddTransactionOpen] = useState(false)
@@ -34,14 +35,13 @@ export const DashboardPage = () => {
   const [todayExpense, setTodayExpense] = useState(0)
   const [todayBalance, setTodayBalance] = useState(0)
   const [allFilters, setAllFilters] = useState<AllTransactionsFilters>({
-    startDate: '',
-    endDate: '',
+    startDate: todayDate,
+    endDate: todayDate,
     typeFilter: 'all',
     categoryFilter: 'all',
     sortField: 'date',
     sortDirection: 'desc',
   })
-  const todayDate = dayjs().format('YYYY-MM-DD')
 
   const {
     data: todayData,
@@ -62,13 +62,12 @@ export const DashboardPage = () => {
     isLoading: isAllLoading,
     isError: isAllError,
   } = useQuery({
-    queryKey: [...transactionKey, 'all', allFilters],
+    queryKey: [...transactionKey, 'all', { ...allFilters, categoryFilter: undefined }],
     queryFn: () =>
       getTransactionsFiltered({
         startDate: allFilters.startDate || undefined,
         endDate: allFilters.endDate || undefined,
         type: allFilters.typeFilter === 'all' ? undefined : allFilters.typeFilter,
-        category: allFilters.categoryFilter === 'all' ? undefined : allFilters.categoryFilter,
         sortBy: allFilters.sortField,
         sortDir: allFilters.sortDirection,
       }),
