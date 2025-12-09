@@ -2,9 +2,7 @@ import { type FormEvent, useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import { Modal } from '../../components/Modal'
-import { Spinner } from '../../components/Spinner'
 import { getCategories, createCategory, deleteCategory, setDefaultCategory } from '../../api/categories'
-import { LoadingSpinner } from '../../components/LoadingSpinner'
 import { ErrorBanner } from '../../components/ErrorBanner'
 import { mapApiError } from '../../utils/errors'
 import type { Category } from '../../types'
@@ -179,4 +177,3 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     </Modal>
   )
 }
-

@@ -1,4 +1,5 @@
 import { Line } from 'react-chartjs-2'
+import { formatCurrency } from '../../utils/format'
 
 interface ReportsChartProps {
   chartData: {
@@ -30,10 +31,7 @@ export const ReportsChart = ({ chartData }: ReportsChartProps) => (
             callbacks: {
               label: context => {
                 const value = context.parsed.y ?? 0
-                return `${context.dataset.label}: ${value.toLocaleString(undefined, {
-                  style: 'currency',
-                  currency: 'USD',
-                })}`
+                return `${context.dataset.label}: ${formatCurrency(value)}`
               },
             },
           },
@@ -52,4 +50,3 @@ export const ReportsChart = ({ chartData }: ReportsChartProps) => (
     />
   </div>
 )
-

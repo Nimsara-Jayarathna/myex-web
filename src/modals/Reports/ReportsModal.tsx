@@ -10,11 +10,9 @@ import {
   Legend,
   Filler,
 } from 'chart.js'
-import { Line } from 'react-chartjs-2'
 import { Modal } from '../../components/Modal'
 import { getTransactionSummary } from '../../api/transactions'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
-import { formatCurrency } from '../../utils/format'
 import { ReportsHeader } from './ReportsHeader'
 import { ReportsChart } from './ReportsChart'
 
@@ -86,4 +84,3 @@ export const ReportsModal = ({ open, onClose }: ReportsModalProps) => {
     </Modal>
   )
 }
-

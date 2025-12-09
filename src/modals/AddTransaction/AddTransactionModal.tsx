@@ -3,7 +3,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import dayjs from 'dayjs'
 import { Modal } from '../../components/Modal'
-import { Spinner } from '../../components/Spinner'
 import { getCategories } from '../../api/categories'
 import { createTransaction } from '../../api/transactions'
 import type { Transaction } from '../../types'
@@ -162,4 +161,3 @@ export const AddTransactionModal = ({ open, onClose, onTransactionCreated }: Add
     </Modal>
   )
 }
-

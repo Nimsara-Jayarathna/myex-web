@@ -22,8 +22,6 @@ export const CategoriesGrid = ({
   resolveCategoryId,
   onDelete,
 }: CategoriesGridProps) => {
-  const isIncome = true
-
   if (isLoading) {
     return <LoadingSpinner />
   }
@@ -79,7 +77,7 @@ export const CategoriesGrid = ({
                 </div>
                 <span
                   className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-[11px] font-medium ${
-                    isIncome
+                    column.isIncome
                       ? 'border-income/40 bg-income/10 text-income'
                       : 'border-expense/40 bg-expense/10 text-expense'
                   }`}
@@ -148,4 +146,3 @@ export const CategoriesGrid = ({
     </div>
   )
 }
-

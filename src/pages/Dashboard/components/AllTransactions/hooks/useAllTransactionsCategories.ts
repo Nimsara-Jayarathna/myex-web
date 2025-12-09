@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import type { AllTransactionsFilters } from '../types'
-import { getCategories } from '../../../../../api/categories'
+import { getAllCategories } from '../../../../../api/categories'
 
 interface CategoryOption {
   id: string
@@ -18,11 +18,18 @@ export const useAllTransactionsCategories = (
   onFiltersChange: (filters: AllTransactionsFilters) => void
 ): UseAllTransactionsCategoriesResult => {
   const { data: categoriesData } = useQuery({
-    queryKey: ['categories'],
-    queryFn: getCategories,
+    queryKey: ['categoriesAll', filters.typeFilter],
+    queryFn: () =>
+      getAllCategories(
+        filters.typeFilter === 'all'
+          ? undefined
+          : filters.typeFilter === 'income' || filters.typeFilter === 'expense'
+            ? filters.typeFilter
+            : undefined
+      ),
   })
 
-  const categories = useMemo(
+  const categoriesForType = useMemo(
     () =>
       (categoriesData ?? []).map(item => ({
         id: item.id ?? item._id ?? item.name,
@@ -32,16 +39,10 @@ export const useAllTransactionsCategories = (
     [categoriesData]
   )
 
-  const categoriesForType = useMemo(
-    () =>
-      filters.typeFilter === 'all'
-        ? categories
-        : categories.filter(item => item.type === filters.typeFilter),
-    [categories, filters.typeFilter]
-  )
-
   useEffect(() => {
     if (filters.categoryFilter === 'all') return
+    if (!categoriesForType.length) return
+
     const stillValid = categoriesForType.some(cat => cat.id === filters.categoryFilter)
     if (!stillValid) {
       onFiltersChange({ ...filters, categoryFilter: 'all' })
