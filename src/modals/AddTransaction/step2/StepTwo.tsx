@@ -1,0 +1,134 @@
+import dayjs from 'dayjs'
+import type { FormEvent } from 'react'
+import { CategoryTiles } from './CategoryTiles'
+
+interface StepTwoCategory {
+  id: string
+  name: string
+  type: 'income' | 'expense'
+  isDefault?: boolean
+}
+
+interface StepTwoProps {
+  amount: string
+  transactionType: 'income' | 'expense'
+  date: string
+  note: string
+  categories: StepTwoCategory[]
+  filteredCategories: StepTwoCategory[]
+  selectedCategory: string
+  isLoadingCategories: boolean
+  isSubmitting: boolean
+  onBack: () => void
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void
+  onChangeType: (type: 'income' | 'expense') => void
+  onChangeDate: (value: string) => void
+  onChangeNote: (value: string) => void
+  onSelectCategory: (id: string) => void
+}
+
+export const StepTwo = ({
+  amount,
+  transactionType,
+  date,
+  note,
+  filteredCategories,
+  selectedCategory,
+  isLoadingCategories,
+  isSubmitting,
+  onBack,
+  onSubmit,
+  onChangeType,
+  onChangeDate,
+  onChangeNote,
+  onSelectCategory,
+}: StepTwoProps) => {
+  const isToday = date === dayjs().format('YYYY-MM-DD')
+
+  return (
+    <form className="flex flex-col gap-5" onSubmit={onSubmit}>
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm text-neutral shadow-[0_18px_50px_-40px_rgba(15,23,42,0.35)]">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={onBack}
+            className="rounded-full border border-border bg-white px-3 py-1 text-xs font-medium text-muted transition hover:border-accent/40 hover:text-accent"
+          >
+            ← Back
+          </button>
+          <span className="inline-flex items-center gap-2 rounded-xl border border-border bg-white px-3 py-1.5">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted">Amount</span>
+            <span className="text-sm font-semibold text-neutral">{amount || '0.00'}</span>
+          </span>
+        </div>
+        <div className="inline-flex rounded-full border border-border bg-white shadow-soft">
+          {(['income', 'expense'] as const).map(option => (
+            <button
+              key={option}
+              type="button"
+              onClick={() => onChangeType(option)}
+              className={`px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] transition first:rounded-l-full last:rounded-r-full ${
+                transactionType === option
+                  ? option === 'income'
+                    ? 'bg-income text-white'
+                    : 'bg-expense text-white'
+                  : 'text-muted hover:bg-accent/5'
+              }`}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <span className="text-sm text-neutral">Category</span>
+        <CategoryTiles
+          categories={filteredCategories}
+          selectedCategoryId={selectedCategory}
+          isLoading={isLoadingCategories}
+          onSelectCategory={onSelectCategory}
+        />
+      </div>
+
+      <label className="flex flex-col gap-2 text-sm text-neutral">
+        <span className="flex items-center gap-2">
+          <span>Date</span>
+          {isToday ? (
+            <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[11px] font-medium text-accent">Today</span>
+          ) : null}
+        </span>
+        <input
+          type="date"
+          value={date}
+          onChange={event => onChangeDate(event.target.value)}
+          className={`rounded-2xl border px-4 py-3 text-sm text-neutral focus:outline-none focus:ring-2 ${
+            isToday
+              ? 'border-accent bg-accent/5 focus:border-accent focus:ring-accent/40'
+              : 'border-border bg-white focus:border-accent focus:ring-accent/30'
+          }`}
+        />
+      </label>
+
+      <label className="flex flex-col gap-2 text-sm text-neutral">
+        Note
+        <textarea
+          value={note}
+          onChange={event => onChangeNote(event.target.value)}
+          rows={3}
+          placeholder="Optional note about this transaction"
+          className="rounded-2xl border border-border bg-white px-4 py-3 text-sm text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+        />
+      </label>
+
+      <button
+        type="submit"
+        className="mt-2 inline-flex items-center justify-center gap-2 rounded-2xl bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#2F89C9] disabled:cursor-not-allowed disabled:opacity-70"
+        disabled={isSubmitting || isLoadingCategories || !filteredCategories.length}
+      >
+        {isSubmitting ? <span>Saving...</span> : <span>Add Transaction</span>}
+      </button>
+    </form>
+  )
+}
+
