@@ -19,7 +19,16 @@ export const AllTransactionsPage = ({
   const [grouping, setGrouping] = useState<Grouping>('none')
 
   const { categoriesForType } = useAllTransactionsCategories(filters, onFiltersChange)
-  const grouped = useGroupedTransactions(transactions, grouping)
+  const filteredTransactions =
+    filters.categoryFilter === 'all'
+      ? transactions
+      : transactions.filter(transaction => {
+          const transactionCategoryId =
+            transaction.categoryId ?? (typeof transaction.category === 'string' ? transaction.category : undefined)
+          return transactionCategoryId === filters.categoryFilter
+        })
+
+  const grouped = useGroupedTransactions(filteredTransactions, grouping)
 
   return (
     <section className="space-y-4 rounded-4xl border border-border bg-white/90 p-6 shadow-card">
@@ -59,7 +68,7 @@ export const AllTransactionsPage = ({
       ) : transactions.length === 0 ? (
         <EmptyState title="No transactions found" description="Adjust filters or add a transaction to see it here." />
       ) : (
-        <TransactionTable transactions={transactions} grouped={grouped ?? undefined} />
+        <TransactionTable transactions={filteredTransactions} grouped={grouped ?? undefined} />
       )}
     </section>
   )
