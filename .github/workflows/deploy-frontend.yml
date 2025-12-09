@@ -22,8 +22,8 @@ jobs:
        (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')) ||
       (github.event_name == 'pull_request' &&
        (github.base_ref == 'dev' || github.base_ref == 'main'))
-    environment: ${{ (github.event_name == 'pull_request' && github.base_ref == 'main') ||
-      (github.event_name == 'push' && github.ref == 'refs/heads/main') && 'production' || 'staging' }}
+    # Only pushes to main use the production environment; everything else (including PRs) is staging
+    environment: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'production' || 'staging' }}
     outputs:
       deploy_env: ${{ steps.deploy_vars.outputs.deploy_env }}
       target_dir: ${{ steps.deploy_vars.outputs.target_dir }}
