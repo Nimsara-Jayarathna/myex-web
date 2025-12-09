@@ -4,7 +4,6 @@ import type { Category } from '../../types'
 
 interface CategoriesGridProps {
   isLoading: boolean
-  isFetching: boolean
   categories: Category[]
   deleteMutation: {
     isPending: boolean
@@ -12,15 +11,20 @@ interface CategoriesGridProps {
   }
   resolveCategoryId: (category: Category) => string
   onDelete: (category: Category) => void
+  onSetDefault: (category: Category) => void
+  isSettingDefault: boolean
+  onAddCategory: () => void
 }
 
 export const CategoriesGrid = ({
   isLoading,
-  isFetching,
   categories,
   deleteMutation,
   resolveCategoryId,
   onDelete,
+  onSetDefault,
+  isSettingDefault,
+  onAddCategory,
 }: CategoriesGridProps) => {
   if (isLoading) {
     return <LoadingSpinner />
@@ -52,11 +56,16 @@ export const CategoriesGrid = ({
             View and manage all your income and expense categories. Removing one will affect linked transactions.
           </p>
         </div>
-        {isFetching ? (
-          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1 text-[11px] font-medium text-muted">
-            <Spinner size="sm" /> Refreshing...
-          </span>
-        ) : null}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onAddCategory}
+            className="inline-flex items-center gap-1 rounded-2xl bg-accent px-3 py-1.5 text-xs font-semibold text-white shadow-soft transition hover:bg-[#2F89C9]"
+          >
+            <span className="text-base leading-none">+</span>
+            <span>Add category</span>
+          </button>
+        </div>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         {grouped.map(column => {
@@ -91,8 +100,9 @@ export const CategoriesGrid = ({
                     const categoryId = resolveCategoryId(category)
                     const isDeleting = deleteMutation.isPending && deleteMutation.variables === categoryId
                     const initials = category.name?.[0]?.toUpperCase() ?? '?'
-                    const removeButtonClasses =
-                      'border-expense/30 text-expense hover:border-expense/50 hover:bg-expense/10'
+                    const isDefault = Boolean(category.isDefault)
+                    const canDelete = !isDefault
+
                     return (
                       <li
                         key={categoryId}
@@ -121,15 +131,36 @@ export const CategoriesGrid = ({
                             </div>
                           </div>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => onDelete(category)}
-                          className={`inline-flex items-center gap-1 self-end rounded-full border px-3 py-1 text-xs font-medium transition sm:self-center ${removeButtonClasses}`}
-                          disabled={isDeleting}
-                        >
-                          {isDeleting ? <Spinner size="sm" /> : null}
-                          Remove
-                        </button>
+                        <div className="flex items-center gap-1 self-end sm:self-center">
+                          <button
+                            type="button"
+                            onClick={() => onSetDefault(category)}
+                            disabled={isDefault || isSettingDefault}
+                            className={`inline-flex items-center justify-center text-[34px] transition ${
+                              isDefault
+                                ? 'text-yellow-500 cursor-default'
+                                : 'text-yellow-400 hover:text-yellow-500'
+                            } disabled:cursor-not-allowed disabled:opacity-70`}
+                            aria-label={isDefault ? 'Default category' : 'Set as default'}
+                          >
+                            <span>{isDefault ? '★' : '☆'}</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (canDelete) {
+                                onDelete(category)
+                              }
+                            }}
+                            className={`inline-flex items-center justify-center text-[34px] transition ${
+                              canDelete ? 'text-expense hover:text-expense/80' : 'text-muted cursor-not-allowed'
+                            } disabled:cursor-not-allowed disabled:opacity-70`}
+                            disabled={isDeleting || !canDelete}
+                            aria-label={canDelete ? 'Remove category' : 'Cannot remove default category'}
+                          >
+                            {isDeleting && canDelete ? <Spinner size="sm" /> : <span className="leading-none">×</span>}
+                          </button>
+                        </div>
                       </li>
                     )
                   })

@@ -24,6 +24,7 @@ export const CategoryForm = ({ name, type, isSaving, onChangeName, onChangeType,
         name="name"
         value={name}
         onChange={event => onChangeName(event.target.value)}
+        maxLength={12}
         className="w-full rounded-2xl border border-border bg-white px-4 py-2.5 text-sm text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
         placeholder="e.g. Groceries"
       />
@@ -65,4 +66,3 @@ export const CategoryForm = ({ name, type, isSaving, onChangeName, onChangeType,
     </div>
   </form>
 )
-

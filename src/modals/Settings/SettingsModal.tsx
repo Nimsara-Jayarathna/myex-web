@@ -1,14 +1,14 @@
-import { type FormEvent, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import { Modal } from '../../components/Modal'
-import { getCategories, createCategory, deleteCategory, setDefaultCategory } from '../../api/categories'
+import { LoadingSpinner } from '../../components/LoadingSpinner'
+import { getCategories, deleteCategory, setDefaultCategory } from '../../api/categories'
 import { ErrorBanner } from '../../components/ErrorBanner'
 import { mapApiError } from '../../utils/errors'
 import type { Category } from '../../types'
-import { CategoryForm } from './CategoryForm'
-import { DefaultCategories } from './DefaultCategories'
 import { CategoriesGrid } from './CategoriesGrid'
+import { AddCategoryModal } from './AddCategoryModal'
 
 interface SettingsModalProps {
   open: boolean
@@ -19,8 +19,7 @@ const categoryKey = ['categories']
 
 export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const queryClient = useQueryClient()
-  const [name, setName] = useState('')
-  const [type, setType] = useState<'income' | 'expense'>('income')
+  const [isAddCategoryOpen, setAddCategoryOpen] = useState(false)
   const [defaultIncomeId, setDefaultIncomeId] = useState('')
   const [defaultExpenseId, setDefaultExpenseId] = useState('')
   const [uiError, setUiError] = useState<{ message: string; detail?: string } | null>(null)
@@ -50,17 +49,6 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     () => (categories ?? []).filter(item => item.type === 'expense'),
     [categories],
   )
-
-  const createMutation = useMutation({
-    mutationFn: createCategory,
-    onSuccess: () => {
-      toast.success('Category created')
-      setName('')
-      queryClient.invalidateQueries({ queryKey: categoryKey })
-      setUiError(null)
-    },
-    onError: error => setUiError(mapApiError(error)),
-  })
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteCategory(id),
@@ -108,15 +96,6 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     setDefaultMutation.mutate(categoryId)
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    if (!name.trim()) {
-      toast.error('Category name is required')
-      return
-    }
-    createMutation.mutate({ name: name.trim(), type })
-  }
-
   const handleDelete = (category: Category) => {
     const identifier = resolveCategoryId(category)
     if (!identifier) {
@@ -124,6 +103,15 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
       return
     }
     deleteMutation.mutate(identifier)
+  }
+
+  const handleSetDefault = (category: Category) => {
+    const identifier = resolveCategoryId(category)
+    if (!identifier) {
+      toast.error('Unable to set default: missing identifier')
+      return
+    }
+    handleDefaultSelect(identifier, category.type)
   }
 
   return (
@@ -134,46 +122,42 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
       subtitle="Create and organize your income and expense categories."
       widthClassName="max-w-4xl"
     >
-      <div className="space-y-5">
-        {uiError || isError ? (
-          <div className="flex justify-center">
-            <ErrorBanner
-              message={(uiError ?? mapApiError(error)).message}
-              detail={(uiError ?? mapApiError(error)).detail}
-              onRetry={isError ? () => refetch() : undefined}
-              className="w-full max-w-2xl"
-            />
+      <div className="relative">
+        <div className="space-y-5">
+          {uiError || isError ? (
+            <div className="flex justify-center">
+              <ErrorBanner
+                message={(uiError ?? mapApiError(error)).message}
+                detail={(uiError ?? mapApiError(error)).detail}
+                onRetry={isError ? () => refetch() : undefined}
+                className="w-full max-w-2xl"
+              />
+            </div>
+          ) : null}
+
+          <CategoriesGrid
+            isLoading={isLoading}
+            categories={categories ?? []}
+            deleteMutation={deleteMutation}
+            resolveCategoryId={resolveCategoryId}
+            onDelete={handleDelete}
+            onSetDefault={handleSetDefault}
+            isSettingDefault={setDefaultMutation.isPending}
+            onAddCategory={() => setAddCategoryOpen(true)}
+          />
+        </div>
+
+        {(isLoading || isFetching || deleteMutation.isPending || setDefaultMutation.isPending) && (
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/75 backdrop-blur-sm">
+            <div className="flex flex-col items-center gap-3">
+              <LoadingSpinner />
+              <p className="text-xs font-medium text-muted">Updating categories...</p>
+            </div>
           </div>
-        ) : null}
-
-        <CategoryForm
-          name={name}
-          type={type}
-          isSaving={createMutation.isPending}
-          onChangeName={setName}
-          onChangeType={setType}
-          onSubmit={handleSubmit}
-        />
-
-        <DefaultCategories
-          incomeCategories={incomeCategories}
-          expenseCategories={expenseCategories}
-          defaultIncomeId={defaultIncomeId}
-          defaultExpenseId={defaultExpenseId}
-          isUpdating={setDefaultMutation.isPending}
-          onChangeDefault={handleDefaultSelect}
-          resolveCategoryId={resolveCategoryId}
-        />
-
-        <CategoriesGrid
-          isLoading={isLoading}
-          isFetching={isFetching}
-          categories={categories ?? []}
-          deleteMutation={deleteMutation}
-          resolveCategoryId={resolveCategoryId}
-          onDelete={handleDelete}
-        />
+        )}
       </div>
+
+      <AddCategoryModal open={isAddCategoryOpen} onClose={() => setAddCategoryOpen(false)} />
     </Modal>
   )
 }
