@@ -24,6 +24,7 @@ const transactionKey = ['transactions']
 export const DashboardPage = () => {
   const navigate = useNavigate()
   const { user, logout, isAuthenticated } = useAuth()
+  const todayDate = dayjs().format('YYYY-MM-DD')
   const [isSettingsOpen, setSettingsOpen] = useState(false)
   const [isReportsOpen, setReportsOpen] = useState(false)
   const [isAddTransactionOpen, setAddTransactionOpen] = useState(false)
@@ -34,14 +35,13 @@ export const DashboardPage = () => {
   const [todayExpense, setTodayExpense] = useState(0)
   const [todayBalance, setTodayBalance] = useState(0)
   const [allFilters, setAllFilters] = useState<AllTransactionsFilters>({
-    startDate: '',
-    endDate: '',
+    startDate: todayDate,
+    endDate: todayDate,
     typeFilter: 'all',
     categoryFilter: 'all',
     sortField: 'date',
     sortDirection: 'desc',
   })
-  const todayDate = dayjs().format('YYYY-MM-DD')
 
   const {
     data: todayData,

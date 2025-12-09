@@ -23,13 +23,6 @@ export const AllTransactionsPage = ({
 
   return (
     <section className="space-y-4 rounded-4xl border border-border bg-white/90 p-6 shadow-card">
-      <header className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-semibold text-neutral">All Transactions</h2>
-          <p className="text-sm text-muted">Filter, sort, or group your full history.</p>
-        </div>
-      </header>
-
       <div className="space-y-3">
         <FiltersBar
           startDate={filters.startDate}
