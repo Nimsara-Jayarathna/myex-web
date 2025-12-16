@@ -8,6 +8,8 @@ interface TodayActivitySectionProps {
   income: number
   expense: number
   balance: number
+  onDeleteTransaction?: (transaction: Transaction) => void
+  isDeleting?: boolean
 }
 
 export const TodayActivitySection = ({
@@ -16,6 +18,8 @@ export const TodayActivitySection = ({
   income,
   expense,
   balance,
+  onDeleteTransaction,
+  isDeleting,
 }: TodayActivitySectionProps) => {
   return (
     <div className="space-y-6">
@@ -26,6 +30,8 @@ export const TodayActivitySection = ({
         isLoading={isLoading}
         emptyTitle="No activity today"
         emptyDescription="Add a transaction to see it reflected in today's activity."
+        onDeleteTransaction={onDeleteTransaction}
+        isDeleting={isDeleting}
       />
     </div>
   )

@@ -1,12 +1,20 @@
+import dayjs from 'dayjs'
 import type { Transaction } from '../types'
 import { formatCurrency, formatDate } from '../utils/format'
 
 interface TransactionListProps {
   transactions: Transaction[]
   title?: string
+  onDeleteTransaction?: (transaction: Transaction) => void
+  isDeleting?: boolean
 }
 
-export const TransactionList = ({ transactions, title = 'Recent Transactions' }: TransactionListProps) => {
+export const TransactionList = ({
+  transactions,
+  title = 'Recent Transactions',
+  onDeleteTransaction,
+  isDeleting,
+}: TransactionListProps) => {
   return (
     <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-soft">
       <header className="flex items-center justify-between border-b border-border px-6 py-4">
@@ -21,6 +29,8 @@ export const TransactionList = ({ transactions, title = 'Recent Transactions' }:
           const isIncome = transaction.type === 'income'
           const amountLabel = `${isIncome ? '+' : '-'}${formatCurrency(Math.abs(transaction.amount))}`
           const key = transaction._id ?? transaction.id ?? `${transaction.date}-${transaction.amount}`
+          const canDelete =
+            !!transaction.createdAt && dayjs(transaction.createdAt).isSame(dayjs(), 'day') && !!onDeleteTransaction
 
           return (
             <li
@@ -45,11 +55,23 @@ export const TransactionList = ({ transactions, title = 'Recent Transactions' }:
                   ) : null}
                 </div>
               </div>
-              <span
-                className={`text-right text-base font-semibold tracking-tight ${isIncome ? 'text-income' : 'text-expense'}`}
-              >
-                {amountLabel}
-              </span>
+              <div className="flex items-center gap-3">
+                <span
+                  className={`text-right text-base font-semibold tracking-tight ${isIncome ? 'text-income' : 'text-expense'}`}
+                >
+                  {amountLabel}
+                </span>
+                {canDelete ? (
+                  <button
+                    type="button"
+                    onClick={() => onDeleteTransaction?.(transaction)}
+                    disabled={isDeleting}
+                    className="text-[11px] font-semibold text-red-500 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    Delete
+                  </button>
+                ) : null}
+              </div>
             </li>
           )
         })}

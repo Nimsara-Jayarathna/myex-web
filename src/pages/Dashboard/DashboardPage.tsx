@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import dayjs from 'dayjs'
 import { Navbar } from './components/Navbar/Navbar'
-import { getTransactionsFiltered } from '../../api/transactions'
+import { deleteTransaction, getTransactionsFiltered } from '../../api/transactions'
 import { TabNavigation } from '../../components/TabNavigation'
 import { TodayTransactionsPage } from './components/TodayTransactions/TodayTransactionsPage'
 import { AllTransactionsPage } from './components/AllTransactions/AllTransactionsPage'
@@ -18,12 +18,14 @@ import type { Transaction } from '../../types'
 import type { TransactionFilters } from '../../api/transactions'
 import type { AllTransactionsFilters } from './components/AllTransactions/types'
 import { Widget } from './components/Widget'
+import { mapApiError } from '../../utils/errors'
 
 const transactionKey = ['transactions']
 
 export const DashboardPage = () => {
   const navigate = useNavigate()
   const { user, logout, isAuthenticated } = useAuth()
+  const queryClient = useQueryClient()
   const todayDate = dayjs().format('YYYY-MM-DD')
   const [isSettingsOpen, setSettingsOpen] = useState(false)
   const [isReportsOpen, setReportsOpen] = useState(false)
@@ -88,6 +90,53 @@ export const DashboardPage = () => {
     setAllTransactions(allData?.transactions ?? [])
   }, [allData])
 
+  const deleteTransactionMutation = useMutation({
+    mutationFn: async (transaction: Transaction) => {
+      const identifier = transaction._id ?? transaction.id
+
+      if (!identifier) {
+        throw new Error('Unable to delete transaction: missing identifier')
+      }
+
+      await deleteTransaction(identifier)
+      return transaction
+    },
+    onSuccess: deleted => {
+      setTodayTransactions(prev =>
+        prev.filter(
+          item => (item._id ?? item.id) !== (deleted._id ?? deleted.id),
+        ),
+      )
+      setAllTransactions(prev =>
+        prev.filter(
+          item => (item._id ?? item.id) !== (deleted._id ?? deleted.id),
+        ),
+      )
+
+      const todayReference = dayjs()
+      if (dayjs(deleted.date).isSame(todayReference, 'day')) {
+        if (deleted.type === 'income') {
+          setTodayIncome(prev => prev - deleted.amount)
+          setTodayBalance(prev => prev - deleted.amount)
+        } else if (deleted.type === 'expense') {
+          setTodayExpense(prev => prev - deleted.amount)
+          setTodayBalance(prev => prev + deleted.amount)
+        }
+      }
+
+      queryClient.invalidateQueries({ queryKey: transactionKey })
+      toast.success('Transaction deleted')
+    },
+    onError: error => {
+      const friendly = mapApiError(error)
+      toast.error(friendly.message)
+    },
+  })
+
+  const handleDeleteTransaction = (transaction: Transaction) => {
+    deleteTransactionMutation.mutate(transaction)
+  }
+
   const handleTransactionCreated = (transaction: Transaction) => {
     const todayReference = dayjs()
     setAllTransactions(prev => [transaction, ...prev])
@@ -144,6 +193,8 @@ export const DashboardPage = () => {
               income={todayIncome}
               expense={todayExpense}
               balance={todayBalance}
+              onDeleteTransaction={handleDeleteTransaction}
+              isDeleting={deleteTransactionMutation.isPending}
             />
           ) : (
             <AllTransactionsPage
@@ -151,6 +202,8 @@ export const DashboardPage = () => {
               isLoading={isAllLoading}
               filters={allFilters}
               onFiltersChange={setAllFilters}
+              onDeleteTransaction={handleDeleteTransaction}
+              isDeleting={deleteTransactionMutation.isPending}
             />
           )}
         </Widget>

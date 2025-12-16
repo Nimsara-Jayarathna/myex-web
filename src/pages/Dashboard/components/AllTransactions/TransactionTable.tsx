@@ -6,15 +6,28 @@ import { TransactionRow } from './table/TransactionRow'
 interface TransactionTableProps {
   transactions: Transaction[]
   grouped?: GroupedTransactions[]
+  onDeleteTransaction?: (transaction: Transaction) => void
+  isDeleting?: boolean
 }
 
-const renderRows = (list: Transaction[]) =>
+const renderRows = (
+  list: Transaction[],
+  onDeleteTransaction?: (transaction: Transaction) => void,
+  isDeleting?: boolean,
+) =>
   list.map(transaction => {
     const key = transaction._id ?? transaction.id ?? `${transaction.date}-${transaction.amount}-${transaction.category}`
-    return <TransactionRow key={key} transaction={transaction} />
+    return (
+      <TransactionRow
+        key={key}
+        transaction={transaction}
+        onDeleteTransaction={onDeleteTransaction}
+        isDeleting={isDeleting}
+      />
+    )
   })
 
-export const TransactionTable = ({ transactions, grouped }: TransactionTableProps) => {
+export const TransactionTable = ({ transactions, grouped, onDeleteTransaction, isDeleting }: TransactionTableProps) => {
   if (grouped && grouped.length > 0) {
     return (
       <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-soft">
@@ -33,7 +46,7 @@ export const TransactionTable = ({ transactions, grouped }: TransactionTableProp
             </div>
             <table className="w-full text-left">
               <TransactionTableHeader />
-              <tbody>{renderRows(group.items)}</tbody>
+              <tbody>{renderRows(group.items, onDeleteTransaction, isDeleting)}</tbody>
             </table>
           </div>
         ))}
@@ -45,9 +58,8 @@ export const TransactionTable = ({ transactions, grouped }: TransactionTableProp
     <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-soft">
       <table className="w-full text-left">
         <TransactionTableHeader />
-        <tbody>{renderRows(transactions)}</tbody>
+        <tbody>{renderRows(transactions, onDeleteTransaction, isDeleting)}</tbody>
       </table>
     </div>
   )
 }
-

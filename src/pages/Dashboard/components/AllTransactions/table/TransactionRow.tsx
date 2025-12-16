@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import type { Transaction } from '../../../../../types'
 import { formatCurrency, formatDate } from '../../../../../utils/format'
 
@@ -10,10 +11,14 @@ const resolveCategory = (transaction: Transaction) => {
 
 interface TransactionRowProps {
   transaction: Transaction
+  onDeleteTransaction?: (transaction: Transaction) => void
+  isDeleting?: boolean
 }
 
-export const TransactionRow = ({ transaction }: TransactionRowProps) => {
+export const TransactionRow = ({ transaction, onDeleteTransaction, isDeleting }: TransactionRowProps) => {
   const isIncome = transaction.type === 'income'
+  const canDelete =
+    !!transaction.createdAt && dayjs(transaction.createdAt).isSame(dayjs(), 'day') && !!onDeleteTransaction
 
   return (
     <tr className="border-b border-border/70 last:border-b-0 hover:bg-surfaceMuted/80">
@@ -35,7 +40,18 @@ export const TransactionRow = ({ transaction }: TransactionRowProps) => {
         {formatCurrency(Math.abs(transaction.amount))}
       </td>
       <td className="px-4 py-3 text-sm text-muted">{transaction.note ?? 'No note'}</td>
+      <td className="px-4 py-3 text-right text-sm">
+        {canDelete ? (
+          <button
+            type="button"
+            onClick={() => onDeleteTransaction?.(transaction)}
+            disabled={isDeleting}
+            className="text-[11px] font-semibold text-red-500 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Delete
+          </button>
+        ) : null}
+      </td>
     </tr>
   )
 }
-
