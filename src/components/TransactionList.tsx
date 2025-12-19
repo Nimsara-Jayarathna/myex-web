@@ -1,6 +1,6 @@
-import dayjs from 'dayjs'
 import type { Transaction } from '../types'
 import { formatCurrency, formatDate } from '../utils/format'
+import { isTodayInUserTimeZone } from '../utils/date'
 
 interface TransactionListProps {
   transactions: Transaction[]
@@ -29,8 +29,7 @@ export const TransactionList = ({
           const isIncome = transaction.type === 'income'
           const amountLabel = `${isIncome ? '+' : '-'}${formatCurrency(Math.abs(transaction.amount))}`
           const key = transaction._id ?? transaction.id ?? `${transaction.date}-${transaction.amount}`
-          const canDelete =
-            !!transaction.createdAt && dayjs(transaction.createdAt).isSame(dayjs(), 'day') && !!onDeleteTransaction
+          const canDelete = !!onDeleteTransaction && isTodayInUserTimeZone(transaction.date)
 
           return (
             <li

@@ -1,6 +1,6 @@
-import dayjs from 'dayjs'
 import type { Transaction } from '../../../../../types'
 import { formatCurrency, formatDate } from '../../../../../utils/format'
+import { isTodayInUserTimeZone } from '../../../../../utils/date'
 
 const resolveCategory = (transaction: Transaction) => {
   if (typeof transaction.category === 'string') {
@@ -17,8 +17,7 @@ interface TransactionRowProps {
 
 export const TransactionRow = ({ transaction, onDeleteTransaction, isDeleting }: TransactionRowProps) => {
   const isIncome = transaction.type === 'income'
-  const canDelete =
-    !!transaction.createdAt && dayjs(transaction.createdAt).isSame(dayjs(), 'day') && !!onDeleteTransaction
+  const canDelete = !!onDeleteTransaction && isTodayInUserTimeZone(transaction.date)
 
   return (
     <tr className="border-b border-border/70 last:border-b-0 hover:bg-surfaceMuted/80">
