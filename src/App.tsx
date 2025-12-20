@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Route, Routes } from 'react-router-dom'
-import { LandingPage } from './pages/LandingPage'
+import { LandingPage } from './pages/LandingPage/LandingPage'
 import { DashboardPage } from './pages/Dashboard/DashboardPage'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { getSession } from './api/auth'
