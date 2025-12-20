@@ -148,7 +148,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
         </div>
 
         {(isLoading || isFetching || deleteMutation.isPending || setDefaultMutation.isPending) && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center bg-[var(--surface-2)] backdrop-blur-sm">
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-[var(--surface-glass)] backdrop-blur-sm">
             <div className="flex flex-col items-center gap-3">
               <LoadingSpinner />
               <p className="text-xs font-medium text-[var(--text-muted)]">Updating categories...</p>

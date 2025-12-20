@@ -10,7 +10,7 @@ interface ReportsHeaderProps {
 export const ReportsHeader = ({ view, onChangeView, totals }: ReportsHeaderProps) => (
   <div className="flex flex-col gap-6">
     <div className="flex flex-wrap items-center justify-between gap-3">
-      <div className="flex gap-2 rounded-full border border-[var(--border-soft)] bg-[var(--surface-1)] p-1 shadow-sm">
+      <div className="flex gap-2 rounded-full border border-[var(--border-glass)] bg-[var(--surface-glass)] p-1 shadow-sm backdrop-blur-md">
         {(['daily', 'monthly'] as const).map(option => (
           <button
             key={option}

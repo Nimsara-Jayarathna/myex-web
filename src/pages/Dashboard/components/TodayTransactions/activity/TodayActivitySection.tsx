@@ -27,7 +27,7 @@ export const TodayActivitySection = ({
   return (
     <div className="space-y-6">
       <TodaySummaryCards income={income} expense={expense} balance={balance} />
-      <section className="rounded-4xl border border-[var(--border-soft)] bg-[var(--surface-2)] p-6 shadow-card">
+      <section className="rounded-4xl border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] p-6 shadow-card backdrop-blur-xl">
         <ListHeader title="Today's Activity" />
 
         {isLoading ? (

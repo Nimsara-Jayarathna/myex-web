@@ -13,7 +13,7 @@ interface CategoryFormProps {
 export const CategoryForm = ({ name, type, isSaving, onChangeName, onChangeType, onSubmit }: CategoryFormProps) => (
   <form
     onSubmit={onSubmit}
-    className="grid gap-4 rounded-3xl border border-[var(--border-soft)] bg-gradient-to-br from-[var(--surface-1)] via-[var(--surface-2)] to-[var(--surface-4)] p-5 shadow-sm md:grid-cols-[3fr_2fr] md:items-end"
+    className="grid gap-4 rounded-3xl border border-[var(--border-glass)] bg-gradient-to-br from-[var(--surface-glass-thick)] via-[var(--surface-glass)] to-[var(--surface-glass)] p-5 shadow-sm backdrop-blur-xl md:grid-cols-[3fr_2fr] md:items-end"
   >
     <div className="flex flex-col gap-2 md:pr-2">
       <label htmlFor="category-name" className="text-sm font-semibold text-[var(--page-fg)]">
@@ -33,7 +33,7 @@ export const CategoryForm = ({ name, type, isSaving, onChangeName, onChangeType,
       <div className="flex items-center justify-between">
         <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">Type</span>
       </div>
-      <div className="inline-flex rounded-full border border-[var(--border-soft)] bg-[var(--surface-1)] shadow-soft">
+      <div className="inline-flex rounded-full border border-[var(--border-glass)] bg-[var(--surface-glass)] shadow-soft backdrop-blur-md">
         {(['income', 'expense'] as const).map(option => (
           <button
             key={option}

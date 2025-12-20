@@ -43,7 +43,7 @@ export const Modal = ({ open, onClose, title, subtitle, children, footer, widthC
           <motion.div
             role="dialog"
             aria-modal="true"
-            className={`relative w-full overflow-hidden rounded-[34px] border border-[var(--border-soft)] bg-[var(--surface-2)] px-8 pb-8 pt-10 text-[var(--page-fg)] shadow-[0_45px_120px_-50px_rgba(15,35,55,0.6)] backdrop-blur-2xl sm:px-10 ${widthClassName}`}
+            className={`relative w-full overflow-hidden rounded-[34px] border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] px-8 pb-8 pt-10 text-[var(--page-fg)] shadow-[0_45px_120px_-50px_rgba(15,35,55,0.6)] backdrop-blur-2xl sm:px-10 ${widthClassName}`}
             initial={{ y: 36, opacity: 0, scale: 0.98 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 24, opacity: 0, scale: 0.97 }}
@@ -54,7 +54,7 @@ export const Modal = ({ open, onClose, title, subtitle, children, footer, widthC
             <button
               type="button"
               onClick={onClose}
-              className="absolute right-6 top-6 inline-flex items-center gap-2 rounded-full border border-[var(--border-soft)] bg-[var(--surface-3)] px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-[var(--text-subtle)] transition hover:border-accent/40 hover:text-[var(--page-fg)]"
+              className="absolute right-6 top-6 inline-flex items-center gap-2 rounded-full border border-[var(--border-glass)] bg-[var(--surface-glass)] px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-[var(--text-subtle)] backdrop-blur-md transition hover:border-accent/40 hover:text-[var(--page-fg)]"
             >
               Close
             </button>
@@ -68,7 +68,7 @@ export const Modal = ({ open, onClose, title, subtitle, children, footer, widthC
               <div className="max-h-[65vh] overflow-y-auto pr-2">
                 {children}
               </div>
-              {footer ? <div className="border-t border-[var(--border-soft)] pt-4">{footer}</div> : null}
+              {footer ? <div className="border-t border-[var(--border-glass)] pt-4">{footer}</div> : null}
             </div>
           </motion.div>
         </motion.div>

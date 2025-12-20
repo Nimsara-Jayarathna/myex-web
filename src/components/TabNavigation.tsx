@@ -8,7 +8,7 @@ interface TabNavigationProps<T extends string> {
 
 export const TabNavigation = <T extends string>({ tabs, activeTab, onChange }: TabNavigationProps<T>) => {
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border-soft)] bg-[var(--surface-2)] p-1 shadow-soft">
+    <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border-glass)] bg-[var(--surface-glass)] p-1 shadow-soft backdrop-blur-md">
       {tabs.map(tab => {
         const isActive = tab.id === activeTab
         return (

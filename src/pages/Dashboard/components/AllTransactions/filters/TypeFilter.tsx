@@ -17,7 +17,7 @@ export const TypeFilter = ({ typeFilter, onChangeType }: TypeFilterProps) => (
           className={`rounded-lg border px-3 py-2 text-sm font-semibold transition ${
             typeFilter === option
               ? 'border-accent bg-accent text-white shadow-md'
-              : 'border-[var(--border-soft)] bg-[var(--surface-1)] text-[var(--page-fg)] hover:border-accent/50 hover:text-accent'
+              : 'border-[var(--border-glass)] bg-[var(--surface-glass)] text-[var(--page-fg)] hover:border-accent/50 hover:text-accent'
           }`}
         >
           {option.charAt(0).toUpperCase() + option.slice(1)}

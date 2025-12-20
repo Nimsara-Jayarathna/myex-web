@@ -6,11 +6,11 @@ export const DashboardPreview = () => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 0.2, duration: 1 }}
-      className="relative rounded-[2.5rem] border border-[var(--border-soft)] bg-[var(--surface-2)] p-4 shadow-card backdrop-blur-xl"
+      className="relative rounded-[2.5rem] border border-[var(--border-glass)] bg-[var(--surface-glass)] p-4 shadow-card backdrop-blur-xl"
     >
-      <div className="rounded-[2rem] border border-[var(--border-soft)] bg-[var(--surface-1)] p-8 shadow-soft">
+      <div className="rounded-[2rem] border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] p-8 shadow-soft backdrop-blur-xl">
         <div className="mb-10 flex justify-center">
-          <div className="inline-flex rounded-full border border-[var(--border-soft)] bg-[var(--surface-3)] p-1 shadow-inner">
+          <div className="inline-flex rounded-full border border-[var(--border-glass)] bg-[var(--surface-glass)] p-1 shadow-inner backdrop-blur-md">
             <button className="rounded-full bg-[#3498db] px-6 py-1.5 text-xs font-bold text-white shadow-sm">
               Today's Activity
             </button>
@@ -38,7 +38,7 @@ export const DashboardPreview = () => {
           ].map((item, i) => (
             <div
               key={i}
-              className="flex items-center justify-between rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-3)] p-4"
+              className="flex items-center justify-between rounded-2xl border border-[var(--border-glass)] bg-[var(--surface-glass)] p-4 backdrop-blur-md"
             >
               <span className="text-sm font-semibold text-[var(--page-fg)]">{item.label}</span>
               <span className="text-sm font-bold" style={{ color: item.color }}>

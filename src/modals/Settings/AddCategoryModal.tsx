@@ -79,7 +79,7 @@ export const AddCategoryModal = ({ open, onClose }: AddCategoryModalProps) => {
           {uiError ? <p className="text-xs font-medium text-expense/90">{uiError}</p> : null}
         </div>
 
-        <div className="flex flex-col gap-2 rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-4)] p-3 text-xs text-[var(--text-muted)]">
+        <div className="flex flex-col gap-2 rounded-2xl border border-[var(--border-glass)] bg-[var(--surface-glass)] p-3 text-xs text-[var(--text-muted)] backdrop-blur-md">
           <span className="font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">Type</span>
           <p>Select whether this category is used for money coming in or going out.</p>
         </div>

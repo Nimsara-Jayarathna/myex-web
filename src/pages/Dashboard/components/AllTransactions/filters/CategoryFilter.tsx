@@ -54,18 +54,18 @@ export const CategoryFilter = ({
         <button
           type="button"
           onClick={() => setIsCategoryOpen(open => !open)}
-          className="flex w-full items-center justify-between rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-1)] px-4 py-2 text-sm font-semibold text-[var(--page-fg)] shadow-sm hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/25"
+          className="flex w-full items-center justify-between rounded-2xl border border-[var(--border-glass)] bg-[var(--surface-glass)] px-4 py-2 text-sm font-semibold text-[var(--page-fg)] shadow-sm backdrop-blur-md hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/25"
         >
           <span className="truncate">{categoryLabel}</span>
           <span className="ml-2 text-xs font-semibold text-[var(--text-subtle)]">{isCategoryOpen ? '▲' : '▼'}</span>
         </button>
 
         {isCategoryOpen && (
-          <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-1)] shadow-[0_22px_50px_-24px_rgba(15,23,42,0.35)]">
+          <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-2xl border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] shadow-[0_22px_50px_-24px_rgba(15,23,42,0.35)] backdrop-blur-xl">
             <button
               type="button"
               onClick={() => handleCategorySelect('all')}
-              className={`flex w-full items-center justify-between px-4 py-2 text-sm font-medium transition hover:bg-[var(--surface-4)] ${
+              className={`flex w-full items-center justify-between px-4 py-2 text-sm font-medium transition hover:bg-[var(--surface-glass)] ${
                 categoryFilter === 'all' ? 'bg-accent/10 text-accent' : 'text-[var(--page-fg)]'
               }`}
             >
@@ -77,7 +77,7 @@ export const CategoryFilter = ({
                 type="button"
                 key={category.id}
                 onClick={() => handleCategorySelect(category.id)}
-                className={`flex w-full items-center justify-between px-4 py-2 text-sm transition hover:bg-[var(--surface-4)] ${
+                className={`flex w-full items-center justify-between px-4 py-2 text-sm transition hover:bg-[var(--surface-glass)] ${
                   categoryFilter === category.id ? 'bg-accent/10 font-semibold text-accent' : 'text-[var(--page-fg)]'
                 }`}
               >

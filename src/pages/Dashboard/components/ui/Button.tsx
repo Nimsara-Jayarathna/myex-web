@@ -8,7 +8,7 @@ const baseClasses =
 const variantClasses: Record<NonNullable<ButtonProps['variant']>, string> = {
   primary: 'bg-accent text-white hover:bg-accent/90',
   secondary:
-    'border border-[var(--border-soft)] bg-[var(--surface-1)] text-[var(--page-fg)] hover:border-accent/50 hover:text-accent',
+    'border border-[var(--border-glass)] bg-[var(--surface-glass)] text-[var(--page-fg)] backdrop-blur-md hover:border-accent/50 hover:text-accent',
   ghost: 'text-[var(--page-fg)] hover:text-accent',
 }
 

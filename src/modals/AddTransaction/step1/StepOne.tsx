@@ -24,7 +24,7 @@ export const StepOne = ({ amount, onChangeAmount, onSelectType }: StepOneProps) 
           key={option}
           type="button"
           onClick={() => onSelectType(option)}
-          className={`flex items-center gap-4 rounded-3xl border border-[var(--border-soft)] bg-[var(--surface-2)] px-6 py-4 text-left shadow-[0_20px_60px_-40px_rgba(15,23,42,0.3)] transition ${
+          className={`flex items-center gap-4 rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass)] px-6 py-4 text-left shadow-[0_20px_60px_-40px_rgba(15,23,42,0.3)] backdrop-blur-md transition ${
             option === 'income'
               ? 'hover:border-income/40 hover:shadow-[0_24px_55px_-30px_rgba(46,204,113,0.55)]'
               : 'hover:border-expense/40 hover:shadow-[0_24px_55px_-30px_rgba(231,76,60,0.55)]'

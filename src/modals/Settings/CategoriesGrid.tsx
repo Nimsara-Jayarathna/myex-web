@@ -48,7 +48,7 @@ export const CategoriesGrid = ({
   ]
 
   return (
-    <div className="rounded-3xl border border-[var(--border-soft)] bg-[var(--surface-2)] p-5 shadow-[0_24px_80px_-52px_rgba(15,23,42,0.35)]">
+    <div className="rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] p-5 shadow-[0_24px_80px_-52px_rgba(15,23,42,0.35)] backdrop-blur-xl">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h3 className="text-sm font-semibold text-[var(--page-fg)]">All categories</h3>
@@ -77,7 +77,7 @@ export const CategoriesGrid = ({
           return (
             <div
               key={column.title}
-              className="flex flex-col gap-3 rounded-3xl border border-[var(--border-soft)] bg-[var(--surface-2)] p-5 shadow-[0_24px_70px_-45px_rgba(15,23,42,0.25)] backdrop-blur"
+              className="flex flex-col gap-3 rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass)] p-5 shadow-[0_24px_70px_-45px_rgba(15,23,42,0.25)] backdrop-blur-xl"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
@@ -106,7 +106,7 @@ export const CategoriesGrid = ({
                     return (
                       <li
                         key={categoryId}
-                        className="flex flex-col gap-3 rounded-2xl border border-[var(--border-strong)] bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--page-fg)] shadow-[0_18px_45px_-35px_rgba(15,23,42,0.3)] transition hover:border-accent/40 hover:shadow-soft sm:flex-row sm:items-center sm:justify-between"
+                        className="flex flex-col gap-3 rounded-2xl border border-[var(--border-glass)] bg-[var(--surface-glass)] px-4 py-3 text-sm text-[var(--page-fg)] shadow-[0_18px_45px_-35px_rgba(15,23,42,0.3)] backdrop-blur-md transition hover:border-accent/40 hover:shadow-soft sm:flex-row sm:items-center sm:justify-between"
                       >
                         <div className="flex items-center gap-3">
                           <span
@@ -119,12 +119,12 @@ export const CategoriesGrid = ({
                             <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--text-muted)]">
                               <span className="uppercase tracking-[0.25em]">{category.type}</span>
                               {category.isDefault ? (
-                                <span className="rounded-full bg-[var(--surface-4)] px-2 py-0.5 text-[11px] font-medium text-[var(--text-muted)]">
+                                <span className="rounded-full bg-[var(--surface-glass)] px-2 py-0.5 text-[11px] font-medium text-[var(--text-muted)] backdrop-blur-md">
                                   Default
                                 </span>
                               ) : null}
                               {category.isActive === false ? (
-                                <span className="rounded-full bg-[var(--border-soft)] px-2 py-0.5 text-[11px] font-medium text-[var(--text-muted)]">
+                                <span className="rounded-full bg-[var(--surface-glass)] px-2 py-0.5 text-[11px] font-medium text-[var(--text-muted)] backdrop-blur-md">
                                   Inactive
                                 </span>
                               ) : null}
@@ -167,7 +167,7 @@ export const CategoriesGrid = ({
                     )
                   })
                         ) : (
-                  <li className="rounded-2xl border border-dashed border-[var(--border-soft)] bg-[var(--surface-2)] px-4 py-6 text-center text-xs text-[var(--text-muted)]">
+                  <li className="rounded-2xl border border-dashed border-[var(--border-glass)] bg-[var(--surface-glass)] px-4 py-6 text-center text-xs text-[var(--text-muted)] backdrop-blur-md">
                     {emptyState}
                   </li>
                 )}

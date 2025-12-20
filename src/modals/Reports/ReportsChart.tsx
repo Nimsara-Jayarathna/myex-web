@@ -16,7 +16,7 @@ interface ReportsChartProps {
 }
 
 export const ReportsChart = ({ chartData }: ReportsChartProps) => (
-  <div className="rounded-3xl border border-[var(--border-soft)] bg-[var(--surface-2)] p-4 shadow-card">
+  <div className="rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass)] p-4 shadow-card backdrop-blur-md">
     <Line
       data={chartData}
       options={{
@@ -50,7 +50,7 @@ export const ReportsChart = ({ chartData }: ReportsChartProps) => (
             grid: {
               color:
                 (typeof window !== 'undefined' &&
-                  getComputedStyle(document.documentElement).getPropertyValue('--border-soft').trim()) ||
+                  getComputedStyle(document.documentElement).getPropertyValue('--border-glass').trim()) ||
                 'rgba(79, 103, 127, 0.1)',
             },
           },
@@ -64,7 +64,7 @@ export const ReportsChart = ({ chartData }: ReportsChartProps) => (
             grid: {
               color:
                 (typeof window !== 'undefined' &&
-                  getComputedStyle(document.documentElement).getPropertyValue('--border-soft').trim()) ||
+                  getComputedStyle(document.documentElement).getPropertyValue('--border-glass').trim()) ||
                 'rgba(79, 103, 127, 0.1)',
             },
           },

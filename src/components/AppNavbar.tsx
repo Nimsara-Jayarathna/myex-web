@@ -31,16 +31,16 @@ export const AppNavbar = ({
   const isLanding = variant === 'landing'
   const headerClass = isLanding
     ? 'relative z-50'
-    : 'sticky top-0 z-40 border-b border-[var(--border-soft)] bg-[var(--surface-2)] backdrop-blur-md'
+    : 'sticky top-0 z-40 border-b border-[var(--border-glass)] bg-[var(--surface-glass)] backdrop-blur-md'
   const containerClass = `mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 ${
     isLanding ? 'px-8 py-8' : 'px-6 py-4'
   }`
   const itemClass =
-    'inline-flex items-center gap-2 rounded-full border border-[var(--border-soft)] bg-[var(--surface-2)] px-4 py-2 text-sm font-medium text-[var(--page-fg)] transition hover:border-accent/40 hover:text-accent'
+    'inline-flex items-center gap-2 rounded-full border border-[var(--border-glass)] bg-[var(--surface-glass)] px-4 py-2 text-sm font-medium text-[var(--page-fg)] backdrop-blur-md transition hover:border-accent/40 hover:text-accent'
   const themeButtonClass =
-    'rounded-full border border-[var(--border-soft)] bg-[var(--surface-2)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--page-fg)] shadow-sm transition hover:border-accent/40 hover:text-accent'
+    'rounded-full border border-[var(--border-glass)] bg-[var(--surface-glass)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--page-fg)] shadow-sm backdrop-blur-md transition hover:border-accent/40 hover:text-accent'
   const landingPrimaryClass =
-    'rounded-full border border-[var(--border-soft)] bg-[var(--surface-2)] px-6 py-2 text-sm font-bold text-[var(--page-fg)] backdrop-blur-md transition hover:border-[#3498db] hover:text-[#3498db]'
+    'rounded-full border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] px-6 py-2 text-sm font-bold text-[var(--page-fg)] backdrop-blur-md transition hover:border-[#3498db] hover:text-[#3498db]'
   const iconClass = 'h-4 w-4 text-accent'
   const profileRef = useRef<HTMLDetailsElement | null>(null)
 
@@ -90,16 +90,16 @@ export const AppNavbar = ({
               {userName ? (
                 <details ref={profileRef} className="group relative">
                   <summary
-                    className={`${itemClass} cursor-pointer list-none hover:border-[var(--border-soft)] hover:text-[var(--page-fg)]`}
+                    className={`${itemClass} cursor-pointer list-none hover:border-[var(--border-glass)] hover:text-[var(--page-fg)]`}
                   >
                     <span className="text-xs uppercase tracking-[0.2em] text-[var(--text-muted)]">Hello</span>
                     <span className="font-semibold text-[var(--page-fg)]">{userName}</span>
                   </summary>
-                  <div className="absolute right-0 top-full z-50 mt-3 w-48 rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-1)] p-2 shadow-[0_18px_45px_-35px_rgba(15,23,42,0.4)]">
+                  <div className="absolute right-0 top-full z-50 mt-3 w-48 rounded-2xl border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] p-2 shadow-[0_18px_45px_-35px_rgba(15,23,42,0.4)] backdrop-blur-xl">
                     {onOpenReports ? (
                       <button
                         type="button"
-                        className="flex w-full items-center gap-2 rounded-full px-3 py-2 text-sm text-[var(--page-fg)] transition hover:bg-[var(--surface-3)]"
+                        className="flex w-full items-center gap-2 rounded-full px-3 py-2 text-sm text-[var(--page-fg)] transition hover:bg-[var(--surface-glass)]"
                         onClick={() => {
                           onOpenReports()
                           if (profileRef.current) profileRef.current.open = false
@@ -112,7 +112,7 @@ export const AppNavbar = ({
                     {onOpenSettings ? (
                       <button
                         type="button"
-                        className="flex w-full items-center gap-2 rounded-full px-3 py-2 text-sm text-[var(--page-fg)] transition hover:bg-[var(--surface-3)]"
+                        className="flex w-full items-center gap-2 rounded-full px-3 py-2 text-sm text-[var(--page-fg)] transition hover:bg-[var(--surface-glass)]"
                         onClick={() => {
                           onOpenSettings()
                           if (profileRef.current) profileRef.current.open = false
@@ -125,7 +125,7 @@ export const AppNavbar = ({
                     {onLogout ? (
                       <button
                         type="button"
-                        className="flex w-full items-center gap-2 rounded-full px-3 py-2 text-sm text-[var(--page-fg)] transition hover:bg-[var(--surface-3)]"
+                        className="flex w-full items-center gap-2 rounded-full px-3 py-2 text-sm text-[var(--page-fg)] transition hover:bg-[var(--surface-glass)]"
                         onClick={() => {
                           onLogout()
                           if (profileRef.current) profileRef.current.open = false

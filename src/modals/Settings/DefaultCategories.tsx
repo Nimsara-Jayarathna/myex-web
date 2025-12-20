@@ -19,14 +19,14 @@ export const DefaultCategories = ({
   onChangeDefault,
   resolveCategoryId,
 }: DefaultCategoriesProps) => (
-  <div className="rounded-3xl border border-[var(--border-soft)] bg-[var(--surface-2)] p-5 shadow-[0_22px_60px_-48px_rgba(15,23,42,0.28)]">
+  <div className="rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] p-5 shadow-[0_22px_60px_-48px_rgba(15,23,42,0.28)] backdrop-blur-xl">
     <div className="flex flex-wrap items-center justify-between gap-3">
       <div>
         <h3 className="text-sm font-semibold text-[var(--page-fg)]">Default categories</h3>
         <p className="text-xs text-[var(--text-muted)]">Choose the go-to income and expense categories.</p>
       </div>
       {isUpdating ? (
-        <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border-soft)] bg-[var(--surface-1)] px-3 py-1 text-[11px] font-medium text-[var(--text-muted)]">
+        <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border-glass)] bg-[var(--surface-glass)] px-3 py-1 text-[11px] font-medium text-[var(--text-muted)] backdrop-blur-md">
           Updating...
         </span>
       ) : null}
@@ -41,7 +41,7 @@ export const DefaultCategories = ({
           value={defaultIncomeId}
           onChange={event => onChangeDefault(event.target.value, 'income')}
           disabled={!incomeCategories.length || isUpdating}
-          className="rounded-2xl border border-income/30 bg-[var(--surface-1)] px-3 py-2.5 text-sm font-semibold text-[var(--page-fg)] shadow-[0_10px_28px_-22px_rgba(15,23,42,0.35)] transition focus:border-income focus:outline-none focus:ring-2 focus:ring-income/25 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-2xl border border-income/30 bg-[var(--surface-glass-thick)] px-3 py-2.5 text-sm font-semibold text-[var(--page-fg)] shadow-[0_10px_28px_-22px_rgba(15,23,42,0.35)] backdrop-blur-md transition focus:border-income focus:outline-none focus:ring-2 focus:ring-income/25 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <option value="" disabled>
             {incomeCategories.length ? 'Select income default' : 'No income categories'}
@@ -66,7 +66,7 @@ export const DefaultCategories = ({
           value={defaultExpenseId}
           onChange={event => onChangeDefault(event.target.value, 'expense')}
           disabled={!expenseCategories.length || isUpdating}
-          className="rounded-2xl border border-expense/30 bg-[var(--surface-1)] px-3 py-2.5 text-sm font-semibold text-[var(--page-fg)] shadow-[0_10px_28px_-22px_rgba(15,23,42,0.35)] transition focus:border-expense focus:outline-none focus:ring-2 focus:ring-expense/25 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-2xl border border-expense/30 bg-[var(--surface-glass-thick)] px-3 py-2.5 text-sm font-semibold text-[var(--page-fg)] shadow-[0_10px_28px_-22px_rgba(15,23,42,0.35)] backdrop-blur-md transition focus:border-expense focus:outline-none focus:ring-2 focus:ring-expense/25 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <option value="" disabled>
             {expenseCategories.length ? 'Select expense default' : 'No expense categories'}

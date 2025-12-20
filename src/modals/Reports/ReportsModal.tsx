@@ -76,7 +76,7 @@ export const ReportsModal = ({ open, onClose }: ReportsModalProps) => {
         ) : data ? (
           <ReportsChart chartData={chartData} />
         ) : (
-          <p className="rounded-2xl border border-dashed border-[var(--border-soft)] bg-[var(--surface-2)] px-4 py-8 text-center text-sm text-[var(--text-muted)]">
+          <p className="rounded-2xl border border-dashed border-[var(--border-glass)] bg-[var(--surface-glass)] px-4 py-8 text-center text-sm text-[var(--text-muted)] backdrop-blur-md">
             No summary data yet. Add a transaction to see insights.
           </p>
         )}

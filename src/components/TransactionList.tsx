@@ -16,8 +16,8 @@ export const TransactionList = ({
   isDeleting,
 }: TransactionListProps) => {
   return (
-    <div className="overflow-hidden rounded-3xl border border-[var(--border-soft)] bg-[var(--surface-1)] shadow-soft">
-      <header className="flex items-center justify-between border-b border-[var(--border-soft)] px-6 py-4">
+    <div className="overflow-hidden rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] shadow-soft backdrop-blur-xl">
+      <header className="flex items-center justify-between border-b border-[var(--border-glass)] bg-[var(--surface-glass)] px-6 py-4">
         <span className="text-sm font-medium uppercase tracking-[0.28em] text-[var(--text-muted)]">{title}</span>
       </header>
       <ul className="max-h-[420px] space-y-1 overflow-y-auto px-2 py-2">
@@ -34,7 +34,7 @@ export const TransactionList = ({
           return (
             <li
               key={key}
-              className="group flex items-center justify-between gap-4 rounded-2xl px-4 py-3 transition hover:bg-[var(--surface-4)]"
+              className="group flex items-center justify-between gap-4 rounded-2xl px-4 py-3 transition hover:bg-[var(--surface-glass)]"
             >
               <div className="flex items-center gap-4">
                 <span
@@ -88,7 +88,7 @@ export const TransactionList = ({
           )
         })}
         {transactions.length === 0 ? (
-          <li className="rounded-2xl border border-dashed border-[var(--border-soft)] px-4 py-10 text-center text-sm text-[var(--text-muted)]">
+          <li className="rounded-2xl border border-dashed border-[var(--border-glass)] bg-[var(--surface-glass)] px-4 py-10 text-center text-sm text-[var(--text-muted)] backdrop-blur-md">
             No transactions yet. Add your first one!
           </li>
         ) : null}

@@ -64,7 +64,7 @@ export const TransactionRow = ({
   const canDelete = !!onDeleteTransaction && (forceDeletable || isToday(transaction.date))
 
   return (
-    <tr className="group border-b border-[var(--border-strong)] last:border-b-0 hover:bg-[var(--surface-4)]">
+    <tr className="group border-b border-[var(--border-glass)] last:border-b-0 hover:bg-[var(--surface-glass)]">
       <td className="px-4 py-3 text-sm text-[var(--page-fg)]">{formatDate(transaction.date)}</td>
       <td className="px-4 py-3 text-sm font-semibold">
         <span

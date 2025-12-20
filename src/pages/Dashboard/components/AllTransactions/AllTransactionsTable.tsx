@@ -36,17 +36,17 @@ export const AllTransactionsTable = ({
 }: AllTransactionsTableProps) => {
   if (grouped && grouped.length > 0) {
     return (
-      <div className="overflow-hidden rounded-3xl border border-[var(--border-soft)] bg-[var(--surface-1)] shadow-soft">
+      <div className="overflow-hidden rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] shadow-soft backdrop-blur-xl">
         {grouped.map(group => (
-          <div key={group.label} className="border-b border-[var(--border-soft)] last:border-b-0">
-            <div className="flex items-center justify-between border-b border-[var(--border-soft)] bg-[var(--surface-4)] px-5 py-3">
+          <div key={group.label} className="border-b border-[var(--border-glass)] last:border-b-0">
+            <div className="flex items-center justify-between border-b border-[var(--border-glass)] bg-[var(--surface-glass)] px-5 py-3 backdrop-blur-md">
               <div className="flex items-center gap-2">
                 <span className="inline-block h-5 w-1 rounded-full bg-accent" aria-hidden="true" />
                 <span className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--page-fg)]">
                   Group: {group.label}
                 </span>
               </div>
-              <span className="rounded-full border border-accent/40 bg-[var(--surface-1)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-accent shadow-[0_10px_25px_-20px_rgba(52,152,219,0.7)]">
+              <span className="rounded-full border border-accent/40 bg-[var(--surface-glass)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-accent shadow-[0_10px_25px_-20px_rgba(52,152,219,0.7)] backdrop-blur-md">
                 {group.items.length} items
               </span>
             </div>
@@ -61,7 +61,7 @@ export const AllTransactionsTable = ({
   }
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-[var(--border-soft)] bg-[var(--surface-1)] shadow-soft">
+    <div className="overflow-hidden rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] shadow-soft backdrop-blur-xl">
       <table className="w-full text-left">
         <TransactionTableHeader />
         <tbody>{renderRows(transactions, onDeleteTransaction, isDeleting)}</tbody>

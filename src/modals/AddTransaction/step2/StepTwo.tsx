@@ -47,21 +47,21 @@ export const StepTwo = ({
 
   return (
     <form className="flex flex-col gap-5" onSubmit={onSubmit}>
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--page-fg)] shadow-[0_18px_50px_-40px_rgba(15,23,42,0.35)]">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--border-glass)] bg-[var(--surface-glass)] px-4 py-3 text-sm text-[var(--page-fg)] shadow-[0_18px_50px_-40px_rgba(15,23,42,0.35)] backdrop-blur-md">
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={onBack}
-            className="rounded-full border border-[var(--border-soft)] bg-[var(--surface-1)] px-3 py-1 text-xs font-medium text-[var(--text-muted)] transition hover:border-accent/40 hover:text-accent"
+            className="rounded-full border border-[var(--border-glass)] bg-[var(--surface-glass)] px-3 py-1 text-xs font-medium text-[var(--text-muted)] backdrop-blur-md transition hover:border-accent/40 hover:text-accent"
           >
             ← Back
           </button>
-          <span className="inline-flex items-center gap-2 rounded-xl border border-[var(--border-soft)] bg-[var(--surface-1)] px-3 py-1.5">
+          <span className="inline-flex items-center gap-2 rounded-xl border border-[var(--border-glass)] bg-[var(--surface-glass)] px-3 py-1.5 backdrop-blur-md">
             <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">Amount</span>
             <span className="text-sm font-semibold text-[var(--page-fg)]">{amount || '0.00'}</span>
           </span>
         </div>
-        <div className="inline-flex rounded-full border border-[var(--border-soft)] bg-[var(--surface-1)] shadow-soft">
+        <div className="inline-flex rounded-full border border-[var(--border-glass)] bg-[var(--surface-glass)] shadow-soft backdrop-blur-md">
           {(['income', 'expense'] as const).map(option => (
             <button
               key={option}
@@ -105,7 +105,7 @@ export const StepTwo = ({
           className={`rounded-2xl border px-4 py-3 text-sm text-[var(--page-fg)] focus:outline-none focus:ring-2 ${
             isToday
               ? 'border-accent bg-accent/5 focus:border-accent focus:ring-accent/40'
-              : 'border-[var(--border-soft)] bg-[var(--surface-1)] focus:border-accent focus:ring-accent/30'
+              : 'border-[var(--border-glass)] bg-[var(--surface-glass)] focus:border-accent focus:ring-accent/30'
           }`}
         />
       </label>
