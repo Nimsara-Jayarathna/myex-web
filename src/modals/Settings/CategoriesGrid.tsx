@@ -48,11 +48,11 @@ export const CategoriesGrid = ({
   ]
 
   return (
-    <div className="rounded-3xl border border-border bg-white/95 p-5 shadow-[0_24px_80px_-52px_rgba(15,23,42,0.35)]">
+    <div className="rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] p-5 shadow-[0_24px_80px_-52px_rgba(15,23,42,0.35)] backdrop-blur-xl">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h3 className="text-sm font-semibold text-neutral">All categories</h3>
-          <p className="text-xs text-muted">
+          <h3 className="text-sm font-semibold text-[var(--page-fg)]">All categories</h3>
+          <p className="text-xs text-[var(--text-muted)]">
             View and manage all your income and expense categories. Removing one will affect linked transactions.
           </p>
         </div>
@@ -77,12 +77,12 @@ export const CategoriesGrid = ({
           return (
             <div
               key={column.title}
-              className="flex flex-col gap-3 rounded-3xl border border-border bg-white/90 p-5 shadow-[0_24px_70px_-45px_rgba(15,23,42,0.25)] backdrop-blur"
+              className="flex flex-col gap-3 rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass)] p-5 shadow-[0_24px_70px_-45px_rgba(15,23,42,0.25)] backdrop-blur-xl"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <h3 className="text-sm font-semibold text-neutral">{column.title}</h3>
-                  <p className="text-xs text-muted">{column.description}</p>
+                  <h3 className="text-sm font-semibold text-[var(--page-fg)]">{column.title}</h3>
+                  <p className="text-xs text-[var(--text-muted)]">{column.description}</p>
                 </div>
                 <span
                   className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-[11px] font-medium ${
@@ -106,7 +106,7 @@ export const CategoriesGrid = ({
                     return (
                       <li
                         key={categoryId}
-                        className="flex flex-col gap-3 rounded-2xl border border-border/60 bg-white/90 px-4 py-3 text-sm text-neutral shadow-[0_18px_45px_-35px_rgba(15,23,42,0.3)] transition hover:border-accent/40 hover:shadow-soft sm:flex-row sm:items-center sm:justify-between"
+                        className="flex flex-col gap-3 rounded-2xl border border-[var(--border-glass)] bg-[var(--surface-glass)] px-4 py-3 text-sm text-[var(--page-fg)] shadow-[0_18px_45px_-35px_rgba(15,23,42,0.3)] backdrop-blur-md transition hover:border-accent/40 hover:shadow-soft sm:flex-row sm:items-center sm:justify-between"
                       >
                         <div className="flex items-center gap-3">
                           <span
@@ -115,16 +115,16 @@ export const CategoriesGrid = ({
                             {initials}
                           </span>
                           <div className="flex flex-col">
-                            <span className="font-medium text-neutral">{category.name}</span>
-                            <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
+                            <span className="font-medium text-[var(--page-fg)]">{category.name}</span>
+                            <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--text-muted)]">
                               <span className="uppercase tracking-[0.25em]">{category.type}</span>
                               {category.isDefault ? (
-                                <span className="rounded-full bg-surfaceMuted px-2 py-0.5 text-[11px] font-medium text-muted">
+                                <span className="rounded-full bg-[var(--surface-glass)] px-2 py-0.5 text-[11px] font-medium text-[var(--text-muted)] backdrop-blur-md">
                                   Default
                                 </span>
                               ) : null}
                               {category.isActive === false ? (
-                                <span className="rounded-full bg-border px-2 py-0.5 text-[11px] font-medium text-muted">
+                                <span className="rounded-full bg-[var(--surface-glass)] px-2 py-0.5 text-[11px] font-medium text-[var(--text-muted)] backdrop-blur-md">
                                   Inactive
                                 </span>
                               ) : null}
@@ -153,7 +153,9 @@ export const CategoriesGrid = ({
                               }
                             }}
                             className={`inline-flex items-center justify-center text-[34px] transition ${
-                              canDelete ? 'text-expense hover:text-expense/80' : 'text-muted cursor-not-allowed'
+                              canDelete
+                                ? 'text-expense hover:text-expense/80'
+                                : 'text-[var(--text-muted)] cursor-not-allowed'
                             } disabled:cursor-not-allowed disabled:opacity-70`}
                             disabled={isDeleting || !canDelete}
                             aria-label={canDelete ? 'Remove category' : 'Cannot remove default category'}
@@ -164,8 +166,8 @@ export const CategoriesGrid = ({
                       </li>
                     )
                   })
-                ) : (
-                  <li className="rounded-2xl border border-dashed border-border bg-white/70 px-4 py-6 text-center text-xs text-muted">
+                        ) : (
+                  <li className="rounded-2xl border border-dashed border-[var(--border-glass)] bg-[var(--surface-glass)] px-4 py-6 text-center text-xs text-[var(--text-muted)] backdrop-blur-md">
                     {emptyState}
                   </li>
                 )}

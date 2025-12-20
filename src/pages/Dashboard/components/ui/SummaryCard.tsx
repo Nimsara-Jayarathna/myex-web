@@ -10,9 +10,9 @@ interface SummaryCardProps {
 }
 
 const accentContainer: Record<NonNullable<SummaryCardProps['accent']>, string> = {
-  income: 'border-income/25 bg-white shadow-soft',
-  expense: 'border-expense/25 bg-white shadow-soft',
-  balance: 'border-accent/25 bg-white shadow-soft',
+  income: 'border-income/25 bg-[var(--surface-glass)] shadow-soft',
+  expense: 'border-expense/25 bg-[var(--surface-glass)] shadow-soft',
+  balance: 'border-accent/25 bg-[var(--surface-glass)] shadow-soft',
 }
 
 const iconAccent: Record<NonNullable<SummaryCardProps['accent']>, string> = {
@@ -29,13 +29,13 @@ const highlightAccent: Record<NonNullable<SummaryCardProps['accent']>, string> =
 
 export const SummaryCard = ({ title, amount, icon, accent = 'balance', highlight }: SummaryCardProps) => (
   <article
-    className={`group relative overflow-hidden rounded-3xl border p-6 transition-transform duration-200 hover:-translate-y-1 hover:shadow-card ${accentContainer[accent]}`}
+    className={`group relative overflow-hidden rounded-3xl border p-6 backdrop-blur-md transition-transform duration-200 hover:-translate-y-1 hover:shadow-card ${accentContainer[accent]}`}
   >
     <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent opacity-70" />
     <div className="relative flex items-start justify-between gap-4">
       <div className="flex flex-col gap-2">
-        <span className="text-xs uppercase tracking-[0.3em] text-muted">{title}</span>
-        <span className="text-3xl font-semibold text-neutral">{formatCurrency(amount)}</span>
+        <span className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">{title}</span>
+        <span className="text-3xl font-semibold text-[var(--page-fg)]">{formatCurrency(amount)}</span>
         {highlight ? (
           <span className={`text-xs font-semibold uppercase tracking-[0.3em] ${highlightAccent[accent]}`}>
             {highlight}

@@ -16,7 +16,7 @@ interface ReportsChartProps {
 }
 
 export const ReportsChart = ({ chartData }: ReportsChartProps) => (
-  <div className="rounded-3xl border border-border bg-white/90 p-4 shadow-card">
+  <div className="rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass)] p-4 shadow-card backdrop-blur-md">
     <Line
       data={chartData}
       options={{
@@ -24,7 +24,10 @@ export const ReportsChart = ({ chartData }: ReportsChartProps) => (
         plugins: {
           legend: {
             labels: {
-              color: '#4F677F',
+              color:
+                (typeof window !== 'undefined' &&
+                  getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim()) ||
+                '#4F677F',
             },
           },
           tooltip: {
@@ -38,12 +41,32 @@ export const ReportsChart = ({ chartData }: ReportsChartProps) => (
         },
         scales: {
           x: {
-            ticks: { color: '#4F677F' },
-            grid: { color: 'rgba(79, 103, 127, 0.1)' },
+            ticks: {
+              color:
+                (typeof window !== 'undefined' &&
+                  getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim()) ||
+                '#4F677F',
+            },
+            grid: {
+              color:
+                (typeof window !== 'undefined' &&
+                  getComputedStyle(document.documentElement).getPropertyValue('--border-glass').trim()) ||
+                'rgba(79, 103, 127, 0.1)',
+            },
           },
           y: {
-            ticks: { color: '#4F677F' },
-            grid: { color: 'rgba(79, 103, 127, 0.1)' },
+            ticks: {
+              color:
+                (typeof window !== 'undefined' &&
+                  getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim()) ||
+                '#4F677F',
+            },
+            grid: {
+              color:
+                (typeof window !== 'undefined' &&
+                  getComputedStyle(document.documentElement).getPropertyValue('--border-glass').trim()) ||
+                'rgba(79, 103, 127, 0.1)',
+            },
           },
         },
       }}

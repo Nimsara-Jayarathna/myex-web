@@ -14,7 +14,7 @@ export const TodayTransactionsTable = ({
   isDeleting,
 }: TodayTransactionsTableProps) => {
   return (
-    <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-soft">
+    <div className="overflow-hidden rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] shadow-soft backdrop-blur-xl">
       <table className="w-full text-left">
         <TransactionTableHeader />
         <tbody>

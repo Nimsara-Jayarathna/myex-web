@@ -2,4 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Refined Background: Slightly cooler slate-50 */
+  --page-bg: #f8fafc;
+  --page-fg: #0f172a;
+
+  /* Glass Effects - Light Mode */
+  --surface-glass: rgba(255, 255, 255, 0.65);
+  --surface-glass-thick: rgba(255, 255, 255, 0.9);
+  --page-overlay-strong: rgba(255, 255, 255, 0.9);
+  --page-overlay-soft: rgba(255, 255, 255, 0.65);
+
+  /* Modern Blue-Grey Accents */
+  --surface-1: #ffffff;
+  --surface-2: #f1f5f9; /* Slate 100 */
+  --surface-3: #e2e8f0; /* Slate 200 */
+  --surface-4: #cbd5e1; /* Slate 300 */
+
+  /* Crisp Borders for the Glass look */
+  --border-glass: rgba(255, 255, 255, 0.8);
+  --border-soft: rgba(15, 23, 42, 0.06);
+  --border-strong: rgba(15, 23, 42, 0.1);
+
+  /* Professional Typography */
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --text-subtle: #94a3b8;
+
+  /* Form Elements */
+  --input-bg: rgba(255, 255, 255, 0.5);
+  --input-border: #cbd5e1;
+  --primary-accent: #3b82f6;
+
+  /* Legacy surfaces */
+  --chip-bg: #e2e8f0;
+}
+
+[data-theme="dark"] {
+  /* Deep Blue-Grey Navy (Slate 950) */
+  --page-bg: #020617;
+  --page-fg: #f1f5f9;
+
+  /* Glass Effects - Dark Mode (The "Deep Sea" look) */
+  --surface-glass: rgba(15, 23, 42, 0.6);
+  --surface-glass-thick: rgba(15, 23, 42, 0.85);
+  --page-overlay-strong: rgba(15, 23, 42, 0.85);
+  --page-overlay-soft: rgba(15, 23, 42, 0.6);
+
+  /* Surfaces with depth */
+  --surface-1: #0f172a; /* Slate 900 */
+  --surface-2: #1e293b; /* Slate 800 */
+  --surface-3: #334155; /* Slate 700 */
+  --surface-4: #475569; /* Slate 600 */
+
+  /* Glass borders: Dark mode glass needs a faint white highlight on top to pop */
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-soft: rgba(255, 255, 255, 0.05);
+  --border-strong: rgba(255, 255, 255, 0.12);
+
+  /* Typography */
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-subtle: #64748b;
+
+  /* Form Elements */
+  --input-bg: rgba(15, 23, 42, 0.4);
+  --input-border: #334155;
+  --primary-accent: #60a5fa;
+
+  /* Legacy surfaces */
+  --chip-bg: #334155;
+}
+
 

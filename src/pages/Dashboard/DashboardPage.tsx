@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import dayjs from 'dayjs'
-import { Navbar } from './components/Navbar/Navbar'
+import { AppNavbar } from '../../components/AppNavbar'
 import { deleteTransaction, getTransactionsFiltered } from '../../api/transactions'
 import { TabNavigation } from '../../components/TabNavigation'
 import { TodayTransactionsPage } from './components/TodayTransactions/TodayTransactionsPage'
@@ -14,6 +14,7 @@ import { SettingsModal } from '../../modals/Settings'
 import { ReportsModal } from '../../modals/Reports'
 import { logoutSession } from '../../api/auth'
 import { useAuth } from '../../hooks/useAuth'
+import { useTheme } from '../../hooks/useTheme'
 import type { Transaction } from '../../types'
 import type { TransactionFilters } from '../../api/transactions'
 import type { AllTransactionsFilters } from './components/AllTransactions/types'
@@ -25,6 +26,7 @@ const transactionKey = ['transactions']
 export const DashboardPage = () => {
   const navigate = useNavigate()
   const { user, logout, isAuthenticated } = useAuth()
+  const { theme, toggleTheme } = useTheme()
   const queryClient = useQueryClient()
   const todayDate = dayjs().format('YYYY-MM-DD')
   const [isSettingsOpen, setSettingsOpen] = useState(false)
@@ -164,10 +166,16 @@ export const DashboardPage = () => {
   }, [isAllError, isTodayError])
 
   return (
-    <div className="relative min-h-screen bg-background pb-24 text-neutral">
+    <div
+      data-theme={theme}
+      className="relative min-h-screen bg-[var(--page-bg)] pb-24 text-[var(--page-fg)]"
+    >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(52,152,219,0.12),_transparent_60%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_rgba(46,204,113,0.1),_transparent_55%)]" />
-      <Navbar
+      <AppNavbar
+        variant="dashboard"
+        theme={theme}
+        onToggleTheme={toggleTheme}
         onOpenSettings={() => setSettingsOpen(true)}
         onOpenReports={() => setReportsOpen(true)}
         onLogout={handleLogout}

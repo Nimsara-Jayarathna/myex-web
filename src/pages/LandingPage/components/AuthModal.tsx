@@ -43,7 +43,7 @@ export const AuthModal = ({
                   type="text"
                   placeholder="First Name"
                   required
-                  className="rounded-2xl border border-gray-100 bg-gray-50 px-5 py-3.5 text-sm outline-none transition focus:border-[#3498db]/30 focus:ring-4 focus:ring-[#3498db]/5"
+                  className="rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-5 py-3.5 text-sm text-[var(--page-fg)] placeholder:text-[var(--text-muted)] outline-none transition focus:border-[#3498db]/30 focus:ring-4 focus:ring-[#3498db]/5"
                   value={formState.firstName}
                   onChange={event => onFieldChange('firstName', event.target.value)}
                 />
@@ -51,7 +51,7 @@ export const AuthModal = ({
                   type="text"
                   placeholder="Last Name"
                   required
-                  className="rounded-2xl border border-gray-100 bg-gray-50 px-5 py-3.5 text-sm outline-none transition focus:border-[#3498db]/30 focus:ring-4 focus:ring-[#3498db]/5"
+                  className="rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-5 py-3.5 text-sm text-[var(--page-fg)] placeholder:text-[var(--text-muted)] outline-none transition focus:border-[#3498db]/30 focus:ring-4 focus:ring-[#3498db]/5"
                   value={formState.lastName}
                   onChange={event => onFieldChange('lastName', event.target.value)}
                 />
@@ -61,7 +61,7 @@ export const AuthModal = ({
               type="email"
               placeholder="Email Address"
               required
-              className="w-full rounded-2xl border border-gray-100 bg-gray-50 px-5 py-3.5 text-sm outline-none transition focus:border-[#3498db]/30 focus:ring-4 focus:ring-[#3498db]/5"
+              className="w-full rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-5 py-3.5 text-sm text-[var(--page-fg)] placeholder:text-[var(--text-muted)] outline-none transition focus:border-[#3498db]/30 focus:ring-4 focus:ring-[#3498db]/5"
               value={formState.email}
               onChange={event => onFieldChange('email', event.target.value)}
             />
@@ -69,7 +69,7 @@ export const AuthModal = ({
               type="password"
               placeholder="Password"
               required
-              className="w-full rounded-2xl border border-gray-100 bg-gray-50 px-5 py-3.5 text-sm outline-none transition focus:border-[#3498db]/30 focus:ring-4 focus:ring-[#3498db]/5"
+              className="w-full rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-5 py-3.5 text-sm text-[var(--page-fg)] placeholder:text-[var(--text-muted)] outline-none transition focus:border-[#3498db]/30 focus:ring-4 focus:ring-[#3498db]/5"
               value={formState.password}
               onChange={event => onFieldChange('password', event.target.value)}
             />
@@ -81,7 +81,7 @@ export const AuthModal = ({
               {isLoading ? <Spinner size="sm" /> : activeMode === 'login' ? 'Sign In' : 'Create Account'}
             </button>
 
-            <div className="mt-6 text-center text-xs font-semibold uppercase tracking-widest text-gray-400">
+            <div className="mt-6 text-center text-xs font-semibold uppercase tracking-widest text-[var(--text-subtle)]">
               {activeMode === 'login' ? 'New to MyEx?' : 'Already onboard?'}{' '}
               <button
                 type="button"
