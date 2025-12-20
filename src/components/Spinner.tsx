@@ -9,7 +9,7 @@ const sizeStyles: Record<Required<SpinnerProps>['size'], string> = {
 
 export const Spinner = ({ size = 'sm' }: SpinnerProps) => (
   <span
-    className={`${sizeStyles[size]} inline-flex animate-spin rounded-full border-border border-t-accent`}
+    className={`${sizeStyles[size]} inline-flex animate-spin rounded-full border-[var(--border-soft)] border-t-accent`}
     aria-hidden="true"
   />
 )

@@ -24,7 +24,7 @@ export const TransactionsSection = ({
   isDeleting,
 }: TransactionsSectionProps) => {
   return (
-    <section className="rounded-4xl border border-border bg-white/90 p-6 shadow-card">
+    <section className="rounded-4xl border border-[var(--border-soft)] bg-[var(--surface-2)] p-6 shadow-card">
       <ListHeader title={title} />
 
       {isLoading ? (

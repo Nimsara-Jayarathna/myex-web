@@ -23,7 +23,7 @@ interface DeleteActionCellProps {
 
 const DeleteActionCell = ({ canDelete, isDeleting, onClick }: DeleteActionCellProps) => {
   const baseClasses =
-    'inline-flex h-8 w-8 items-center justify-center rounded-full transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white'
+    'inline-flex h-8 w-8 items-center justify-center rounded-full transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--page-bg)]'
 
   if (canDelete) {
     return (
@@ -64,8 +64,8 @@ export const TransactionRow = ({
   const canDelete = !!onDeleteTransaction && (forceDeletable || isToday(transaction.date))
 
   return (
-    <tr className="group border-b border-border/70 last:border-b-0 hover:bg-surfaceMuted/80">
-      <td className="px-4 py-3 text-sm text-neutral">{formatDate(transaction.date)}</td>
+    <tr className="group border-b border-[var(--border-strong)] last:border-b-0 hover:bg-[var(--surface-4)]">
+      <td className="px-4 py-3 text-sm text-[var(--page-fg)]">{formatDate(transaction.date)}</td>
       <td className="px-4 py-3 text-sm font-semibold">
         <span
           className={`rounded-full px-3 py-1 text-xs uppercase tracking-[0.2em] ${
@@ -77,12 +77,12 @@ export const TransactionRow = ({
           {isIncome ? 'Income' : 'Expense'}
         </span>
       </td>
-      <td className="px-4 py-3 text-sm text-neutral">{resolveCategory(transaction)}</td>
+      <td className="px-4 py-3 text-sm text-[var(--page-fg)]">{resolveCategory(transaction)}</td>
       <td className={`px-4 py-3 text-sm font-semibold ${isIncome ? 'text-income' : 'text-expense'}`}>
         {isIncome ? '+' : '-'}
         {formatCurrency(Math.abs(transaction.amount))}
       </td>
-      <td className="px-4 py-3 text-sm text-muted">{transaction.note ?? 'No note'}</td>
+      <td className="px-4 py-3 text-sm text-[var(--text-muted)]">{transaction.note ?? 'No note'}</td>
       <td className="px-4 py-3 text-right text-sm">
         <DeleteActionCell
           canDelete={canDelete}

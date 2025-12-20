@@ -7,8 +7,9 @@ const baseClasses =
 
 const variantClasses: Record<NonNullable<ButtonProps['variant']>, string> = {
   primary: 'bg-accent text-white hover:bg-accent/90',
-  secondary: 'border border-border bg-white text-neutral hover:border-accent/50 hover:text-accent',
-  ghost: 'text-neutral hover:text-accent',
+  secondary:
+    'border border-[var(--border-soft)] bg-[var(--surface-1)] text-[var(--page-fg)] hover:border-accent/50 hover:text-accent',
+  ghost: 'text-[var(--page-fg)] hover:text-accent',
 }
 
 export const Button = ({ variant = 'secondary', className = '', ...props }: ButtonProps) => {

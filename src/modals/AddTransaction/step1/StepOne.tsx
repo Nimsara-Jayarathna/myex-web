@@ -6,7 +6,7 @@ interface StepOneProps {
 
 export const StepOne = ({ amount, onChangeAmount, onSelectType }: StepOneProps) => (
   <div className="flex flex-col gap-6">
-    <label className="flex flex-col gap-2 text-sm text-neutral">
+    <label className="flex flex-col gap-2 text-sm text-[var(--page-fg)]">
       Amount
       <input
         type="number"
@@ -14,7 +14,7 @@ export const StepOne = ({ amount, onChangeAmount, onSelectType }: StepOneProps) 
         min="0"
         value={amount}
         onChange={event => onChangeAmount(event.target.value)}
-        className="rounded-2xl border border-border bg-white px-4 py-3 text-2xl font-semibold text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+        className="rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-4 py-3 text-2xl font-semibold text-[var(--page-fg)] placeholder:text-[var(--text-subtle)] focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
         placeholder="0.00"
       />
     </label>
@@ -24,7 +24,7 @@ export const StepOne = ({ amount, onChangeAmount, onSelectType }: StepOneProps) 
           key={option}
           type="button"
           onClick={() => onSelectType(option)}
-          className={`flex items-center gap-4 rounded-3xl border border-border bg-white/90 px-6 py-4 text-left shadow-[0_20px_60px_-40px_rgba(15,23,42,0.3)] transition ${
+          className={`flex items-center gap-4 rounded-3xl border border-[var(--border-soft)] bg-[var(--surface-2)] px-6 py-4 text-left shadow-[0_20px_60px_-40px_rgba(15,23,42,0.3)] transition ${
             option === 'income'
               ? 'hover:border-income/40 hover:shadow-[0_24px_55px_-30px_rgba(46,204,113,0.55)]'
               : 'hover:border-expense/40 hover:shadow-[0_24px_55px_-30px_rgba(231,76,60,0.55)]'
@@ -39,7 +39,7 @@ export const StepOne = ({ amount, onChangeAmount, onSelectType }: StepOneProps) 
           >
             {option === 'income' ? '+' : '-'}
           </span>
-          <h3 className="text-base font-semibold capitalize text-neutral">{option}</h3>
+          <h3 className="text-base font-semibold capitalize text-[var(--page-fg)]">{option}</h3>
         </button>
       ))}
     </div>

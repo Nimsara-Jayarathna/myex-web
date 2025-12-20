@@ -63,7 +63,7 @@ export const AddCategoryModal = ({ open, onClose }: AddCategoryModalProps) => {
     >
       <div className="space-y-4">
         <div className="flex flex-col gap-2">
-          <label htmlFor="new-category-name" className="text-sm font-semibold text-neutral">
+          <label htmlFor="new-category-name" className="text-sm font-semibold text-[var(--page-fg)]">
             Category name
           </label>
           <input
@@ -73,14 +73,14 @@ export const AddCategoryModal = ({ open, onClose }: AddCategoryModalProps) => {
             onChange={event => setName(event.target.value)}
             disabled={isSaving}
             maxLength={18}
-            className="w-full rounded-2xl border border-border bg-white px-4 py-2.5 text-sm text-neutral placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30 disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-full rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-4 py-2.5 text-sm text-[var(--page-fg)] placeholder:text-[var(--text-subtle)] focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30 disabled:cursor-not-allowed disabled:opacity-70"
             placeholder="e.g. Groceries, Rent, Salary"
           />
           {uiError ? <p className="text-xs font-medium text-expense/90">{uiError}</p> : null}
         </div>
 
-        <div className="flex flex-col gap-2 rounded-2xl border border-border bg-surfaceMuted/40 p-3 text-xs text-muted">
-          <span className="font-semibold uppercase tracking-[0.2em] text-muted">Type</span>
+        <div className="flex flex-col gap-2 rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-4)] p-3 text-xs text-[var(--text-muted)]">
+          <span className="font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">Type</span>
           <p>Select whether this category is used for money coming in or going out.</p>
         </div>
 

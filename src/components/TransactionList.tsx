@@ -16,9 +16,9 @@ export const TransactionList = ({
   isDeleting,
 }: TransactionListProps) => {
   return (
-    <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-soft">
-      <header className="flex items-center justify-between border-b border-border px-6 py-4">
-        <span className="text-sm font-medium uppercase tracking-[0.28em] text-muted">{title}</span>
+    <div className="overflow-hidden rounded-3xl border border-[var(--border-soft)] bg-[var(--surface-1)] shadow-soft">
+      <header className="flex items-center justify-between border-b border-[var(--border-soft)] px-6 py-4">
+        <span className="text-sm font-medium uppercase tracking-[0.28em] text-[var(--text-muted)]">{title}</span>
       </header>
       <ul className="max-h-[420px] space-y-1 overflow-y-auto px-2 py-2">
         {transactions.map(transaction => {
@@ -34,7 +34,7 @@ export const TransactionList = ({
           return (
             <li
               key={key}
-              className="group flex items-center justify-between gap-4 rounded-2xl px-4 py-3 transition hover:bg-surfaceMuted"
+              className="group flex items-center justify-between gap-4 rounded-2xl px-4 py-3 transition hover:bg-[var(--surface-4)]"
             >
               <div className="flex items-center gap-4">
                 <span
@@ -47,10 +47,12 @@ export const TransactionList = ({
                   {isIncome ? 'In' : 'Out'}
                 </span>
                 <div className="flex flex-col gap-1">
-                  <span className="text-sm font-semibold text-neutral">{categoryLabel}</span>
-                  <span className="text-xs uppercase tracking-[0.3em] text-muted">{formatDate(transaction.date)}</span>
+                  <span className="text-sm font-semibold text-[var(--page-fg)]">{categoryLabel}</span>
+                  <span className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">
+                    {formatDate(transaction.date)}
+                  </span>
                   {transaction.note ? (
-                    <span className="text-xs text-muted">{transaction.note}</span>
+                    <span className="text-xs text-[var(--text-muted)]">{transaction.note}</span>
                   ) : null}
                 </div>
               </div>
@@ -86,7 +88,7 @@ export const TransactionList = ({
           )
         })}
         {transactions.length === 0 ? (
-          <li className="rounded-2xl border border-dashed border-border px-4 py-10 text-center text-sm text-muted">
+          <li className="rounded-2xl border border-dashed border-[var(--border-soft)] px-4 py-10 text-center text-sm text-[var(--text-muted)]">
             No transactions yet. Add your first one!
           </li>
         ) : null}

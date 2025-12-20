@@ -19,20 +19,20 @@ export const DefaultCategories = ({
   onChangeDefault,
   resolveCategoryId,
 }: DefaultCategoriesProps) => (
-  <div className="rounded-3xl border border-border bg-white/90 p-5 shadow-[0_22px_60px_-48px_rgba(15,23,42,0.28)]">
+  <div className="rounded-3xl border border-[var(--border-soft)] bg-[var(--surface-2)] p-5 shadow-[0_22px_60px_-48px_rgba(15,23,42,0.28)]">
     <div className="flex flex-wrap items-center justify-between gap-3">
       <div>
-        <h3 className="text-sm font-semibold text-neutral">Default categories</h3>
-        <p className="text-xs text-muted">Choose the go-to income and expense categories.</p>
+        <h3 className="text-sm font-semibold text-[var(--page-fg)]">Default categories</h3>
+        <p className="text-xs text-[var(--text-muted)]">Choose the go-to income and expense categories.</p>
       </div>
       {isUpdating ? (
-        <span className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1 text-[11px] font-medium text-muted">
+        <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border-soft)] bg-[var(--surface-1)] px-3 py-1 text-[11px] font-medium text-[var(--text-muted)]">
           Updating...
         </span>
       ) : null}
     </div>
     <div className="mt-4 grid gap-4 sm:grid-cols-2">
-      <label className="flex flex-col gap-2 text-sm text-neutral">
+      <label className="flex flex-col gap-2 text-sm text-[var(--page-fg)]">
         <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-income">
           Income default
           <span className="h-2 w-2 rounded-full bg-income" aria-hidden="true" />
@@ -41,7 +41,7 @@ export const DefaultCategories = ({
           value={defaultIncomeId}
           onChange={event => onChangeDefault(event.target.value, 'income')}
           disabled={!incomeCategories.length || isUpdating}
-          className="rounded-2xl border border-income/30 bg-white px-3 py-2.5 text-sm font-semibold text-neutral shadow-[0_10px_28px_-22px_rgba(15,23,42,0.35)] transition focus:border-income focus:outline-none focus:ring-2 focus:ring-income/25 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-2xl border border-income/30 bg-[var(--surface-1)] px-3 py-2.5 text-sm font-semibold text-[var(--page-fg)] shadow-[0_10px_28px_-22px_rgba(15,23,42,0.35)] transition focus:border-income focus:outline-none focus:ring-2 focus:ring-income/25 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <option value="" disabled>
             {incomeCategories.length ? 'Select income default' : 'No income categories'}
@@ -57,7 +57,7 @@ export const DefaultCategories = ({
         </select>
       </label>
 
-      <label className="flex flex-col gap-2 text-sm text-neutral">
+      <label className="flex flex-col gap-2 text-sm text-[var(--page-fg)]">
         <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-expense">
           Expense default
           <span className="h-2 w-2 rounded-full bg-expense" aria-hidden="true" />
@@ -66,7 +66,7 @@ export const DefaultCategories = ({
           value={defaultExpenseId}
           onChange={event => onChangeDefault(event.target.value, 'expense')}
           disabled={!expenseCategories.length || isUpdating}
-          className="rounded-2xl border border-expense/30 bg-white px-3 py-2.5 text-sm font-semibold text-neutral shadow-[0_10px_28px_-22px_rgba(15,23,42,0.35)] transition focus:border-expense focus:outline-none focus:ring-2 focus:ring-expense/25 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-2xl border border-expense/30 bg-[var(--surface-1)] px-3 py-2.5 text-sm font-semibold text-[var(--page-fg)] shadow-[0_10px_28px_-22px_rgba(15,23,42,0.35)] transition focus:border-expense focus:outline-none focus:ring-2 focus:ring-expense/25 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <option value="" disabled>
             {expenseCategories.length ? 'Select expense default' : 'No expense categories'}
