@@ -1,15 +1,24 @@
 import type { Transaction } from '../types'
 import { formatCurrency, formatDate } from '../utils/format'
+import { isToday } from '../utils/date'
 
 interface TransactionListProps {
   transactions: Transaction[]
+  title?: string
+  onDeleteTransaction?: (transaction: Transaction) => void
+  isDeleting?: boolean
 }
 
-export const TransactionList = ({ transactions }: TransactionListProps) => {
+export const TransactionList = ({
+  transactions,
+  title = 'Recent Transactions',
+  onDeleteTransaction,
+  isDeleting,
+}: TransactionListProps) => {
   return (
     <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-soft">
       <header className="flex items-center justify-between border-b border-border px-6 py-4">
-        <span className="text-sm font-medium uppercase tracking-[0.28em] text-muted">Recent Transactions</span>
+        <span className="text-sm font-medium uppercase tracking-[0.28em] text-muted">{title}</span>
       </header>
       <ul className="max-h-[420px] space-y-1 overflow-y-auto px-2 py-2">
         {transactions.map(transaction => {
@@ -20,6 +29,7 @@ export const TransactionList = ({ transactions }: TransactionListProps) => {
           const isIncome = transaction.type === 'income'
           const amountLabel = `${isIncome ? '+' : '-'}${formatCurrency(Math.abs(transaction.amount))}`
           const key = transaction._id ?? transaction.id ?? `${transaction.date}-${transaction.amount}`
+          const canDelete = !!onDeleteTransaction && isToday(transaction.date)
 
           return (
             <li
@@ -44,11 +54,34 @@ export const TransactionList = ({ transactions }: TransactionListProps) => {
                   ) : null}
                 </div>
               </div>
-              <span
-                className={`text-right text-base font-semibold tracking-tight ${isIncome ? 'text-income' : 'text-expense'}`}
-              >
-                {amountLabel}
-              </span>
+              <div className="flex items-center gap-3">
+                <span
+                  className={`text-right text-base font-semibold tracking-tight ${isIncome ? 'text-income' : 'text-expense'}`}
+                >
+                  {amountLabel}
+                </span>
+                <span className="flex items-center justify-center">
+                  {canDelete ? (
+                    <button
+                      type="button"
+                      title="Delete (today only)"
+                      onClick={() => onDeleteTransaction?.(transaction)}
+                      disabled={isDeleting}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-transparent opacity-100 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      <span className="text-lg leading-none" style={{ color: '#ff0000' }}>
+                        ×
+                      </span>
+                    </button>
+                  ) : (
+                    <div className="inline-flex h-8 w-8 items-center justify-center rounded-full">
+                      <span className="text-lg leading-none" style={{ color: '#666666' }}>
+                        ×
+                      </span>
+                    </div>
+                  )}
+                </span>
+              </div>
             </li>
           )
         })}

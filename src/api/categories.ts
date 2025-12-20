@@ -31,7 +31,14 @@ const extractCategories = (data: CategoriesResponse): CategoryApiShape[] => {
 }
 
 export const getCategories = async () => {
-  const { data } = await apiClient.get<CategoriesResponse>('/api/categories')
+  const { data } = await apiClient.get<CategoriesResponse>('/api/categories/active')
+  return extractCategories(data).map(normalizeCategory)
+}
+
+export const getAllCategories = async (type?: 'income' | 'expense') => {
+  const { data } = await apiClient.get<CategoriesResponse>('/api/categories/all', {
+    params: type ? { type } : {},
+  })
   return extractCategories(data).map(normalizeCategory)
 }
 
@@ -54,4 +61,17 @@ export const createCategory = async (payload: Pick<Category, 'name' | 'type'>) =
 
 export const deleteCategory = async (categoryId: string) => {
   await apiClient.delete(`/api/categories/${categoryId}`)
+}
+
+export const setDefaultCategory = async (categoryId: string) => {
+  const { data } = await apiClient.patch<CategoryApiShape | { category: CategoryApiShape }>(
+    `/api/categories/${categoryId}`,
+    { isDefault: true },
+  )
+
+  if ('category' in (data as { category?: CategoryApiShape }) && (data as { category?: CategoryApiShape }).category) {
+    return normalizeCategory((data as { category: CategoryApiShape }).category)
+  }
+
+  return normalizeCategory(data as CategoryApiShape)
 }

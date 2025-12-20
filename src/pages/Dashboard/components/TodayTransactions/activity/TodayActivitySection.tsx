@@ -1,0 +1,50 @@
+import type { Transaction } from '../../../../../types'
+import { LoadingSpinner } from '../../../../../components/LoadingSpinner'
+import { TodaySummaryCards } from '../TodaySummaryCards'
+import { TodayTransactionsTable } from '../TodayTransactionsTable'
+import { EmptyState } from '../../ui/EmptyState'
+import { ListHeader } from '../../Transactions/ListHeader'
+
+interface TodayActivitySectionProps {
+  transactions: Transaction[]
+  isLoading?: boolean
+  income: number
+  expense: number
+  balance: number
+  onDeleteTransaction?: (transaction: Transaction) => void
+  isDeleting?: boolean
+}
+
+export const TodayActivitySection = ({
+  transactions,
+  isLoading = false,
+  income,
+  expense,
+  balance,
+  onDeleteTransaction,
+  isDeleting,
+}: TodayActivitySectionProps) => {
+  return (
+    <div className="space-y-6">
+      <TodaySummaryCards income={income} expense={expense} balance={balance} />
+      <section className="rounded-4xl border border-border bg-white/90 p-6 shadow-card">
+        <ListHeader title="Today's Activity" />
+
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : transactions && transactions.length ? (
+          <TodayTransactionsTable
+            transactions={transactions}
+            onDeleteTransaction={onDeleteTransaction}
+            isDeleting={isDeleting}
+          />
+        ) : (
+          <EmptyState
+            title="No activity today"
+            description="Add a transaction to see it reflected in today's activity."
+          />
+        )}
+      </section>
+    </div>
+  )
+}
