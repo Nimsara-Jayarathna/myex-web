@@ -8,7 +8,6 @@ export const TransactionTableHeader = () => (
   <thead>
     <tr className={headerRowClasses}>
       <th className={headerCellClasses}>Date</th>
-      <th className={headerCellClasses}>Type</th>
       <th className={headerCellClasses}>Category</th>
       <th className={headerCellClasses}>Amount</th>
       <th className={headerCellClasses}>Note</th>
