@@ -7,6 +7,17 @@
   --page-fg: #2c3e50;
   --page-overlay-strong: rgba(255, 255, 255, 0.9);
   --page-overlay-soft: rgba(255, 255, 255, 0.5);
+  --surface-1: #ffffff;
+  --surface-2: rgba(255, 255, 255, 0.6);
+  --surface-3: #f8fafc;
+  --surface-4: #f1f5f9;
+  --border-soft: rgba(15, 23, 42, 0.08);
+  --border-strong: rgba(15, 23, 42, 0.12);
+  --text-muted: #6b7280;
+  --text-subtle: #94a3b8;
+  --input-bg: #f9fafb;
+  --input-border: #e5e7eb;
+  --chip-bg: #f3f4f6;
 }
 
 [data-theme="dark"] {
@@ -14,6 +25,17 @@
   --page-fg: #e6edf5;
   --page-overlay-strong: rgba(15, 19, 26, 0.9);
   --page-overlay-soft: rgba(15, 19, 26, 0.5);
+  --surface-1: #141b24;
+  --surface-2: rgba(20, 27, 36, 0.7);
+  --surface-3: #0f1722;
+  --surface-4: #0b121a;
+  --border-soft: rgba(148, 163, 184, 0.2);
+  --border-strong: rgba(148, 163, 184, 0.3);
+  --text-muted: #a7b5c8;
+  --text-subtle: #8ea0b7;
+  --input-bg: #0f1722;
+  --input-border: #223145;
+  --chip-bg: #101926;
 }
 
 

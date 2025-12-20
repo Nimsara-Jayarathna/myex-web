@@ -6,13 +6,13 @@ interface LandingNavbarProps {
 export const LandingNavbar = ({ onLogin, onRegister }: LandingNavbarProps) => {
   return (
     <nav className="relative z-50 mx-auto flex max-w-7xl items-center justify-between px-8 py-8">
-      <div className="text-2xl font-black tracking-tighter text-[#2C3E50]">
+      <div className="text-2xl font-black tracking-tighter text-[var(--page-fg)]">
         MyEx<span className="text-[#3498db]">.</span>
       </div>
       <div className="flex items-center gap-3">
         <button
           onClick={onLogin}
-          className="rounded-full border border-gray-200 bg-white/80 px-6 py-2 text-sm font-bold text-[#2C3E50] backdrop-blur-md transition hover:border-[#3498db] hover:text-[#3498db]"
+          className="rounded-full border border-[var(--border-soft)] bg-[var(--surface-2)] px-6 py-2 text-sm font-bold text-[var(--page-fg)] backdrop-blur-md transition hover:border-[#3498db] hover:text-[#3498db]"
         >
           Log in
         </button>

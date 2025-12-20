@@ -6,15 +6,17 @@ export const DashboardPreview = () => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 0.2, duration: 1 }}
-      className="relative rounded-[2.5rem] border border-gray-100 bg-white/60 p-4 shadow-card backdrop-blur-xl"
+      className="relative rounded-[2.5rem] border border-[var(--border-soft)] bg-[var(--surface-2)] p-4 shadow-card backdrop-blur-xl"
     >
-      <div className="rounded-[2rem] border border-gray-50 bg-white p-8 shadow-soft">
+      <div className="rounded-[2rem] border border-[var(--border-soft)] bg-[var(--surface-1)] p-8 shadow-soft">
         <div className="mb-10 flex justify-center">
-          <div className="inline-flex rounded-full border border-gray-100 bg-gray-50 p-1 shadow-inner">
+          <div className="inline-flex rounded-full border border-[var(--border-soft)] bg-[var(--surface-3)] p-1 shadow-inner">
             <button className="rounded-full bg-[#3498db] px-6 py-1.5 text-xs font-bold text-white shadow-sm">
               Today's Activity
             </button>
-            <button className="rounded-full px-6 py-1.5 text-xs font-bold text-gray-400">All Transactions</button>
+            <button className="rounded-full px-6 py-1.5 text-xs font-bold text-[var(--text-subtle)]">
+              All Transactions
+            </button>
           </div>
         </div>
 
@@ -34,8 +36,11 @@ export const DashboardPreview = () => {
             { label: 'Freelance Payout', price: '+$2,400.00', color: '#2ecc71' },
             { label: 'Grocery Store', price: '-$120.00', color: '#e74c3c' },
           ].map((item, i) => (
-            <div key={i} className="flex items-center justify-between rounded-2xl border border-gray-100/50 bg-gray-50/50 p-4">
-              <span className="text-sm font-semibold text-[#2C3E50]">{item.label}</span>
+            <div
+              key={i}
+              className="flex items-center justify-between rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-3)] p-4"
+            >
+              <span className="text-sm font-semibold text-[var(--page-fg)]">{item.label}</span>
               <span className="text-sm font-bold" style={{ color: item.color }}>
                 {item.price}
               </span>
