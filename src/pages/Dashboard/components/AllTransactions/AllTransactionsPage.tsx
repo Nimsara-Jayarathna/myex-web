@@ -15,6 +15,8 @@ export const AllTransactionsPage = ({
   isLoading = false,
   filters,
   onFiltersChange,
+  onDeleteTransaction,
+  isDeleting,
 }: AllTransactionsPageProps) => {
   const [grouping, setGrouping] = useState<Grouping>('none')
 
@@ -31,7 +33,7 @@ export const AllTransactionsPage = ({
   const grouped = useGroupedTransactions(filteredTransactions, grouping)
 
   return (
-    <section className="space-y-4 rounded-4xl border border-border bg-white/90 p-6 shadow-card">
+    <section className="space-y-4 rounded-4xl border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] p-6 shadow-card backdrop-blur-xl">
       <div className="space-y-3">
         <FiltersBar
           startDate={filters.startDate}
@@ -68,7 +70,12 @@ export const AllTransactionsPage = ({
       ) : transactions.length === 0 ? (
         <EmptyState title="No transactions found" description="Adjust filters or add a transaction to see it here." />
       ) : (
-        <TransactionTable transactions={filteredTransactions} grouped={grouped ?? undefined} />
+        <TransactionTable
+          transactions={filteredTransactions}
+          grouped={grouped ?? undefined}
+          onDeleteTransaction={onDeleteTransaction}
+          isDeleting={isDeleting}
+        />
       )}
     </section>
   )

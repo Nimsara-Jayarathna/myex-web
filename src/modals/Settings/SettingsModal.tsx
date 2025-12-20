@@ -121,6 +121,16 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
       title="Manage Categories"
       subtitle="Create and organize your income and expense categories."
       widthClassName="max-w-4xl"
+      headerActions={
+        <button
+          type="button"
+          onClick={() => setAddCategoryOpen(true)}
+          className="inline-flex items-center gap-2 rounded-full border border-[var(--border-glass)] bg-[var(--surface-glass)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-subtle)] backdrop-blur-md transition hover:border-accent/40 hover:text-[var(--page-fg)]"
+        >
+          <span className="text-base leading-none text-accent">+</span>
+          <span>Add category</span>
+        </button>
+      }
     >
       <div className="relative">
         <div className="space-y-5">
@@ -143,15 +153,14 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
             onDelete={handleDelete}
             onSetDefault={handleSetDefault}
             isSettingDefault={setDefaultMutation.isPending}
-            onAddCategory={() => setAddCategoryOpen(true)}
           />
         </div>
 
         {(isLoading || isFetching || deleteMutation.isPending || setDefaultMutation.isPending) && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/75 backdrop-blur-sm">
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-[var(--surface-glass)] backdrop-blur-sm">
             <div className="flex flex-col items-center gap-3">
               <LoadingSpinner />
-              <p className="text-xs font-medium text-muted">Updating categories...</p>
+              <p className="text-xs font-medium text-[var(--text-muted)]">Updating categories...</p>
             </div>
           </div>
         )}

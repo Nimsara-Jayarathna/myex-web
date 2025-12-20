@@ -19,10 +19,11 @@ export interface AllTransactionsPageProps {
   isLoading?: boolean
   filters: AllTransactionsFilters
   onFiltersChange: (filters: AllTransactionsFilters) => void
+  onDeleteTransaction?: (transaction: Transaction) => void
+  isDeleting?: boolean
 }
 
 export interface GroupedTransactions {
   label: string
   items: Transaction[]
 }
-
