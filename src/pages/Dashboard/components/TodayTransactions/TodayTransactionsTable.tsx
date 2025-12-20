@@ -15,7 +15,14 @@ export const TodayTransactionsTable = ({
 }: TodayTransactionsTableProps) => {
   return (
     <div className="overflow-hidden rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] shadow-soft backdrop-blur-xl">
-      <table className="w-full text-left">
+      <table className="w-full table-fixed text-left">
+        <colgroup>
+          <col className="w-[140px]" />
+          <col className="w-[240px]" />
+          <col className="w-[140px]" />
+          <col />
+          <col className="w-[56px]" />
+        </colgroup>
         <TransactionTableHeader />
         <tbody>
           {transactions.map(transaction => {
