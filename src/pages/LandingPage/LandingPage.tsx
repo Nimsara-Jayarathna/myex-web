@@ -14,6 +14,10 @@ import { LandingNavbar } from './components/LandingNavbar'
 export const LandingPage = () => {
   const navigate = useNavigate()
   const { setAuth, isAuthenticated } = useAuth()
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const stored = localStorage.getItem('theme')
+    return stored === 'dark' || stored === 'light' ? stored : 'light'
+  })
   const [mode, setMode] = useState<AuthMode | null>(null)
   const [formState, setFormState] = useState({ firstName: '', lastName: '', email: '', password: '' })
 
@@ -40,6 +44,10 @@ export const LandingPage = () => {
       navigate('/dashboard', { replace: true })
     }
   }, [isAuthenticated, navigate])
+
+  useEffect(() => {
+    localStorage.setItem('theme', theme)
+  }, [theme])
 
   const transitionToMode = (nextMode: AuthMode) => {
     setMode(nextMode)
@@ -71,15 +79,28 @@ export const LandingPage = () => {
   const isLoading = loginMutation.isPending || registerMutation.isPending
 
   return (
-    <main className="relative min-h-screen w-full overflow-x-hidden bg-[#FBFBFE] text-[#2C3E50]">
+    <main
+      data-theme={theme}
+      className="relative min-h-screen w-full overflow-x-hidden bg-[var(--page-bg)] text-[var(--page-fg)]"
+    >
       <div className="pointer-events-none absolute inset-0 z-0">
         <div className="absolute inset-0 bg-hero-grid opacity-[0.03]" />
-        <div className="absolute inset-x-0 top-0 h-[600px] bg-gradient-to-b from-white/90 via-white/50 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-[600px] bg-gradient-to-b from-[var(--page-overlay-strong)] via-[var(--page-overlay-soft)] to-transparent" />
         <div className="absolute right-0 top-0 h-[500px] w-[500px] rounded-full bg-[#3498db]/10 blur-[120px]" />
         <div className="absolute bottom-0 left-0 h-[500px] w-[500px] rounded-full bg-[#2ecc71]/10 blur-[120px]" />
       </div>
 
       <LandingNavbar onLogin={() => transitionToMode('login')} onRegister={() => transitionToMode('register')} />
+
+      <div className="relative z-10 mx-auto flex max-w-7xl justify-end px-8 pt-6">
+        <button
+          type="button"
+          onClick={() => setTheme(prev => (prev === 'light' ? 'dark' : 'light'))}
+          className="rounded-full border border-white/20 bg-[var(--page-overlay-soft)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--page-fg)] shadow-sm transition hover:bg-[var(--page-overlay-strong)]"
+        >
+          {theme === 'light' ? 'Dark mode' : 'Light mode'}
+        </button>
+      </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-8 pb-32 pt-16">
         <div className="grid items-center gap-20 lg:grid-cols-[1.1fr_1fr]">

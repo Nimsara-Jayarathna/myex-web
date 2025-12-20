@@ -2,4 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --page-bg: #fbfbfe;
+  --page-fg: #2c3e50;
+  --page-overlay-strong: rgba(255, 255, 255, 0.9);
+  --page-overlay-soft: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="dark"] {
+  --page-bg: #0f131a;
+  --page-fg: #e6edf5;
+  --page-overlay-strong: rgba(15, 19, 26, 0.9);
+  --page-overlay-soft: rgba(15, 19, 26, 0.5);
+}
+
 
