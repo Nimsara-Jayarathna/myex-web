@@ -4,20 +4,18 @@ import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { login, register } from '../../api/auth'
 import { useAuth } from '../../hooks/useAuth'
+import { useTheme } from '../../hooks/useTheme'
 import type { AuthMode } from '../../types'
+import { AppNavbar } from '../../components/AppNavbar'
 import { AuthModal } from './components/AuthModal'
 import { DashboardPreview } from './components/DashboardPreview'
 import { FeaturesSection } from './components/FeaturesSection'
 import { HeroSection } from './components/HeroSection'
-import { LandingNavbar } from './components/LandingNavbar'
 
 export const LandingPage = () => {
   const navigate = useNavigate()
   const { setAuth, isAuthenticated } = useAuth()
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    const stored = localStorage.getItem('theme')
-    return stored === 'dark' || stored === 'light' ? stored : 'light'
-  })
+  const { theme, toggleTheme } = useTheme()
   const [mode, setMode] = useState<AuthMode | null>(null)
   const [formState, setFormState] = useState({ firstName: '', lastName: '', email: '', password: '' })
 
@@ -44,10 +42,6 @@ export const LandingPage = () => {
       navigate('/dashboard', { replace: true })
     }
   }, [isAuthenticated, navigate])
-
-  useEffect(() => {
-    localStorage.setItem('theme', theme)
-  }, [theme])
 
   const transitionToMode = (nextMode: AuthMode) => {
     setMode(nextMode)
@@ -90,17 +84,13 @@ export const LandingPage = () => {
         <div className="absolute bottom-0 left-0 h-[500px] w-[500px] rounded-full bg-[#2ecc71]/10 blur-[120px]" />
       </div>
 
-      <LandingNavbar onLogin={() => transitionToMode('login')} onRegister={() => transitionToMode('register')} />
-
-      <div className="relative z-10 mx-auto flex max-w-7xl justify-end px-8 pt-6">
-        <button
-          type="button"
-          onClick={() => setTheme(prev => (prev === 'light' ? 'dark' : 'light'))}
-          className="rounded-full border border-white/20 bg-[var(--page-overlay-soft)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--page-fg)] shadow-sm transition hover:bg-[var(--page-overlay-strong)]"
-        >
-          {theme === 'light' ? 'Dark mode' : 'Light mode'}
-        </button>
-      </div>
+      <AppNavbar
+        variant="landing"
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        onLogin={() => transitionToMode('login')}
+        onRegister={() => transitionToMode('register')}
+      />
 
       <div className="relative z-10 mx-auto max-w-7xl px-8 pb-32 pt-16">
         <div className="grid items-center gap-20 lg:grid-cols-[1.1fr_1fr]">
