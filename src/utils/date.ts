@@ -23,3 +23,6 @@ export const isTodayInUserTimeZone = (dateISO: string, explicitTimeZone?: string
   return txLocalDay === nowLocalDay
 }
 
+export const isToday = (dateISO: string): boolean => {
+  return isTodayInUserTimeZone(dateISO)
+}

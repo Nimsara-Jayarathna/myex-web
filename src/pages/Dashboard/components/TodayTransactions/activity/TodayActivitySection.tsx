@@ -1,6 +1,9 @@
 import type { Transaction } from '../../../../../types'
-import { TransactionsSection } from '../../Transactions/TransactionsSection'
+import { LoadingSpinner } from '../../../../../components/LoadingSpinner'
 import { TodaySummaryCards } from '../TodaySummaryCards'
+import { TodayTransactionsTable } from '../TodayTransactionsTable'
+import { EmptyState } from '../../ui/EmptyState'
+import { ListHeader } from '../../Transactions/ListHeader'
 
 interface TodayActivitySectionProps {
   transactions: Transaction[]
@@ -24,15 +27,24 @@ export const TodayActivitySection = ({
   return (
     <div className="space-y-6">
       <TodaySummaryCards income={income} expense={expense} balance={balance} />
-      <TransactionsSection
-        title="Today's Activity"
-        transactions={transactions}
-        isLoading={isLoading}
-        emptyTitle="No activity today"
-        emptyDescription="Add a transaction to see it reflected in today's activity."
-        onDeleteTransaction={onDeleteTransaction}
-        isDeleting={isDeleting}
-      />
+      <section className="rounded-4xl border border-border bg-white/90 p-6 shadow-card">
+        <ListHeader title="Today's Activity" />
+
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : transactions && transactions.length ? (
+          <TodayTransactionsTable
+            transactions={transactions}
+            onDeleteTransaction={onDeleteTransaction}
+            isDeleting={isDeleting}
+          />
+        ) : (
+          <EmptyState
+            title="No activity today"
+            description="Add a transaction to see it reflected in today's activity."
+          />
+        )}
+      </section>
     </div>
   )
 }

@@ -12,7 +12,7 @@ export const TransactionTableHeader = () => (
       <th className={headerCellClasses}>Category</th>
       <th className={headerCellClasses}>Amount</th>
       <th className={headerCellClasses}>Note</th>
-      <th className={headerCellRightAlignedClasses}>Actions</th>
+      <th className={headerCellRightAlignedClasses} aria-label="Delete" />
     </tr>
   </thead>
 )
