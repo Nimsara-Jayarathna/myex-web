@@ -66,23 +66,24 @@ export const TransactionRow = ({
   return (
     <tr className="group border-b border-[var(--border-glass)] last:border-b-0 hover:bg-[var(--surface-glass)]">
       <td className="px-4 py-3 text-sm text-[var(--page-fg)]">{formatDate(transaction.date)}</td>
-      <td className="px-4 py-3 text-sm font-semibold">
-        <span
-          className={`rounded-full px-3 py-1 text-xs uppercase tracking-[0.2em] ${
-            isIncome
-              ? 'bg-income/15 text-income border border-income/30'
-              : 'bg-expense/15 text-expense border border-expense/30'
-          }`}
-        >
-          {isIncome ? 'Income' : 'Expense'}
-        </span>
+      <td
+        className="max-w-[200px] truncate px-4 py-3 text-sm text-[var(--page-fg)]"
+        title={resolveCategory(transaction)}
+      >
+        {resolveCategory(transaction)}
       </td>
-      <td className="px-4 py-3 text-sm text-[var(--page-fg)]">{resolveCategory(transaction)}</td>
-      <td className={`px-4 py-3 text-sm font-semibold ${isIncome ? 'text-income' : 'text-expense'}`}>
+      <td
+        className={`px-4 py-3 text-right text-sm font-semibold ${isIncome ? 'text-income' : 'text-expense'}`}
+      >
         {isIncome ? '+' : '-'}
         {formatCurrency(Math.abs(transaction.amount))}
       </td>
-      <td className="px-4 py-3 text-sm text-[var(--text-muted)]">{transaction.note ?? 'No note'}</td>
+      <td
+        className="max-w-[360px] truncate px-4 py-3 text-sm text-[var(--text-muted)]"
+        title={transaction.note ?? 'No note'}
+      >
+        {transaction.note ?? 'No note'}
+      </td>
       <td className="px-4 py-3 text-right text-sm">
         <DeleteActionCell
           canDelete={canDelete}

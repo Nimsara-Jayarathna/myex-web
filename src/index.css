@@ -8,8 +8,8 @@
   --page-fg: #0f172a;
 
   /* Glass Effects - Light Mode */
-  --surface-glass: rgba(255, 255, 255, 0.65);
-  --surface-glass-thick: rgba(255, 255, 255, 0.9);
+  --surface-glass: rgba(255, 255, 255, 0.75);
+  --surface-glass-thick: rgba(255, 255, 255, 0.95);
   --page-overlay-strong: rgba(255, 255, 255, 0.9);
   --page-overlay-soft: rgba(255, 255, 255, 0.65);
 
@@ -20,9 +20,9 @@
   --surface-4: #cbd5e1; /* Slate 300 */
 
   /* Crisp Borders for the Glass look */
-  --border-glass: rgba(255, 255, 255, 0.8);
-  --border-soft: rgba(15, 23, 42, 0.06);
-  --border-strong: rgba(15, 23, 42, 0.1);
+  --border-glass: rgba(148, 163, 184, 0.35);
+  --border-soft: rgba(15, 23, 42, 0.08);
+  --border-strong: rgba(15, 23, 42, 0.14);
 
   /* Professional Typography */
   --text-main: #1e293b;
@@ -72,6 +72,34 @@
 
   /* Legacy surfaces */
   --chip-bg: #334155;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.4);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.6);
+}
+
+[data-theme="dark"] *::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.35);
+}
+
+[data-theme="dark"] *::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.6);
 }
 
 
