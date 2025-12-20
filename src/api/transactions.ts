@@ -93,3 +93,17 @@ export const getTransactionSummary = async () => {
   const { data } = await apiClient.get<SummaryResponse>('/api/transactions/summary')
   return data
 }
+
+export const deleteTransaction = async (transactionId: string) => {
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
+  if (!timeZone) {
+    throw new Error('Unable to detect timezone')
+  }
+
+  await apiClient.delete(`/api/transactions/${transactionId}`, {
+    headers: {
+      'X-User-Timezone': timeZone,
+    },
+  })
+}

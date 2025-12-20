@@ -54,22 +54,24 @@ export const FiltersBar = ({
   }
 
   return (
-    <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-3">
-      <DateRangeFilter
-        startDate={startDate}
-        endDate={endDate}
-        onChangeStartDate={handleStartDateChange}
-        onChangeEndDate={handleEndDateChange}
-      />
+    <div className="relative z-30 rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass)] p-4 shadow-soft backdrop-blur-xl">
+      <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-3">
+        <DateRangeFilter
+          startDate={startDate}
+          endDate={endDate}
+          onChangeStartDate={handleStartDateChange}
+          onChangeEndDate={handleEndDateChange}
+        />
 
-      <TypeFilter typeFilter={typeFilter} onChangeType={handleTypeChange} />
+        <TypeFilter typeFilter={typeFilter} onChangeType={handleTypeChange} />
 
-      <CategoryFilter
-        typeFilter={typeFilter}
-        categoryFilter={categoryFilter}
-        categories={categories}
-        onChangeCategory={handleCategoryChange}
-      />
+        <CategoryFilter
+          typeFilter={typeFilter}
+          categoryFilter={categoryFilter}
+          categories={categories}
+          onChangeCategory={handleCategoryChange}
+        />
+      </div>
     </div>
   )
 }
