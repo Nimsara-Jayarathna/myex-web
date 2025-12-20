@@ -8,10 +8,20 @@ interface ModalProps {
   subtitle?: string
   children: ReactNode
   footer?: ReactNode
+  headerActions?: ReactNode
   widthClassName?: string
 }
 
-export const Modal = ({ open, onClose, title, subtitle, children, footer, widthClassName = 'max-w-lg' }: ModalProps) => {
+export const Modal = ({
+  open,
+  onClose,
+  title,
+  subtitle,
+  children,
+  footer,
+  headerActions,
+  widthClassName = 'max-w-lg',
+}: ModalProps) => {
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden'
@@ -51,13 +61,16 @@ export const Modal = ({ open, onClose, title, subtitle, children, footer, widthC
             onClick={event => event.stopPropagation()}
           >
             <span className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
-            <button
-              type="button"
-              onClick={onClose}
-              className="absolute right-6 top-6 inline-flex items-center gap-2 rounded-full border border-[var(--border-glass)] bg-[var(--surface-glass)] px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-[var(--text-subtle)] backdrop-blur-md transition hover:border-accent/40 hover:text-[var(--page-fg)]"
-            >
-              Close
-            </button>
+            <div className="absolute right-6 top-6 flex items-center gap-2">
+              {headerActions}
+              <button
+                type="button"
+                onClick={onClose}
+                className="inline-flex items-center gap-2 rounded-full border border-[var(--border-glass)] bg-[var(--surface-glass)] px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-[var(--text-subtle)] backdrop-blur-md transition hover:border-accent/40 hover:text-[var(--page-fg)]"
+              >
+                Close
+              </button>
+            </div>
             <div className="flex flex-col gap-5">
               {title ? (
                 <div className="pr-4">

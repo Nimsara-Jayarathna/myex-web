@@ -13,7 +13,6 @@ interface CategoriesGridProps {
   onDelete: (category: Category) => void
   onSetDefault: (category: Category) => void
   isSettingDefault: boolean
-  onAddCategory: () => void
 }
 
 export const CategoriesGrid = ({
@@ -24,7 +23,6 @@ export const CategoriesGrid = ({
   onDelete,
   onSetDefault,
   isSettingDefault,
-  onAddCategory,
 }: CategoriesGridProps) => {
   if (isLoading) {
     return <LoadingSpinner />
@@ -48,37 +46,18 @@ export const CategoriesGrid = ({
   ]
 
   return (
-    <div className="rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] p-5 shadow-[0_24px_80px_-52px_rgba(15,23,42,0.35)] backdrop-blur-xl">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h3 className="text-sm font-semibold text-[var(--page-fg)]">All categories</h3>
-          <p className="text-xs text-[var(--text-muted)]">
-            View and manage all your income and expense categories. Removing one will affect linked transactions.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={onAddCategory}
-            className="inline-flex items-center gap-1 rounded-2xl bg-accent px-3 py-1.5 text-xs font-semibold text-white shadow-soft transition hover:bg-[#2F89C9]"
-          >
-            <span className="text-base leading-none">+</span>
-            <span>Add category</span>
-          </button>
-        </div>
-      </div>
-      <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid gap-4 sm:grid-cols-2">
         {grouped.map(column => {
           const badgeClasses = column.isIncome
             ? 'border-income/40 bg-income/10 text-income'
             : 'border-expense/40 bg-expense/10 text-expense'
           const emptyState = column.emptyState
 
-          return (
-            <div
-              key={column.title}
-              className="flex flex-col gap-3 rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass)] p-5 shadow-[0_24px_70px_-45px_rgba(15,23,42,0.25)] backdrop-blur-xl"
-            >
+        return (
+          <div
+            key={column.title}
+            className="flex flex-col gap-3 rounded-3xl border border-[var(--border-glass)] bg-[var(--surface-glass)] p-5 shadow-[0_24px_70px_-45px_rgba(15,23,42,0.25)] backdrop-blur"
+          >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <h3 className="text-sm font-semibold text-[var(--page-fg)]">{column.title}</h3>
@@ -106,7 +85,7 @@ export const CategoriesGrid = ({
                     return (
                       <li
                         key={categoryId}
-                        className="flex flex-col gap-3 rounded-2xl border border-[var(--border-glass)] bg-[var(--surface-glass)] px-4 py-3 text-sm text-[var(--page-fg)] shadow-[0_18px_45px_-35px_rgba(15,23,42,0.3)] backdrop-blur-md transition hover:border-accent/40 hover:shadow-soft sm:flex-row sm:items-center sm:justify-between"
+                        className="group flex flex-col gap-3 rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-glass)] px-4 py-3 text-sm text-[var(--page-fg)] shadow-[0_18px_45px_-35px_rgba(15,23,42,0.3)] transition hover:border-accent/30 hover:shadow-soft sm:flex-row sm:items-center sm:justify-between"
                       >
                         <div className="flex items-center gap-3">
                           <span
@@ -117,14 +96,13 @@ export const CategoriesGrid = ({
                           <div className="flex flex-col">
                             <span className="font-medium text-[var(--page-fg)]">{category.name}</span>
                             <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--text-muted)]">
-                              <span className="uppercase tracking-[0.25em]">{category.type}</span>
                               {category.isDefault ? (
-                                <span className="rounded-full bg-[var(--surface-glass)] px-2 py-0.5 text-[11px] font-medium text-[var(--text-muted)] backdrop-blur-md">
+                                <span className="rounded-full bg-surfaceMuted px-2 py-0.5 text-[11px] font-medium text-[var(--text-muted)]">
                                   Default
                                 </span>
                               ) : null}
                               {category.isActive === false ? (
-                                <span className="rounded-full bg-[var(--surface-glass)] px-2 py-0.5 text-[11px] font-medium text-[var(--text-muted)] backdrop-blur-md">
+                                <span className="rounded-full bg-border px-2 py-0.5 text-[11px] font-medium text-[var(--text-muted)]">
                                   Inactive
                                 </span>
                               ) : null}
@@ -139,7 +117,7 @@ export const CategoriesGrid = ({
                             className={`inline-flex items-center justify-center text-[34px] transition ${
                               isDefault
                                 ? 'text-yellow-500 cursor-default'
-                                : 'text-yellow-400 hover:text-yellow-500'
+                                : 'text-slate-400 group-hover:text-yellow-500'
                             } disabled:cursor-not-allowed disabled:opacity-70`}
                             aria-label={isDefault ? 'Default category' : 'Set as default'}
                           >
@@ -154,8 +132,8 @@ export const CategoriesGrid = ({
                             }}
                             className={`inline-flex items-center justify-center text-[34px] transition ${
                               canDelete
-                                ? 'text-expense hover:text-expense/80'
-                                : 'text-[var(--text-muted)] cursor-not-allowed'
+                                ? 'text-slate-400 group-hover:text-expense'
+                                : 'text-muted cursor-not-allowed'
                             } disabled:cursor-not-allowed disabled:opacity-70`}
                             disabled={isDeleting || !canDelete}
                             aria-label={canDelete ? 'Remove category' : 'Cannot remove default category'}
@@ -166,8 +144,8 @@ export const CategoriesGrid = ({
                       </li>
                     )
                   })
-                        ) : (
-                  <li className="rounded-2xl border border-dashed border-[var(--border-glass)] bg-[var(--surface-glass)] px-4 py-6 text-center text-xs text-[var(--text-muted)] backdrop-blur-md">
+                ) : (
+                  <li className="rounded-2xl border border-dashed border-[var(--border-soft)] bg-[var(--surface-glass)] px-4 py-6 text-center text-xs text-[var(--text-muted)]">
                     {emptyState}
                   </li>
                 )}
@@ -175,7 +153,6 @@ export const CategoriesGrid = ({
             </div>
           )
         })}
-      </div>
     </div>
   )
 }
