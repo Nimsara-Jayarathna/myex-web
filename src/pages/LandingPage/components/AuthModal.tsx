@@ -82,7 +82,7 @@ export const AuthModal = ({
             </button>
 
             <div className="mt-6 text-center text-xs font-semibold uppercase tracking-widest text-[var(--text-subtle)]">
-              {activeMode === 'login' ? 'New to MyEx?' : 'Already onboard?'}{' '}
+              {activeMode === 'login' ? 'New to Blipzo?' : 'Already onboard?'}{' '}
               <button
                 type="button"
                 onClick={() => onModeChange(activeMode === 'login' ? 'register' : 'login')}
