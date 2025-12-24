@@ -1,8 +1,8 @@
 {
-  "name": "myex-web",
+  "name": "blipzo-web",
   "version": "1.0.0",
   "private": true,
-  "description": "Modern React + Vite + Tailwind + TypeScript frontend for MyEx — a personal expense and income tracking web app connected to a Node.js + MongoDB backend.",
+  "description": "Modern React + Vite + Tailwind + TypeScript frontend for Blipzo — a personal expense and income tracking web app connected to a Node.js + MongoDB backend.",
   "type": "module",
   "keywords": [
     "react",
@@ -11,7 +11,7 @@
     "typescript",
     "expense-tracker",
     "frontend",
-    "myex"
+    "blipzo"
   ],
   "scripts": {
     "dev": "vite",
