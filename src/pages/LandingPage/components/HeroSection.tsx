@@ -15,7 +15,7 @@ export const HeroSection = ({ onRegister }: HeroSectionProps) => {
         </span>
       </h1>
       <p className="mt-8 max-w-lg text-lg leading-relaxed text-[var(--text-muted)]">
-        MyEx pairs intuitive tracking with calm visuals so you can review income, expenses, and balance within a single,
+        Blipzo pairs intuitive tracking with calm visuals so you can review income, expenses, and balance within a single,
         distraction-free workspace.
       </p>
       <div className="mt-10 flex flex-wrap gap-4">
