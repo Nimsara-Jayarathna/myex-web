@@ -63,7 +63,7 @@ export const AppNavbar = ({
     <header className={headerClass}>
       <div className={containerClass}>
         <div className="text-2xl font-black tracking-tighter text-[var(--page-fg)]">
-          MyEx<span className="text-[#3498db]">.</span>
+          Blipzo<span className="text-[#3498db]">.</span>
         </div>
         <div className="flex flex-wrap items-center justify-end gap-2">
           {isLanding ? (

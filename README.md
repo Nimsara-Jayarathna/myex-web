@@ -1,6 +1,6 @@
-# MyEx Web
+# Blipzo Web
 
-React + Vite + Tailwind + TypeScript frontend for the MyEx expense tracker. It uses React Query for data fetching, Zustand for auth state, and cookie-based authentication against the MyEx API.
+React + Vite + Tailwind + TypeScript frontend for the Blipzo expense tracker. It uses React Query for data fetching, Zustand for auth state, and cookie-based authentication against the Blipzo API.
 
 ## Features
 - Landing page with login/register modals.
