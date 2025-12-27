@@ -107,23 +107,27 @@ export const AddCategoryModal = ({ open, onClose, categories, limit }: AddCatego
           <p>Select whether this category is used for money coming in or going out.</p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-2">
+        <div className="grid w-full grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => handleSave('income')}
             disabled={isSaving || incomeLimitReached}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-income px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#28A55C] disabled:cursor-not-allowed disabled:opacity-70"
+            className="inline-flex w-full min-w-0 items-center justify-center gap-2 whitespace-nowrap rounded-2xl bg-income px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#28A55C] disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isSaving && savingType === 'income' ? <Spinner size="sm" /> : null}
+            <span className="flex h-4 w-4 items-center justify-center">
+              {isSaving && savingType === 'income' ? <Spinner size="sm" /> : null}
+            </span>
             <span>{incomeLabel}</span>
           </button>
           <button
             type="button"
             onClick={() => handleSave('expense')}
             disabled={isSaving || expenseLimitReached}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-expense px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#C63E32] disabled:cursor-not-allowed disabled:opacity-70"
+            className="inline-flex w-full min-w-0 items-center justify-center gap-2 whitespace-nowrap rounded-2xl bg-expense px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#C63E32] disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isSaving && savingType === 'expense' ? <Spinner size="sm" /> : null}
+            <span className="flex h-4 w-4 items-center justify-center">
+              {isSaving && savingType === 'expense' ? <Spinner size="sm" /> : null}
+            </span>
             <span>{expenseLabel}</span>
           </button>
         </div>
