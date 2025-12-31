@@ -9,24 +9,31 @@ import { mapApiError } from '../../utils/errors'
 interface AddCategoryModalProps {
   open: boolean
   onClose: () => void
+  categories: { type: 'income' | 'expense' }[]
+  limit?: number
 }
 
 const categoryKey = ['categories']
 
-export const AddCategoryModal = ({ open, onClose }: AddCategoryModalProps) => {
+export const AddCategoryModal = ({ open, onClose, categories, limit }: AddCategoryModalProps) => {
   const queryClient = useQueryClient()
   const [name, setName] = useState('')
   const [uiError, setUiError] = useState<string | null>(null)
+  const [savingType, setSavingType] = useState<'income' | 'expense' | null>(null)
 
   useEffect(() => {
     if (open) {
       setName('')
       setUiError(null)
+      setSavingType(null)
     }
   }, [open])
 
   const createMutation = useMutation({
     mutationFn: (payload: { name: string; type: 'income' | 'expense' }) => createCategory(payload),
+    onMutate: payload => {
+      setSavingType(payload.type)
+    },
     onSuccess: () => {
       toast.success('Category created')
       queryClient.invalidateQueries({ queryKey: categoryKey })
@@ -39,9 +46,18 @@ export const AddCategoryModal = ({ open, onClose }: AddCategoryModalProps) => {
       setUiError(mapped.message)
       toast.error(mapped.message)
     },
+    onSettled: () => {
+      setSavingType(null)
+    },
   })
 
   const handleSave = (type: 'income' | 'expense') => {
+    const count = type === 'income' ? incomeCount : expenseCount
+    const isLimitReached = typeof limit === 'number' && count >= limit
+    if (isLimitReached) {
+      setUiError(`${type === 'income' ? 'Income' : 'Expense'} category limit reached (${count}/${limit}).`)
+      return
+    }
     const trimmed = name.trim()
     if (!trimmed) {
       setUiError('Category name is required')
@@ -52,6 +68,13 @@ export const AddCategoryModal = ({ open, onClose }: AddCategoryModalProps) => {
   }
 
   const isSaving = createMutation.isPending
+  const hasLimit = typeof limit === 'number'
+  const incomeCount = categories.filter(category => category.type === 'income').length
+  const expenseCount = categories.filter(category => category.type === 'expense').length
+  const incomeLimitReached = hasLimit && incomeCount >= (limit ?? 0)
+  const expenseLimitReached = hasLimit && expenseCount >= (limit ?? 0)
+  const incomeLabel = hasLimit ? `Save as income (${incomeCount}/${limit})` : 'Save as income'
+  const expenseLabel = hasLimit ? `Save as expense (${expenseCount}/${limit})` : 'Save as expense'
 
   return (
     <Modal
@@ -84,26 +107,39 @@ export const AddCategoryModal = ({ open, onClose }: AddCategoryModalProps) => {
           <p>Select whether this category is used for money coming in or going out.</p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-2">
+        <div className="grid w-full grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => handleSave('income')}
-            disabled={isSaving}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-income px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#28A55C] disabled:cursor-not-allowed disabled:opacity-70"
+            disabled={isSaving || incomeLimitReached}
+            className="inline-flex w-full min-w-0 items-center justify-center gap-2 whitespace-nowrap rounded-2xl bg-income px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#28A55C] disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isSaving ? <Spinner size="sm" /> : null}
-            <span>Save as income</span>
+            <span className="flex h-4 w-4 items-center justify-center">
+              {isSaving && savingType === 'income' ? <Spinner size="sm" /> : null}
+            </span>
+            <span>{incomeLabel}</span>
           </button>
           <button
             type="button"
             onClick={() => handleSave('expense')}
-            disabled={isSaving}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-expense px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#C63E32] disabled:cursor-not-allowed disabled:opacity-70"
+            disabled={isSaving || expenseLimitReached}
+            className="inline-flex w-full min-w-0 items-center justify-center gap-2 whitespace-nowrap rounded-2xl bg-expense px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#C63E32] disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isSaving ? <Spinner size="sm" /> : null}
-            <span>Save as expense</span>
+            <span className="flex h-4 w-4 items-center justify-center">
+              {isSaving && savingType === 'expense' ? <Spinner size="sm" /> : null}
+            </span>
+            <span>{expenseLabel}</span>
           </button>
         </div>
+        {hasLimit && (incomeLimitReached || expenseLimitReached) ? (
+          <p className="text-center text-xs font-medium text-[var(--text-muted)]">
+            {incomeLimitReached && expenseLimitReached
+              ? `Income limit reached (${incomeCount}/${limit}). Expense limit reached (${expenseCount}/${limit}).`
+              : incomeLimitReached
+                ? `Income limit reached (${incomeCount}/${limit}).`
+                : `Expense limit reached (${expenseCount}/${limit}).`}
+          </p>
+        ) : null}
       </div>
     </Modal>
   )

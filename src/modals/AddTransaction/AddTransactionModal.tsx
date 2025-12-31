@@ -57,7 +57,7 @@ export const AddTransactionModal = ({ open, onClose, onTransactionCreated }: Add
       try {
         setIsLoadingCategories(true)
         const result = await getCategories()
-        const mapped: CategoryOption[] = (result ?? []).map(item => ({
+        const mapped: CategoryOption[] = (result.categories ?? []).map(item => ({
           id: item.id ?? item._id ?? item.name,
           name: item.name,
           type: item.type,

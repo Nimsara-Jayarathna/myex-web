@@ -25,7 +25,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
   const [uiError, setUiError] = useState<{ message: string; detail?: string } | null>(null)
 
   const {
-    data: categories,
+    data,
     isLoading,
     isFetching,
     isError,
@@ -38,15 +38,18 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     retry: 1,
   })
 
+  const categories = data?.categories ?? []
+  const categoriesLimit = data?.limit
+
   const resolveCategoryId = (category: Category) => category._id ?? category.id ?? ''
 
   const incomeCategories = useMemo(
-    () => (categories ?? []).filter(item => item.type === 'income'),
+    () => categories.filter(item => item.type === 'income'),
     [categories],
   )
 
   const expenseCategories = useMemo(
-    () => (categories ?? []).filter(item => item.type === 'expense'),
+    () => categories.filter(item => item.type === 'expense'),
     [categories],
   )
 
@@ -147,7 +150,8 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
 
           <CategoriesGrid
             isLoading={isLoading}
-            categories={categories ?? []}
+            categories={categories}
+            limit={categoriesLimit}
             deleteMutation={deleteMutation}
             resolveCategoryId={resolveCategoryId}
             onDelete={handleDelete}
@@ -166,7 +170,12 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
         )}
       </div>
 
-      <AddCategoryModal open={isAddCategoryOpen} onClose={() => setAddCategoryOpen(false)} />
+      <AddCategoryModal
+        open={isAddCategoryOpen}
+        onClose={() => setAddCategoryOpen(false)}
+        categories={categories}
+        limit={categoriesLimit}
+      />
     </Modal>
   )
 }
