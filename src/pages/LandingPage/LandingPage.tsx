@@ -7,6 +7,7 @@ import { useAuth } from '../../hooks/useAuth'
 import { useTheme } from '../../hooks/useTheme'
 import type { AuthMode } from '../../types'
 import { AppNavbar } from '../../components/AppNavbar'
+import { Footer } from '../../components/Footer'
 import { AuthModal } from './components/AuthModal'
 import { DashboardPreview } from './components/DashboardPreview'
 import { FeaturesSection } from './components/FeaturesSection'
@@ -111,6 +112,7 @@ export const LandingPage = () => {
         formState={formState}
         onFieldChange={handleFieldChange}
       />
+      <Footer />
     </main>
   )
 }
