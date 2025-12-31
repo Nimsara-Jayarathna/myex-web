@@ -35,22 +35,24 @@ export const AllTransactionsPage = ({
   return (
     <section className="space-y-4 rounded-4xl border border-[var(--border-glass)] bg-[var(--surface-glass-thick)] p-6 shadow-card backdrop-blur-xl">
       <div className="space-y-3">
-        <FiltersBar
-          startDate={filters.startDate}
-          endDate={filters.endDate}
-          typeFilter={filters.typeFilter}
-          categoryFilter={filters.categoryFilter}
-          categories={categoriesForType}
-          onChange={({ startDate, endDate, typeFilter, categoryFilter }) => {
-            onFiltersChange({
-              ...filters,
-              startDate,
-              endDate,
-              typeFilter,
-              categoryFilter,
-            })
-          }}
-        />
+        <div className="relative z-50">
+          <FiltersBar
+            startDate={filters.startDate}
+            endDate={filters.endDate}
+            typeFilter={filters.typeFilter}
+            categoryFilter={filters.categoryFilter}
+            categories={categoriesForType}
+            onChange={({ startDate, endDate, typeFilter, categoryFilter }) => {
+              onFiltersChange({
+                ...filters,
+                startDate,
+                endDate,
+                typeFilter,
+                categoryFilter,
+              })
+            }}
+          />
+        </div>
 
         <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-3">
           <SortControls

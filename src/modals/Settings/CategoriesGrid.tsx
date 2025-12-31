@@ -5,6 +5,7 @@ import type { Category } from '../../types'
 interface CategoriesGridProps {
   isLoading: boolean
   categories: Category[]
+  limit?: number
   deleteMutation: {
     isPending: boolean
     variables: unknown
@@ -18,6 +19,7 @@ interface CategoriesGridProps {
 export const CategoriesGrid = ({
   isLoading,
   categories,
+  limit,
   deleteMutation,
   resolveCategoryId,
   onDelete,
@@ -53,6 +55,8 @@ export const CategoriesGrid = ({
             : 'border-expense/40 bg-expense/10 text-expense'
           const emptyState = column.emptyState
 
+        const countLabel = typeof limit === 'number' ? `${column.items.length}/${limit}` : `${column.items.length}`
+
         return (
           <div
             key={column.title}
@@ -70,7 +74,7 @@ export const CategoriesGrid = ({
                       : 'border-expense/40 bg-expense/10 text-expense'
                   }`}
                 >
-                  {column.items.length}
+                  {countLabel}
                 </span>
               </div>
               <ul className="max-h-[320px] space-y-3 overflow-y-auto pr-1">
