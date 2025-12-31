@@ -6,7 +6,12 @@ type CategoryApiShape = Category & {
   id?: string
 }
 
-type CategoriesResponse = CategoryApiShape[] | { categories: CategoryApiShape[] }
+type CategoriesResponse = CategoryApiShape[] | { categories: CategoryApiShape[]; limit?: number }
+
+type CategoriesPayload = {
+  categories: CategoryApiShape[]
+  limit?: number
+}
 
 const normalizeCategory = (category: CategoryApiShape): Category => {
   const identifier = category._id ?? category.id
@@ -20,26 +25,30 @@ const normalizeCategory = (category: CategoryApiShape): Category => {
   }
 }
 
-const extractCategories = (data: CategoriesResponse): CategoryApiShape[] => {
+const extractCategoriesPayload = (data: CategoriesResponse): CategoriesPayload => {
   if (Array.isArray(data)) {
-    return data
+    return { categories: data }
   }
   if (data?.categories) {
-    return data.categories
+    return { categories: data.categories, limit: data.limit }
   }
-  return []
+  return { categories: [] }
 }
 
 export const getCategories = async () => {
   const { data } = await apiClient.get<CategoriesResponse>('/api/categories/active')
-  return extractCategories(data).map(normalizeCategory)
+  const payload = extractCategoriesPayload(data)
+  return {
+    categories: payload.categories.map(normalizeCategory),
+    limit: payload.limit,
+  }
 }
 
 export const getAllCategories = async (type?: 'income' | 'expense') => {
   const { data } = await apiClient.get<CategoriesResponse>('/api/categories/all', {
     params: type ? { type } : {},
   })
-  return extractCategories(data).map(normalizeCategory)
+  return extractCategoriesPayload(data).categories.map(normalizeCategory)
 }
 
 export const createCategory = async (payload: Pick<Category, 'name' | 'type'>) => {
