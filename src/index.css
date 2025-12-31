@@ -1,6 +1,28 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-background: #ECF0F1;
+  --color-surface: #FFFFFF;
+  --color-surfaceMuted: #F7F9FB;
+  --color-border: #D5DEE8;
+  --color-neutral: #2C3E50;
+  --color-muted: #4F677F;
+  --color-accent: #3498DB;
+  --color-income: #2ECC71;
+  --color-expense: #E74C3C;
+
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
+
+  --shadow-card: 0 24px 60px -30px rgba(44, 62, 80, 0.35);
+  --shadow-soft: 0 18px 45px -28px rgba(52, 152, 219, 0.35);
+  --shadow-outline: 0 0 0 1px rgba(213, 222, 232, 0.8);
+
+  --radius-3xl: 1.5rem;
+  --radius-4xl: 2rem;
+
+  --image-hero-grid: radial-gradient(circle at 25% 25%, rgba(52, 152, 219, 0.16), transparent 45%), radial-gradient(circle at 75% 20%, rgba(46, 204, 113, 0.12), transparent 50%);
+}
 
 :root {
   /* Refined Background: Slightly cooler slate-50 */
