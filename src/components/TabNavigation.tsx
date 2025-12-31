@@ -19,10 +19,8 @@ export const TabNavigation = <T extends string>({ tabs, activeTab, onChange }: T
         return
       }
 
-      const containerRect = container.getBoundingClientRect()
-      const activeRect = activeButton.getBoundingClientRect()
-      const nextLeft = activeRect.left - containerRect.left
-      const nextWidth = activeRect.width
+      const nextLeft = activeButton.offsetLeft
+      const nextWidth = activeButton.offsetWidth
 
       setIndicator(prev => {
         if (prev.left === nextLeft && prev.width === nextWidth && prev.ready) {
@@ -64,9 +62,8 @@ export const TabNavigation = <T extends string>({ tabs, activeTab, onChange }: T
     >
       <span
         aria-hidden="true"
-        className={`pointer-events-none absolute top-1 bottom-1 rounded-full border border-white/30 bg-[linear-gradient(135deg,rgba(59,130,246,0.55),rgba(59,130,246,0.4)_60%,rgba(59,130,246,0.28))] shadow-[0_18px_45px_-30px_rgba(15,23,42,0.45)] backdrop-blur-xl transition-[transform,width,opacity] duration-500 ${
-          indicator.ready ? 'opacity-100' : 'opacity-0'
-        }`}
+        className={`pointer-events-none absolute left-0 top-1 bottom-1 rounded-full border border-white/30 bg-[linear-gradient(135deg,rgba(59,130,246,0.55),rgba(59,130,246,0.4)_60%,rgba(59,130,246,0.28))] shadow-[0_18px_45px_-30px_rgba(15,23,42,0.45)] backdrop-blur-xl transition-[transform,width,opacity] duration-500 ${indicator.ready ? 'opacity-100' : 'opacity-0'
+          }`}
         style={{
           transform: `translateX(${indicator.left}px)`,
           width: `${indicator.width}px`,
@@ -83,9 +80,8 @@ export const TabNavigation = <T extends string>({ tabs, activeTab, onChange }: T
             ref={node => {
               tabRefs.current.set(tab.id, node)
             }}
-            className={`relative z-10 flex items-center gap-2 rounded-full px-6 py-3 text-base font-semibold transition-colors duration-300 ${
-              isActive ? 'text-slate-900' : 'text-[var(--page-fg)] hover:text-[var(--primary-accent)]'
-            }`}
+            className={`relative z-10 flex items-center gap-2 rounded-full px-6 py-3 text-base font-semibold transition-colors duration-300 ${isActive ? 'text-slate-900' : 'text-[var(--page-fg)] hover:text-[var(--primary-accent)]'
+              }`}
           >
             {tab.icon}
             <span>{tab.label}</span>
