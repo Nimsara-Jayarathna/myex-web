@@ -27,7 +27,7 @@ const shouldSkipRefresh = (url?: string) => {
   if (!url) {
     return true
   }
-  return ['/api/auth/login', '/api/auth/register', '/api/auth/refresh', '/api/auth/logout'].some(path =>
+  return ['/api/v1/auth/login', '/api/v1/auth/register', '/api/v1/auth/refresh', '/api/v1/auth/logout'].some(path =>
     url.includes(path),
   )
 }
@@ -37,8 +37,8 @@ let refreshRequest: Promise<void> | null = null
 const refreshSession = async () => {
   if (!refreshRequest) {
     refreshRequest = apiClient
-      .post('/api/auth/refresh')
-      .then(() => {})
+      .post('/api/v1/auth/refresh')
+      .then(() => { })
       .finally(() => {
         refreshRequest = null
       })
