@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import dayjs from 'dayjs'
 import { AppNavbar } from '../../components/AppNavbar'
+import { Footer } from '../../components/Footer'
 import { deleteTransaction, getTransactionsFiltered } from '../../api/transactions'
 import { TabNavigation } from '../../components/TabNavigation'
 import { TodayTransactionsPage } from './components/TodayTransactions/TodayTransactionsPage'
@@ -151,7 +152,7 @@ export const DashboardPage = () => {
   }
 
   const handleLogout = () => {
-    void logoutSession().catch(() => {})
+    void logoutSession().catch(() => { })
     logout()
     toast.success('Logged out')
     navigate('/', { replace: true })
@@ -168,7 +169,7 @@ export const DashboardPage = () => {
   return (
     <div
       data-theme={theme}
-      className="relative min-h-screen bg-[var(--page-bg)] pb-24 text-[var(--page-fg)]"
+      className="relative flex min-h-screen flex-col bg-[var(--page-bg)] text-[var(--page-fg)]"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(52,152,219,0.12),_transparent_60%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_rgba(46,204,113,0.1),_transparent_55%)]" />
@@ -226,6 +227,7 @@ export const DashboardPage = () => {
         onClose={() => setAddTransactionOpen(false)}
         onTransactionCreated={handleTransactionCreated}
       />
+      <Footer />
     </div>
   )
 }
